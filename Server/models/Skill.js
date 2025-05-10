@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+// /models/Skill.js
+const mongoose = require('mongoose');
 
 const skillSchema = new mongoose.Schema(
   {
@@ -19,11 +20,11 @@ const skillSchema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Skill", skillSchema);
+module.exports = mongoose.model('Skill', skillSchema);

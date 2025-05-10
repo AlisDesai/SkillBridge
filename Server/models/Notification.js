@@ -1,15 +1,16 @@
-const mongoose = require("mongoose");
+// /models/Notification.js
+const mongoose = require('mongoose');
 
 const notificationSchema = new mongoose.Schema(
   {
     recipient: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     type: {
       type: String,
-      enum: ["match_request", "message", "reminder", "system"],
+      enum: ['match_request', 'message', 'reminder', 'system'],
       required: true,
     },
     content: {
@@ -22,14 +23,14 @@ const notificationSchema = new mongoose.Schema(
     },
     relatedId: {
       type: mongoose.Schema.Types.ObjectId,
-      refPath: "relatedModel",
+      refPath: 'relatedModel',
     },
     relatedModel: {
       type: String,
-      enum: ["Match", "Message", "Review"],
+      enum: ['Match', 'Message', 'Review'],
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Notification", notificationSchema);
+module.exports = mongoose.model('Notification', notificationSchema);

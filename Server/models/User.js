@@ -1,3 +1,4 @@
+// /models/User.js
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
@@ -19,6 +20,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 6,
     },
+
     bio: {
       type: String,
       default: "",
