@@ -7,8 +7,43 @@ const sendEmail = require("../utils/sendEmail");
 // Generate JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
+    expiresIn: process.env.JWT_EXPIRE || "1d",
   });
+};
+
+// Add refresh token generation
+const generateRefreshToken = (id) => {
+  return jwt.sign({ id }, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRE || "7d",
+  });
+};
+
+// Refresh token route handler
+exports.refreshToken = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return next(new ErrorResponse("Refresh token required", 400));
+    }
+
+    // Verify the refresh token
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+    const user = await User.findById(decoded.id);
+    if (!user || user.refreshToken !== refreshToken) {
+      return next(new ErrorResponse("Invalid refresh token", 401));
+    }
+
+    const newAccessToken = generateToken(user._id);
+
+    res.json({
+      success: true,
+      token: newAccessToken,
+    });
+  } catch (err) {
+    next(new ErrorResponse(`Token refresh failed: ${err.message}`, 401));
+  }
 };
 
 // Register User
@@ -37,8 +72,24 @@ exports.login = async (req, res, next) => {
     if (!user || !(await user.matchPassword(password))) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
+
     const token = generateToken(user._id);
-    res.json({ user, token });
+    const refreshToken = generateRefreshToken(user._id);
+
+    // Save refresh token
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    res.json({
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+      token,
+      refreshToken,
+    });
   } catch (err) {
     next(err);
   }
