@@ -22,7 +22,7 @@ const socketController = (io) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("Socket connected:", socket.user.name);
+    console.log("Socket connected:", socket.id);
     chatHandler(io, socket);
     notifHandler(io, socket);
 
