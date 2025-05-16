@@ -25,6 +25,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+
+    refreshToken: {
+      type: String,
+      default: null,
+    },
+    
     teachSkills: [
       {
         name: String,
@@ -37,6 +43,7 @@ const userSchema = new mongoose.Schema(
         level: String,
       },
     ],
+
     availability: [String],
     resetToken: String,
     resetTokenExpire: Date,

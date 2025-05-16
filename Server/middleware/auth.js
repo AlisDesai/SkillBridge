@@ -1,35 +1,44 @@
 // /middleware/auth.js
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+const ErrorResponse = require("../utils/errorResponse");
 
-// to protect routes
+// Middleware to protect routes (require login)
 exports.protect = async (req, res, next) => {
   let token;
 
-  // Get token from Authorization header
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
+  // Extract token from Authorization header
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
   }
 
   if (!token) {
-    return res.status(401).json({ message: 'Not authorized, no token' });
+    return next(new ErrorResponse("Not authorized, token missing", 401));
   }
 
   try {
-    // Verify token and attach user to request
+    // Verify token and get user
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id).select('-password');
+    const user = await User.findById(decoded.id).select("-password");
+    if (!user) {
+      return next(new ErrorResponse("User not found", 404));
+    }
+
+    req.user = user;
     next();
   } catch (err) {
-    res.status(401).json({ message: 'Not authorized, token failed' });
+    next(new ErrorResponse("Not authorized, token invalid", 401));
   }
 };
 
-// to restrict to admin only
+// Middleware for admin-only access
 exports.adminOnly = (req, res, next) => {
-  if (req.user && req.user.role === 'admin') {
+  if (req.user && req.user.role === "admin") {
     next();
   } else {
-    res.status(403).json({ message: 'Access denied: Admins only' });
+    next(new ErrorResponse("Access denied: Admins only", 403));
   }
 };
