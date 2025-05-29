@@ -1,0 +1,12 @@
+/* src/assets/styles/globals.css */
+body {
+  @apply text-[#1F2937] bg-[#F9FAFB];
+}
+
+h1, h2, h3 {
+  @apply font-semibold;
+}
+
+input, textarea, select {
+  @apply rounded-xl border px-4 py-2 focus:outline-none focus:ring-2;
+}
