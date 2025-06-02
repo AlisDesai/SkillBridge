@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Spinner = ({ size }) => (
   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
@@ -71,6 +70,14 @@ export default function RegisterForm() {
   const navigate = (path) => {
     console.log(`Navigating to: ${path}`);
     // In your actual app, use: navigate(path) from react-router-dom
+    // For demonstration purposes, we'll simulate direct redirect
+    if (path === "/login") {
+      // Direct redirect to login page without any popup
+      window.location.href = "/login"; // Replace with your actual routing logic
+    } else if (path === "/home" || path === "/dashboard") {
+      // Direct redirect to home/dashboard page without any popup
+      window.location.href = "/dashboard"; // Replace with your actual routing logic
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -96,11 +103,11 @@ export default function RegisterForm() {
         confirmPassword: "",
       });
 
-      // Redirect to home page after 3 seconds
+      // Redirect to dashboard after 2 seconds (enough time to see success message)
       setTimeout(() => {
-        navigate("/home"); // or "/" for home page
-        setShowSuccess(false); // Hide success message after redirect
-      }, 3000);
+        setShowSuccess(false);
+        navigate("/dashboard"); // Direct redirect to dashboard
+      }, 2000);
     } catch (err) {
       alert("An error occurred. Please try again.");
     } finally {
@@ -320,7 +327,7 @@ export default function RegisterForm() {
                     <p className="text-gray-600 dark:text-gray-300 text-base">
                       Already have an account?{" "}
                       <button
-                        onClick={() => navigate("/login")} // Add onClick to navigate to /login
+                        onClick={() => navigate("/login")}
                         className="text-emerald-600 dark:text-emerald-400 hover:text-teal-600 dark:hover:text-teal-400 font-bold transition-colors duration-200 hover:underline"
                       >
                         Sign In
