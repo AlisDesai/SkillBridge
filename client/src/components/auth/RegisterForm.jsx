@@ -4,6 +4,27 @@ const Spinner = ({ size }) => (
   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
 );
 
+const ErrorMessage = ({ message }) => {
+  if (!message) return null;
+
+  return (
+    <div className="flex items-center space-x-2 mt-2 text-red-500 dark:text-red-400 text-sm">
+      <svg
+        className="w-4 h-4 flex-shrink-0"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          fillRule="evenodd"
+          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+          clipRule="evenodd"
+        />
+      </svg>
+      <span>{message}</span>
+    </div>
+  );
+};
+
 const SuccessMessage = ({ show }) => {
   if (!show) return null;
 
@@ -11,7 +32,6 @@ const SuccessMessage = ({ show }) => {
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl transform animate-in zoom-in-95 duration-300">
         <div className="text-center">
-          {/* Success Icon */}
           <div className="mx-auto w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center mb-4 animate-pulse">
             <svg
               className="w-8 h-8 text-white"
@@ -28,7 +48,6 @@ const SuccessMessage = ({ show }) => {
             </svg>
           </div>
 
-          {/* Success Text */}
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Registration Successful! 🎉
           </h3>
@@ -36,7 +55,6 @@ const SuccessMessage = ({ show }) => {
             Welcome to our community! Redirecting you to your dashboard...
           </p>
 
-          {/* Progress Bar */}
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-4">
             <div
               className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full animate-pulse"
@@ -44,7 +62,6 @@ const SuccessMessage = ({ show }) => {
             ></div>
           </div>
 
-          {/* Loading dots */}
           <div className="flex justify-center space-x-1">
             <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"></div>
             <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce delay-100"></div>
@@ -63,62 +80,161 @@ export default function RegisterForm() {
     password: "",
     confirmPassword: "",
   });
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [touched, setTouched] = useState({});
 
-  // Simulate navigation (replace with actual navigation in your app)
   const navigate = (path) => {
     console.log(`Navigating to: ${path}`);
-    // In your actual app, use: navigate(path) from react-router-dom
-    // For demonstration purposes, we'll simulate direct redirect
     if (path === "/login") {
-      // Direct redirect to login page without any popup
-      window.location.href = "/login"; // Replace with your actual routing logic
+      window.location.href = "/login";
     } else if (path === "/home" || path === "/dashboard") {
-      // Direct redirect to home/dashboard page without any popup
-      window.location.href = "/dashboard"; // Replace with your actual routing logic
+      window.location.href = "/dashboard";
     }
+  };
+
+  const validateField = (name, value, allValues = form) => {
+    let error = "";
+
+    switch (name) {
+      case "name":
+        if (!value.trim()) {
+          error = "Full name is required";
+        } else if (value.trim().length < 2) {
+          error = "Name must be at least 2 characters long";
+        } else if (value.trim().length > 50) {
+          error = "Name must be less than 50 characters";
+        } else if (!/^[a-zA-Z\s]+$/.test(value.trim())) {
+          error = "Name can only contain letters and spaces";
+        }
+        break;
+
+      case "email":
+        if (!value.trim()) {
+          error = "Email address is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) {
+          error = "Please enter a valid email address";
+        } else if (value.length > 254) {
+          error = "Email address is too long";
+        }
+        break;
+
+      case "password":
+        if (!value) {
+          error = "Password is required";
+        } else if (value.length < 8) {
+          error = "Password must be at least 8 characters long";
+        } else if (value.length > 128) {
+          error = "Password must be less than 128 characters";
+        } else if (!/(?=.*[a-z])/.test(value)) {
+          error = "Password must contain at least one lowercase letter";
+        } else if (!/(?=.*[A-Z])/.test(value)) {
+          error = "Password must contain at least one uppercase letter";
+        } else if (!/(?=.*\d)/.test(value)) {
+          error = "Password must contain at least one number";
+        } else if (!/(?=.*[!@#$%^&*(),.?":{}|<>])/.test(value)) {
+          error = "Password must contain at least one special character";
+        }
+        break;
+
+      case "confirmPassword":
+        if (!value) {
+          error = "Please confirm your password";
+        } else if (value !== allValues.password) {
+          error = "Passwords do not match";
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    return error;
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    Object.keys(form).forEach((key) => {
+      const error = validateField(key, form[key], form);
+      if (error) {
+        newErrors[key] = error;
+      }
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleInputChange = (name, value) => {
+    setForm((prev) => ({ ...prev, [name]: value }));
+
+    if (touched[name]) {
+      const error = validateField(name, value, { ...form, [name]: value });
+      setErrors((prev) => ({ ...prev, [name]: error }));
+    }
+  };
+
+  const handleInputBlur = (name) => {
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    const error = validateField(name, form[name], form);
+    setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.password !== form.confirmPassword) {
-      alert("Passwords do not match!");
+
+    // Mark all fields as touched
+    setTouched({
+      name: true,
+      email: true,
+      password: true,
+      confirmPassword: true,
+    });
+
+    if (!validateForm()) {
       return;
     }
 
     setLoading(true);
     try {
-      // Simulated registration logic
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Show success message
       setShowSuccess(true);
-
-      // Reset form
       setForm({
         name: "",
         email: "",
         password: "",
         confirmPassword: "",
       });
+      setErrors({});
+      setTouched({});
 
-      // Redirect to dashboard after 2 seconds (enough time to see success message)
       setTimeout(() => {
         setShowSuccess(false);
-        navigate("/dashboard"); // Direct redirect to dashboard
+        navigate("/dashboard");
       }, 2000);
     } catch (err) {
-      alert("An error occurred. Please try again.");
+      setErrors({ submit: "Registration failed. Please try again." });
     } finally {
       setLoading(false);
     }
   };
 
+  const getInputClassName = (fieldName) => {
+    const baseClass =
+      "relative w-full px-6 py-4 border rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium";
+    const hasError = errors[fieldName] && touched[fieldName];
+
+    if (hasError) {
+      return `${baseClass} border-red-400 dark:border-red-500 focus:ring-2 focus:ring-red-400/40 focus:border-red-400/60`;
+    }
+
+    return `${baseClass} border-gray-200/80 dark:border-gray-600/80 focus:ring-2 focus:ring-emerald-400/40 focus:border-emerald-400/60`;
+  };
+
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-900 flex items-center justify-center p-6">
-        {/* Subtle animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-1/4 left-1/6 w-64 h-64 bg-emerald-300/10 rounded-full blur-2xl animate-pulse"></div>
           <div className="absolute top-3/4 right-1/6 w-56 h-56 bg-teal-300/8 rounded-full blur-2xl animate-pulse delay-1000"></div>
@@ -126,16 +242,12 @@ export default function RegisterForm() {
         </div>
 
         <div className="relative max-w-6xl w-full">
-          {/* Subtle outer glow */}
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/12 via-teal-400/10 to-cyan-400/8 rounded-3xl blur-xl animate-pulse"></div>
 
-          {/* Main horizontal container */}
           <div className="relative backdrop-blur-sm bg-white/95 dark:bg-gray-800/95 border border-white/60 dark:border-gray-700/60 rounded-3xl shadow-xl hover:shadow-emerald-500/15 transition-all duration-500 overflow-hidden">
-            {/* Two-column layout */}
             <div className="grid lg:grid-cols-2 min-h-[600px]">
               {/* Left side - Welcome section */}
               <div className="relative bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 p-12 flex flex-col justify-center items-center text-white overflow-hidden">
-                {/* Decorative elements */}
                 <div className="absolute top-8 right-8 w-24 h-24 bg-white/10 rounded-full blur-xl animate-pulse"></div>
                 <div className="absolute bottom-8 left-8 w-20 h-20 bg-white/8 rounded-full blur-lg animate-pulse delay-1000"></div>
                 <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-white/5 rounded-full blur-2xl animate-pulse delay-2000"></div>
@@ -155,7 +267,6 @@ export default function RegisterForm() {
                   }
                 `}</style>
 
-                {/* Welcome content */}
                 <div className="relative text-center z-10">
                   <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 rounded-3xl mb-8 shadow-lg backdrop-blur-sm animate-float">
                     <svg
@@ -200,12 +311,10 @@ export default function RegisterForm() {
 
               {/* Right side - Form section */}
               <div className="p-12 flex flex-col justify-center">
-                {/* Refined decorative elements */}
                 <div className="absolute top-8 right-8 w-16 h-16 bg-gradient-to-br from-emerald-400/15 to-teal-400/10 rounded-full blur-xl animate-pulse"></div>
                 <div className="absolute bottom-8 right-12 w-12 h-12 bg-gradient-to-br from-cyan-400/10 to-emerald-400/15 rounded-full blur-lg animate-pulse delay-1000"></div>
 
                 <div className="relative space-y-8 max-w-md mx-auto w-full">
-                  {/* Form header */}
                   <div className="text-center">
                     <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent mb-2">
                       Create Account
@@ -215,7 +324,12 @@ export default function RegisterForm() {
                     </p>
                   </div>
 
-                  {/* Form fields - Horizontal pairs */}
+                  {errors.submit && (
+                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+                      <ErrorMessage message={errors.submit} />
+                    </div>
+                  )}
+
                   <div className="space-y-6">
                     {/* Name field */}
                     <div className="relative group">
@@ -223,12 +337,15 @@ export default function RegisterForm() {
                       <input
                         type="text"
                         placeholder="Full Name"
-                        className="relative w-full px-6 py-4 border border-gray-200/80 dark:border-gray-600/80 rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 focus:border-emerald-400/60 transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium"
+                        className={getInputClassName("name")}
                         value={form.name}
                         onChange={(e) =>
-                          setForm({ ...form, name: e.target.value })
+                          handleInputChange("name", e.target.value)
                         }
+                        onBlur={() => handleInputBlur("name")}
+                        disabled={loading}
                       />
+                      <ErrorMessage message={touched.name ? errors.name : ""} />
                     </div>
 
                     {/* Email field */}
@@ -237,26 +354,39 @@ export default function RegisterForm() {
                       <input
                         type="email"
                         placeholder="Email Address"
-                        className="relative w-full px-6 py-4 border border-gray-200/80 dark:border-gray-600/80 rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40 focus:border-teal-400/60 transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium"
+                        className={getInputClassName("email")}
                         value={form.email}
                         onChange={(e) =>
-                          setForm({ ...form, email: e.target.value })
+                          handleInputChange("email", e.target.value)
                         }
+                        onBlur={() => handleInputBlur("email")}
+                        disabled={loading}
+                      />
+                      <ErrorMessage
+                        message={touched.email ? errors.email : ""}
                       />
                     </div>
 
-                    {/* Password fields in horizontal layout */}
+                    {/* Password fields */}
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="relative group">
                         <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/8 to-emerald-400/6 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <input
                           type="password"
                           placeholder="Password"
-                          className="relative w-full px-4 py-4 border border-gray-200/80 dark:border-gray-600/80 rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 focus:border-cyan-400/60 transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium"
+                          className={getInputClassName("password").replace(
+                            "px-6",
+                            "px-4"
+                          )}
                           value={form.password}
                           onChange={(e) =>
-                            setForm({ ...form, password: e.target.value })
+                            handleInputChange("password", e.target.value)
                           }
+                          onBlur={() => handleInputBlur("password")}
+                          disabled={loading}
+                        />
+                        <ErrorMessage
+                          message={touched.password ? errors.password : ""}
                         />
                       </div>
 
@@ -265,13 +395,21 @@ export default function RegisterForm() {
                         <input
                           type="password"
                           placeholder="Confirm Password"
-                          className="relative w-full px-4 py-4 border border-gray-200/80 dark:border-gray-600/80 rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 focus:border-emerald-400/60 transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium"
+                          className={getInputClassName(
+                            "confirmPassword"
+                          ).replace("px-6", "px-4")}
                           value={form.confirmPassword}
                           onChange={(e) =>
-                            setForm({
-                              ...form,
-                              confirmPassword: e.target.value,
-                            })
+                            handleInputChange("confirmPassword", e.target.value)
+                          }
+                          onBlur={() => handleInputBlur("confirmPassword")}
+                          disabled={loading}
+                        />
+                        <ErrorMessage
+                          message={
+                            touched.confirmPassword
+                              ? errors.confirmPassword
+                              : ""
                           }
                         />
                       </div>
@@ -281,8 +419,7 @@ export default function RegisterForm() {
                   {/* Submit button */}
                   <div className="pt-4">
                     <button
-                      onClick={handleSubmit}
-                      type="button"
+                      type="submit"
                       disabled={loading}
                       className="relative w-full py-4 px-8 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-[1.01] active:scale-[0.99] shadow-lg hover:shadow-emerald-500/25 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none overflow-hidden group"
                     >
@@ -327,8 +464,10 @@ export default function RegisterForm() {
                     <p className="text-gray-600 dark:text-gray-300 text-base">
                       Already have an account?{" "}
                       <button
+                        type="button"
                         onClick={() => navigate("/login")}
                         className="text-emerald-600 dark:text-emerald-400 hover:text-teal-600 dark:hover:text-teal-400 font-bold transition-colors duration-200 hover:underline"
+                        disabled={loading}
                       >
                         Sign In
                       </button>
@@ -341,7 +480,6 @@ export default function RegisterForm() {
         </div>
       </div>
 
-      {/* Success Message Modal */}
       <SuccessMessage show={showSuccess} />
     </>
   );
