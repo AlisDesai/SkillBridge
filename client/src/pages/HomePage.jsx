@@ -10,37 +10,6 @@ export default function HomePage() {
         <div className="absolute top-1/2 left-1/2 w-60 h-60 bg-gray-400/5 rounded-full blur-2xl animate-bounce"></div>
       </div>
 
-      {/* Navigation */}
-      {/* <nav className="relative z-10 flex justify-between items-center p-6 max-w-7xl mx-auto">
-        <div className="text-2xl font-bold text-white">SkillSwap</div>
-        <div className="hidden md:flex space-x-8 text-gray-400">
-          <a
-            href="#"
-            className="hover:text-emerald-300 hover:border-b-2 hover:border-emerald-300 pb-1 transition-all duration-300"
-          >
-            About
-          </a>
-          <a
-            href="#"
-            className="hover:text-emerald-300 hover:border-b-2 hover:border-emerald-300 pb-1 transition-all duration-300"
-          >
-            Features
-          </a>
-          <a
-            href="#"
-            className="hover:text-emerald-300 hover:border-b-2 hover:border-emerald-300 pb-1 transition-all duration-300"
-          >
-            Community
-          </a>
-          <a
-            href="#"
-            className="hover:text-emerald-300 hover:border-b-2 hover:border-emerald-300 pb-1 transition-all duration-300"
-          >
-            Contact
-          </a>
-        </div>
-      </nav> */}
-
       <nav className="relative z-10 flex justify-between items-center p-6 max-w-7xl mx-auto">
   <div className="text-2xl font-bold text-white">SkillSwap</div>
   <div className="hidden md:flex space-x-8">
