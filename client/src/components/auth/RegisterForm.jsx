@@ -1,8 +1,30 @@
 import { useState } from "react";
+import { useEffect } from "react";
 
 const Spinner = ({ size }) => (
   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
 );
+
+const ErrorMessage = ({ message, show }) => {
+  if (!show || !message) return null;
+
+  return (
+    <div className="mt-2 flex items-center space-x-2 text-red-500 text-sm animate-in slide-in-from-left-2 duration-300">
+      <svg
+        className="w-4 h-4 flex-shrink-0"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path
+          fillRule="evenodd"
+          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+          clipRule="evenodd"
+        />
+      </svg>
+      <span className="font-medium">{message}</span>
+    </div>
+  );
+};
 
 const SuccessMessage = ({ show }) => {
   if (!show) return null;
@@ -33,22 +55,15 @@ const SuccessMessage = ({ show }) => {
             Registration Successful! 🎉
           </h3>
           <p className="text-gray-600 dark:text-gray-300 mb-6">
-            Welcome to our community! Redirecting you to your dashboard...
+            Welcome to our community! Redirecting to dashboard...
           </p>
 
           {/* Progress Bar */}
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-4">
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
             <div
-              className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full animate-pulse"
+              className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-200 ease-out"
               style={{ width: "100%" }}
             ></div>
-          </div>
-
-          {/* Loading dots */}
-          <div className="flex justify-center space-x-1">
-            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"></div>
-            <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce delay-100"></div>
-            <div className="w-2 h-2 bg-cyan-500 rounded-full animate-bounce delay-200"></div>
           </div>
         </div>
       </div>
@@ -63,56 +78,172 @@ export default function RegisterForm() {
     password: "",
     confirmPassword: "",
   });
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Simulate navigation (replace with actual navigation in your app)
-  const navigate = (path) => {
-    console.log(`Navigating to: ${path}`);
-    // In your actual app, use: navigate(path) from react-router-dom
-    // For demonstration purposes, we'll simulate direct redirect
-    if (path === "/login") {
-      // Direct redirect to login page without any popup
-      window.location.href = "/login"; // Replace with your actual routing logic
-    } else if (path === "/home" || path === "/dashboard") {
-      // Direct redirect to home/dashboard page without any popup
-      window.location.href = "/dashboard"; // Replace with your actual routing logic
+  // Auto-close success modal and redirect after 3 seconds
+  useEffect(() => {
+    if (showSuccess) {
+      const timer = setTimeout(() => {
+        handleSuccessClose();
+      }, 500); // 0.5 seconds = 500 milliseconds
+
+      return () => clearTimeout(timer);
     }
+  }, [showSuccess]);
+
+  // Validation functions
+  const validateName = (name) => {
+    if (!name.trim()) return "Full name is required";
+    if (name.trim().length < 2)
+      return "Name must be at least 2 characters long";
+    if (!/^[a-zA-Z\s]+$/.test(name.trim()))
+      return "Name can only contain letters and spaces";
+    return "";
+  };
+
+  const validateEmail = (email) => {
+    if (!email.trim()) return "Email address is required";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return "Please enter a valid email address";
+    return "";
+  };
+
+  const validatePassword = (password) => {
+    if (!password) return "Password is required";
+    if (password.length < 6)
+      return "Password must be at least 6 characters long";
+    return "";
+  };
+
+  const validateConfirmPassword = (confirmPassword, password) => {
+    if (!confirmPassword) return "Please confirm your password";
+    if (confirmPassword !== password) return "Passwords do not match";
+    return "";
+  };
+
+  // Real-time validation
+  const validateField = (field, value) => {
+    let error = "";
+    switch (field) {
+      case "name":
+        error = validateName(value);
+        break;
+      case "email":
+        error = validateEmail(value);
+        break;
+      case "password":
+        error = validatePassword(value);
+        break;
+      case "confirmPassword":
+        error = validateConfirmPassword(value, form.password);
+        break;
+      default:
+        break;
+    }
+    return error;
+  };
+
+  const handleInputChange = (field, value) => {
+    setForm({ ...form, [field]: value });
+
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors({ ...errors, [field]: "" });
+    }
+
+    // Real-time validation for confirm password
+    if (field === "password" && form.confirmPassword) {
+      const confirmError = validateConfirmPassword(form.confirmPassword, value);
+      setErrors((prev) => ({ ...prev, confirmPassword: confirmError }));
+    }
+  };
+
+  const handleBlur = (field) => {
+    setTouched({ ...touched, [field]: true });
+    const error = validateField(field, form[field]);
+    setErrors({ ...errors, [field]: error });
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      name: validateName(form.name),
+      email: validateEmail(form.email),
+      password: validatePassword(form.password),
+      confirmPassword: validateConfirmPassword(
+        form.confirmPassword,
+        form.password
+      ),
+    };
+
+    setErrors(newErrors);
+    setTouched({
+      name: true,
+      email: true,
+      password: true,
+      confirmPassword: true,
+    });
+
+    return !Object.values(newErrors).some((error) => error !== "");
+  };
+
+  // Handle success popup close and redirect to login
+  const handleSuccessClose = () => {
+    setShowSuccess(false);
+    // Reset form
+    setForm({ name: "", email: "", password: "", confirmPassword: "" });
+    setErrors({});
+    setTouched({});
+
+    // Redirect to dashboard
+    window.location.href = "/dashboard";
+  };
+
+  // Simulate API call for registration
+  const simulateRegistration = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        // Simulate successful registration
+        const success = Math.random() > 0.1; // 90% success rate for demo
+        if (success) {
+          resolve({ message: "Registration successful!" });
+        } else {
+          reject(new Error("Registration failed. Please try again."));
+        }
+      }, 2000); // 2 second delay to simulate network request
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.password !== form.confirmPassword) {
-      alert("Passwords do not match!");
+
+    if (!validateForm()) {
       return;
     }
 
     setLoading(true);
+
     try {
-      // Simulated registration logic
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // For demo purposes, we're using a simulated API call
+      // In your real app, replace this with your actual API call
+      await simulateRegistration();
 
-      // Show success message
+      // Show success popup
       setShowSuccess(true);
-
-      // Reset form
-      setForm({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-
-      // Redirect to dashboard after 2 seconds (enough time to see success message)
-      setTimeout(() => {
-        setShowSuccess(false);
-        navigate("/dashboard"); // Direct redirect to dashboard
-      }, 2000);
-    } catch (err) {
-      alert("An error occurred. Please try again.");
+    } catch (error) {
+      // Handle registration error
+      alert(error.message || "Registration failed. Please try again.");
+      console.error("Registration error:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLoginClick = () => {
+    // Redirect to login page
+    window.location.href = "/login";
   };
 
   return (
@@ -215,20 +346,26 @@ export default function RegisterForm() {
                     </p>
                   </div>
 
-                  {/* Form fields - Horizontal pairs */}
-                  <div className="space-y-6">
+                  {/* Form */}
+                  <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Name field */}
                     <div className="relative group">
                       <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/8 to-teal-400/6 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <input
                         type="text"
                         placeholder="Full Name"
-                        className="relative w-full px-6 py-4 border border-gray-200/80 dark:border-gray-600/80 rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 focus:border-emerald-400/60 transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium"
+                        className={`relative w-full px-6 py-4 border rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium ${
+                          errors.name && touched.name
+                            ? "border-red-300 focus:ring-red-400/40 focus:border-red-400/60"
+                            : "border-gray-200/80 dark:border-gray-600/80 focus:ring-emerald-400/40 focus:border-emerald-400/60"
+                        }`}
                         value={form.name}
                         onChange={(e) =>
-                          setForm({ ...form, name: e.target.value })
+                          handleInputChange("name", e.target.value)
                         }
+                        onBlur={() => handleBlur("name")}
                       />
+                      <ErrorMessage message={errors.name} show={touched.name} />
                     </div>
 
                     {/* Email field */}
@@ -237,11 +374,20 @@ export default function RegisterForm() {
                       <input
                         type="email"
                         placeholder="Email Address"
-                        className="relative w-full px-6 py-4 border border-gray-200/80 dark:border-gray-600/80 rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400/40 focus:border-teal-400/60 transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium"
+                        className={`relative w-full px-6 py-4 border rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium ${
+                          errors.email && touched.email
+                            ? "border-red-300 focus:ring-red-400/40 focus:border-red-400/60"
+                            : "border-gray-200/80 dark:border-gray-600/80 focus:ring-teal-400/40 focus:border-teal-400/60"
+                        }`}
                         value={form.email}
                         onChange={(e) =>
-                          setForm({ ...form, email: e.target.value })
+                          handleInputChange("email", e.target.value)
                         }
+                        onBlur={() => handleBlur("email")}
+                      />
+                      <ErrorMessage
+                        message={errors.email}
+                        show={touched.email}
                       />
                     </div>
 
@@ -252,11 +398,20 @@ export default function RegisterForm() {
                         <input
                           type="password"
                           placeholder="Password"
-                          className="relative w-full px-4 py-4 border border-gray-200/80 dark:border-gray-600/80 rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 focus:border-cyan-400/60 transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium"
+                          className={`relative w-full px-4 py-4 border rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium ${
+                            errors.password && touched.password
+                              ? "border-red-300 focus:ring-red-400/40 focus:border-red-400/60"
+                              : "border-gray-200/80 dark:border-gray-600/80 focus:ring-cyan-400/40 focus:border-cyan-400/60"
+                          }`}
                           value={form.password}
                           onChange={(e) =>
-                            setForm({ ...form, password: e.target.value })
+                            handleInputChange("password", e.target.value)
                           }
+                          onBlur={() => handleBlur("password")}
+                        />
+                        <ErrorMessage
+                          message={errors.password}
+                          show={touched.password}
                         />
                       </div>
 
@@ -265,69 +420,74 @@ export default function RegisterForm() {
                         <input
                           type="password"
                           placeholder="Confirm Password"
-                          className="relative w-full px-4 py-4 border border-gray-200/80 dark:border-gray-600/80 rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/40 focus:border-emerald-400/60 transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium"
+                          className={`relative w-full px-4 py-4 border rounded-2xl bg-white/98 dark:bg-gray-800/98 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 transition-all duration-300 text-base shadow-sm hover:shadow-lg font-medium ${
+                            errors.confirmPassword && touched.confirmPassword
+                              ? "border-red-300 focus:ring-red-400/40 focus:border-red-400/60"
+                              : "border-gray-200/80 dark:border-gray-600/80 focus:ring-emerald-400/40 focus:border-emerald-400/60"
+                          }`}
                           value={form.confirmPassword}
                           onChange={(e) =>
-                            setForm({
-                              ...form,
-                              confirmPassword: e.target.value,
-                            })
+                            handleInputChange("confirmPassword", e.target.value)
                           }
+                          onBlur={() => handleBlur("confirmPassword")}
+                        />
+                        <ErrorMessage
+                          message={errors.confirmPassword}
+                          show={touched.confirmPassword}
                         />
                       </div>
                     </div>
-                  </div>
 
-                  {/* Submit button */}
-                  <div className="pt-4">
-                    <button
-                      onClick={handleSubmit}
-                      type="button"
-                      disabled={loading}
-                      className="relative w-full py-4 px-8 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-[1.01] active:scale-[0.99] shadow-lg hover:shadow-emerald-500/25 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none overflow-hidden group"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                      <div className="relative flex items-center justify-center space-x-2">
-                        {loading ? (
-                          <div className="flex items-center space-x-2">
-                            <Spinner size="sm" />
-                            <span>Creating Account...</span>
-                          </div>
-                        ) : (
-                          <>
-                            <svg
-                              className="w-5 h-5"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <span>Create Account</span>
-                            <svg
-                              className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M13 7l5 5m0 0l-5 5m5-5H6"
-                              />
-                            </svg>
-                          </>
-                        )}
-                      </div>
-                    </button>
-                  </div>
+                    {/* Submit button */}
+                    <div className="pt-4">
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="relative w-full py-4 px-8 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-600 text-white font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-[1.01] active:scale-[0.99] shadow-lg hover:shadow-emerald-500/25 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none overflow-hidden group"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                        <div className="relative flex items-center justify-center space-x-2">
+                          {loading ? (
+                            <div className="flex items-center space-x-2">
+                              <Spinner size="sm" />
+                              <span>Creating Account...</span>
+                            </div>
+                          ) : (
+                            <>
+                              <svg
+                                className="w-5 h-5"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                              <span>Create Account</span>
+                              <svg
+                                className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                                />
+                              </svg>
+                            </>
+                          )}
+                        </div>
+                      </button>
+                    </div>
+                  </form>
 
                   {/* Already have account link */}
                   <div className="text-center pt-4">
                     <p className="text-gray-600 dark:text-gray-300 text-base">
                       Already have an account?{" "}
                       <button
-                        onClick={() => navigate("/login")}
+                        onClick={handleLoginClick}
                         className="text-emerald-600 dark:text-emerald-400 hover:text-teal-600 dark:hover:text-teal-400 font-bold transition-colors duration-200 hover:underline"
                       >
                         Sign In
@@ -342,7 +502,7 @@ export default function RegisterForm() {
       </div>
 
       {/* Success Message Modal */}
-      <SuccessMessage show={showSuccess} />
+      <SuccessMessage show={showSuccess} onClose={handleSuccessClose} />
     </>
   );
 }
