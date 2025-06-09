@@ -54,13 +54,38 @@ exports.addTeachSkill = async (req, res, next) => {
 
 // Add to learnSkills
 exports.addLearnSkill = async (req, res, next) => {
-  const { name, level } = req.body;
-  if (!name || !level)
-    return res.status(400).json({ message: "All fields required" });
+  try {
+    const { name, level } = req.body;
+    if (!name || !level) {
+      return res.status(400).json({ message: "Skill name and level required" });
+    }
 
-  req.user.learnSkills.push({ name, level });
-  await req.user.save();
-  res.status(200).json({ learnSkills: req.user.learnSkills });
+    const exists = req.user.learnSkills.find((s) => s.name === name);
+    if (exists) {
+      return res.status(400).json({ message: "Skill already added" });
+    }
+
+    req.user.learnSkills.push({ name, level });
+    await req.user.save();
+
+    res.status(200).json({ learnSkills: req.user.learnSkills });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Remove from learnSkills
+exports.removeLearnSkill = async (req, res, next) => {
+  try {
+    const { name } = req.params;
+
+    req.user.learnSkills = req.user.learnSkills.filter((s) => s.name !== name);
+    await req.user.save();
+
+    res.status(200).json({ learnSkills: req.user.learnSkills });
+  } catch (err) {
+    next(err);
+  }
 };
 
 // Remove teach skill
@@ -69,12 +94,4 @@ exports.removeTeachSkill = async (req, res, next) => {
   req.user.teachSkills = req.user.teachSkills.filter((s) => s.name !== name);
   await req.user.save();
   res.status(200).json({ teachSkills: req.user.teachSkills });
-};
-
-// Remove learn skill
-exports.removeLearnSkill = async (req, res, next) => {
-  const { name } = req.params;
-  req.user.learnSkills = req.user.learnSkills.filter((s) => s.name !== name);
-  await req.user.save();
-  res.status(200).json({ learnSkills: req.user.learnSkills });
 };

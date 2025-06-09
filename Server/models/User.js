@@ -30,13 +30,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    
+
+    location: {
+      type: String,
+      default: "",
+    },
+
     teachSkills: [
       {
         name: String,
         level: String,
       },
     ],
+
     learnSkills: [
       {
         name: String,

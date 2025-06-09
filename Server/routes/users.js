@@ -32,6 +32,7 @@ router.put(
     body("teachSkills").optional().isArray(),
     body("learnSkills").optional().isArray(),
     body("availability").optional().isArray(),
+    body("location").optional().isString(),
     runValidation,
   ],
   updateProfile

@@ -5,8 +5,8 @@ const {
   addSkill,
   getSkills,
   addTeachSkill,
-  addLearnSkill,
   removeTeachSkill,
+  addLearnSkill,
   removeLearnSkill,
 } = require("../controllers/skillController");
 
@@ -19,7 +19,7 @@ router.get("/", getSkills);
 // User-specific skills
 router.post("/teach", protect, addTeachSkill);
 router.post("/learn", protect, addLearnSkill);
-router.delete("/teach/:name", protect, removeTeachSkill);
 router.delete("/learn/:name", protect, removeLearnSkill);
+router.delete("/teach/:name", protect, removeTeachSkill);
 
 module.exports = router;

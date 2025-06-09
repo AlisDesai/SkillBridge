@@ -14,12 +14,15 @@ exports.getProfile = async (req, res, next) => {
 // Update user profile
 exports.updateProfile = async (req, res, next) => {
   try {
-    const { name, bio, teachSkills, learnSkills, availability } = req.body;
+    const { name, bio, teachSkills, learnSkills, availability, location } =
+      req.body;
+
     const user = await User.findByIdAndUpdate(
       req.user._id,
-      { name, bio, teachSkills, learnSkills, availability },
+      { name, bio, teachSkills, learnSkills, availability, location },
       { new: true }
     );
+
     res.json(user);
   } catch (err) {
     next(err);
