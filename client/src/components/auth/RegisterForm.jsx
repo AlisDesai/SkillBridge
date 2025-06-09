@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
+import api from "../../utils/api";
+
 
 const Spinner = ({ size }) => (
   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
@@ -226,9 +228,11 @@ export default function RegisterForm() {
     setLoading(true);
 
     try {
-      // For demo purposes, we're using a simulated API call
-      // In your real app, replace this with your actual API call
-      await simulateRegistration();
+      await api.post("/auth/register", {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      });
 
       // Show success popup
       setShowSuccess(true);
