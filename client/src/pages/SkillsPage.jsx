@@ -5,13 +5,14 @@ import SkillList from "../components/profile/SkillList";
 
 export default function SkillsPage() {
   const [newSkill, setNewSkill] = useState("");
+  const [level, setLevel] = useState("Beginner");
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const fetchSkills = async () => {
     try {
       const res = await api.get("/users/me");
-      const userSkills = res.data?.teachSkills?.map((s) => s.name) || [];
+      const userSkills = res.data?.teachSkills || [];
       setSkills(userSkills);
     } catch {
       showError("Failed to load skills");
@@ -19,15 +20,16 @@ export default function SkillsPage() {
   };
 
   const addSkill = async () => {
-    if (!newSkill) return;
+    if (!newSkill || !level) return;
     setLoading(true);
     try {
       await api.post("/skills/teach", {
         name: newSkill,
-        level: "Beginner",
+        level,
       });
       showSuccess("Skill added");
       setNewSkill("");
+      setLevel("Beginner");
       await fetchSkills();
     } catch (err) {
       showError(err.response?.data?.message || "Error adding skill");
@@ -57,7 +59,7 @@ export default function SkillsPage() {
       </h2>
 
       <div className="bg-gray-800 p-6 rounded-2xl shadow max-w-2xl space-y-4">
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 items-center">
           <input
             type="text"
             placeholder="Add new skill..."
@@ -65,6 +67,17 @@ export default function SkillsPage() {
             value={newSkill}
             onChange={(e) => setNewSkill(e.target.value)}
           />
+
+          <select
+            value={level}
+            onChange={(e) => setLevel(e.target.value)}
+            className="px-4 py-2 border rounded-xl bg-gray-900 text-white focus:ring-2 focus:ring-emerald-400"
+          >
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+
           <button
             onClick={addSkill}
             disabled={loading}

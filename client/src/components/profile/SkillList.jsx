@@ -1,4 +1,3 @@
-// src/components/profile/SkillList.jsx
 export default function SkillList({ skills = [], editable = false, onRemove }) {
   if (!skills.length) {
     return <p className="text-gray-400">No skills added yet.</p>;
@@ -6,16 +5,17 @@ export default function SkillList({ skills = [], editable = false, onRemove }) {
 
   return (
     <div className="flex flex-wrap gap-3">
-      {skills.map((skill) => (
+      {skills.map((skill, index) => (
         <span
-          key={skill}
+          key={index}
           className="bg-[#E5E7EB] text-gray-700 px-3 py-1 rounded-full flex items-center gap-2"
         >
-          {skill}
+          <span className="font-medium">{skill.name}</span>
+          <span className="text-xs text-gray-600">({skill.level})</span>
           {editable && (
             <button
               type="button"
-              onClick={() => onRemove?.(skill)}
+              onClick={() => onRemove?.(skill.name)}
               className="text-red-500 text-sm hover:text-red-600"
             >
               ×
