@@ -27,3 +27,54 @@ exports.getSkills = async (req, res, next) => {
     next(err);
   }
 };
+
+// Add to teachSkills (User only)
+exports.addTeachSkill = async (req, res, next) => {
+  try {
+    const { name, level } = req.body;
+
+    if (!name || !level) {
+      return res.status(400).json({ message: "Skill name and level required" });
+    }
+
+    // Avoid duplicates
+    const exists = req.user.teachSkills.find((s) => s.name === name);
+    if (exists) {
+      return res.status(400).json({ message: "Skill already added" });
+    }
+
+    req.user.teachSkills.push({ name, level });
+    await req.user.save();
+
+    res.status(200).json({ teachSkills: req.user.teachSkills });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Add to learnSkills
+exports.addLearnSkill = async (req, res, next) => {
+  const { name, level } = req.body;
+  if (!name || !level)
+    return res.status(400).json({ message: "All fields required" });
+
+  req.user.learnSkills.push({ name, level });
+  await req.user.save();
+  res.status(200).json({ learnSkills: req.user.learnSkills });
+};
+
+// Remove teach skill
+exports.removeTeachSkill = async (req, res, next) => {
+  const { name } = req.params;
+  req.user.teachSkills = req.user.teachSkills.filter((s) => s.name !== name);
+  await req.user.save();
+  res.status(200).json({ teachSkills: req.user.teachSkills });
+};
+
+// Remove learn skill
+exports.removeLearnSkill = async (req, res, next) => {
+  const { name } = req.params;
+  req.user.learnSkills = req.user.learnSkills.filter((s) => s.name !== name);
+  await req.user.save();
+  res.status(200).json({ learnSkills: req.user.learnSkills });
+};

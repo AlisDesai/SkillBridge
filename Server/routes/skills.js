@@ -1,13 +1,25 @@
-// /routes/skills.js
-const express = require('express');
-const { addSkill, getSkills } = require('../controllers/skillController');
-const { protect } = require('../middleware/auth');
+const express = require("express");
 const router = express.Router();
 
-// @route   POST /api/skills
-router.post('/', protect, addSkill);
+const {
+  addSkill,
+  getSkills,
+  addTeachSkill,
+  addLearnSkill,
+  removeTeachSkill,
+  removeLearnSkill,
+} = require("../controllers/skillController");
 
-// @route   GET /api/skills
-router.get('/', getSkills);
+const { protect } = require("../middleware/auth");
+
+// Global skill operations
+router.post("/", protect, addSkill);
+router.get("/", getSkills);
+
+// User-specific skills
+router.post("/teach", protect, addTeachSkill);
+router.post("/learn", protect, addLearnSkill);
+router.delete("/teach/:name", protect, removeTeachSkill);
+router.delete("/learn/:name", protect, removeLearnSkill);
 
 module.exports = router;

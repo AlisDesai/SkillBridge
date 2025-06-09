@@ -10,6 +10,15 @@ const {
 
 const router = express.Router();
 
+// Get current logged-in user
+router.get("/me", protect, async (req, res, next) => {
+  try {
+    res.json(req.user);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Get Profile
 router.get("/profile", protect, getProfile);
 
