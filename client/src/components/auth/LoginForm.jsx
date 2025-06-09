@@ -198,6 +198,7 @@ export default function LoginForm() {
 
       // Save token or user info to localStorage or Redux
       localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       setShowSuccess(true);
       setForm({ email: "", password: "" });

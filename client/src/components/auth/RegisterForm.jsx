@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useEffect } from "react";
 import api from "../../utils/api";
 
-
 const Spinner = ({ size }) => (
   <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
 );
@@ -199,8 +198,8 @@ export default function RegisterForm() {
     setErrors({});
     setTouched({});
 
-    // Redirect to dashboard
-    window.location.href = "/dashboard";
+    // Redirect to Login page
+    window.location.href = "/login";
   };
 
   // Simulate API call for registration
