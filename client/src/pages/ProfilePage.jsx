@@ -47,8 +47,11 @@ export default function ProfilePage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.put("/users/profile", form); // ✅ fixed endpoint
+      await api.put("/users/profile", form);
       showSuccess("Profile updated successfully");
+
+      // 🔁 Update Redux and localStorage to reflect changes
+      dispatch(loginUser({ email: form.email, password: form.password }));
     } catch (err) {
       showError(err.response?.data?.message || "Failed to update profile");
     } finally {

@@ -1,4 +1,6 @@
 // /controllers/userController.js
+const Match = require("../models/Match");
+
 const User = require("../models/User");
 const ErrorResponse = require("../utils/errorResponse");
 
@@ -24,6 +26,40 @@ exports.updateProfile = async (req, res, next) => {
     );
 
     res.json(user);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// /controllers/userController.js
+
+exports.getDashboardStats = async (req, res, next) => {
+  try {
+    const user = req.user;
+
+    const matches = await Match.countDocuments({
+      $or: [{ requester: user._id }, { receiver: user._id }],
+    });
+
+    const pending = await Match.countDocuments({
+      $or: [{ requester: user._id }, { receiver: user._id }],
+      status: "pending",
+    });
+
+    const completed = await Match.countDocuments({
+      $or: [{ requester: user._id }, { receiver: user._id }],
+      status: "accepted",
+    });
+
+    const skills =
+      (user.teachSkills?.length || 0) + (user.learnSkills?.length || 0);
+
+    res.json({
+      matches,
+      pending,
+      completed,
+      skills,
+    });
   } catch (err) {
     next(err);
   }

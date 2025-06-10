@@ -57,7 +57,7 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
             className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-xl"
           >
             Reject
-          </button> 
+          </button>
         </div>
       )}
     </div>
