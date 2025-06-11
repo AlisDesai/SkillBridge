@@ -1,3 +1,7 @@
+// client/src/components/profile/EditProfile.jsx
+import React from "react"; // Added React import
+import Spinner from "../common/Spinner"; // Make sure Spinner is imported
+
 export default function EditProfile({
   form,
   setForm,
@@ -8,21 +12,24 @@ export default function EditProfile({
   const isDark = theme === "dark";
 
   const inputClasses = isDark
-    ? "w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-emerald-400 bg-gray-900 text-white"
-    : "w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-[#4A6FFF]";
+    ? "w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-emerald-400 bg-gray-700 text-white placeholder-gray-400 transition duration-200"
+    : "w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#4A6FFF] text-gray-900 placeholder-gray-500 transition duration-200";
 
   const labelClasses = isDark
-    ? "block text-sm font-medium text-gray-300 mb-1"
-    : "block text-sm font-medium text-gray-700 mb-1";
+    ? "block text-sm font-medium text-gray-300 mb-2"
+    : "block text-sm font-medium text-gray-700 mb-2";
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 max-w-lg">
+    <form onSubmit={onSubmit} className="space-y-6 max-w-lg mx-auto">
       {/* Name Input */}
       <div>
-        <label className={labelClasses}>Full Name</label>
+        <label htmlFor="name" className={labelClasses}>
+          Full Name
+        </label>
         <input
+          id="name"
           type="text"
-          placeholder="Full Name"
+          placeholder="Your Full Name"
           className={inputClasses}
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -31,23 +38,28 @@ export default function EditProfile({
 
       {/* Email Input */}
       <div>
-        <label className={labelClasses}>Email</label>
+        <label htmlFor="email" className={labelClasses}>
+          Email Address
+        </label>
         <input
+          id="email"
           type="email"
-          placeholder="Email"
-          className={inputClasses}
+          placeholder="Your Email"
+          className={`${inputClasses} cursor-not-allowed`}
           value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          disabled
+          disabled // Email typically cannot be changed via profile edit
         />
       </div>
 
       {/* Location Input */}
       <div>
-        <label className={labelClasses}>Location</label>
+        <label htmlFor="location" className={labelClasses}>
+          Location
+        </label>
         <input
+          id="location"
           type="text"
-          placeholder="Location"
+          placeholder="e.g., Surat, Gujarat"
           className={inputClasses}
           value={form.location}
           onChange={(e) => setForm({ ...form, location: e.target.value })}
@@ -56,10 +68,13 @@ export default function EditProfile({
 
       {/* Bio Textarea */}
       <div>
-        <label className={labelClasses}>Bio</label>
+        <label htmlFor="bio" className={labelClasses}>
+          Bio
+        </label>
         <textarea
-          rows="4"
-          placeholder="Short bio"
+          id="bio"
+          rows="5"
+          placeholder="Tell us a little about yourself (e.g., your interests, goals, what you can offer/learn)."
           value={form.bio}
           onChange={(e) => setForm({ ...form, bio: e.target.value })}
           className={inputClasses}
@@ -70,9 +85,15 @@ export default function EditProfile({
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition disabled:opacity-50"
+        className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
-        {loading ? "Saving..." : "Save Profile"}
+        {loading ? (
+          <>
+            <Spinner size={20} color="#FFF" /> Saving...
+          </>
+        ) : (
+          "Save Changes"
+        )}
       </button>
     </form>
   );
