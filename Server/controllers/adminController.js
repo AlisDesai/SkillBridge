@@ -504,48 +504,123 @@ exports.deleteReview = async (req, res, next) => {
   }
 };
 
-// @desc    Get all skills with stats
-// @route   GET /api/admin/skills
-// @access  Private/Admin
-// @desc    Get all skills with stats
-// @route   GET /api/admin/skills
-// @access  Private/Admin
+// REPLACE getAllSkills function (around line 300)
+// In adminController.js - replace the getAllSkills function
 exports.getAllSkills = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     const search = req.query.search || "";
+    const type = req.query.type || "";
 
-    // Build filter - removed type filter since Skill model doesn't have type field
-    let filter = {};
-    if (search) filter.name = { $regex: search, $options: "i" };
+    let pipeline = [
+      { $match: {} },
+      {
+        $project: {
+          name: 1,
+          email: 1,
+          avatar: 1,
+          skills: {
+            $concatArrays: [
+              {
+                $map: {
+                  input: { $ifNull: ["$teachSkills", []] },
+                  as: "skill",
+                  in: {
+                    _id: "$$skill._id",
+                    name: "$$skill.name",
+                    // category: {
+                    //   $ifNull: ["$$skill.category", "Uncategorized"],
+                    // },
+                    subcategory: { $ifNull: ["$$skill.subcategory", null] },
+                    description: {
+                      $ifNull: ["$$skill.description", "No description"],
+                    },
+                    level: { $ifNull: ["$$skill.level", "Beginner"] },
+                    type: "teach",
+                    user: {
+                      _id: "$_id",
+                      name: "$name",
+                      email: "$email",
+                      avatar: { $ifNull: ["$avatar", null] },
+                    },
+                    createdAt: { $ifNull: ["$$skill.createdAt", "$createdAt"] },
+                    isVerified: { $ifNull: ["$$skill.isVerified", false] },
+                  },
+                },
+              },
+              {
+                $map: {
+                  input: { $ifNull: ["$learnSkills", []] },
+                  as: "skill",
+                  in: {
+                    _id: "$$skill._id",
+                    name: "$$skill.name",
+                    // category: {
+                    //   $ifNull: ["$$skill.category", "Uncategorized"],
+                    // },
+                    subcategory: { $ifNull: ["$$skill.subcategory", null] },
+                    description: {
+                      $ifNull: ["$$skill.description", "No description"],
+                    },
+                    level: { $ifNull: ["$$skill.level", "Beginner"] },
+                    type: "learn",
+                    user: {
+                      _id: "$_id",
+                      name: "$name",
+                      email: "$email",
+                      avatar: { $ifNull: ["$avatar", null] },
+                    },
+                    createdAt: { $ifNull: ["$$skill.createdAt", "$createdAt"] },
+                    isVerified: { $ifNull: ["$$skill.isVerified", false] },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+      { $unwind: { path: "$skills", preserveNullAndEmptyArrays: false } },
+      { $replaceRoot: { newRoot: "$skills" } },
+    ];
 
-    const [skills, totalSkills] = await Promise.all([
-      Skill.find(filter)
-        .populate("createdBy", "name email avatar") // Changed from "user" to "createdBy"
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit),
-      Skill.countDocuments(filter),
-    ]);
+    // Add filters
+    if (type) {
+      pipeline.push({ $match: { type: type } });
+    }
 
-    // Map skills to match frontend expectations
-    const mappedSkills = skills.map((skill) => ({
-      ...skill.toObject(),
-      user: skill.createdBy, // Map createdBy to user for frontend compatibility
-    }));
+    if (search) {
+      pipeline.push({
+        $match: {
+          name: { $regex: search, $options: "i" },
+        },
+      });
+    }
 
-    // Since there's no type field, create mock statistics or remove type filter from frontend
-    const skillStats = [{ _id: "total", count: totalSkills }];
+    // Get total count
+    const countPipeline = [...pipeline, { $count: "total" }];
+    const countResult = await User.aggregate(countPipeline);
+    const totalSkills = countResult[0]?.total || 0;
+
+    // Add pagination
+    pipeline.push(
+      { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit }
+    );
+
+    const skills = await User.aggregate(pipeline);
+
+    console.log("Skills found:", skills.length); // Debug log
 
     const totalPages = Math.ceil(totalSkills / limit);
 
     res.status(200).json({
       success: true,
       data: {
-        skills: mappedSkills,
-        statistics: skillStats,
+        skills,
+        statistics: [{ _id: "total", count: totalSkills }],
         pagination: {
           currentPage: page,
           totalPages,
@@ -556,22 +631,44 @@ exports.getAllSkills = async (req, res, next) => {
       },
     });
   } catch (error) {
+    console.error("Error fetching skills:", error);
     next(error);
   }
 };
 
-// @desc    Delete a skill
-// @route   DELETE /api/admin/skills/:id
-// @access  Private/Admin
+// REPLACE deleteSkill function
 exports.deleteSkill = async (req, res, next) => {
   try {
-    const skill = await Skill.findById(req.params.id);
+    const skillId = req.params.id;
 
-    if (!skill) {
+    // Find and remove from User arrays
+    const userWithTeachSkill = await User.findOne({
+      "teachSkills._id": skillId,
+    });
+
+    const userWithLearnSkill = await User.findOne({
+      "learnSkills._id": skillId,
+    });
+
+    if (!userWithTeachSkill && !userWithLearnSkill) {
       return next(new ErrorResponse("Skill not found", 404));
     }
 
-    await skill.deleteOne();
+    // Remove from teachSkills
+    if (userWithTeachSkill) {
+      userWithTeachSkill.teachSkills = userWithTeachSkill.teachSkills.filter(
+        (skill) => skill._id.toString() !== skillId
+      );
+      await userWithTeachSkill.save();
+    }
+
+    // Remove from learnSkills
+    if (userWithLearnSkill) {
+      userWithLearnSkill.learnSkills = userWithLearnSkill.learnSkills.filter(
+        (skill) => skill._id.toString() !== skillId
+      );
+      await userWithLearnSkill.save();
+    }
 
     res.status(200).json({
       success: true,

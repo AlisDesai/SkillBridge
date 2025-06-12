@@ -9,88 +9,28 @@ import { showError, showSuccess } from "../../utils/toast";
 import Button from "../common/Button";
 import Modal from "../common/Modal";
 
-const SkillRow = ({ skill, onDelete, isDeleting }) => {
-  const getTypeColor = (type) => {
+const SkillRow = ({ skill, onDelete, onViewDetails, isDeleting }) => {
+  const getSkillTypeColor = (type) => {
     const colors = {
-      teach: "bg-green-100 text-green-800",
-      learn: "bg-blue-100 text-blue-800",
+      teach: "text-blue-600 bg-blue-100",
+      learn: "text-green-600 bg-green-100",
+      both: "text-purple-600 bg-purple-100",
     };
-    return colors[type] || "bg-gray-100 text-gray-800";
+    return colors[type] || "text-gray-600 bg-gray-100";
   };
 
-  const getLevelColor = (level) => {
-    const colors = {
-      beginner: "bg-yellow-100 text-yellow-800",
-      intermediate: "bg-orange-100 text-orange-800",
-      advanced: "bg-red-100 text-red-800",
-      expert: "bg-purple-100 text-purple-800",
-    };
-    return colors[level] || "bg-gray-100 text-gray-800";
+  const truncateText = (text, maxLength = 50) => {
+    if (!text) return "";
+    return text.length > maxLength
+      ? text.substring(0, maxLength) + "..."
+      : text;
   };
 
   return (
     <tr className="hover:bg-gray-50">
-      <td className="px-6 py-4 whitespace-nowrap">
-        <div className="flex items-center">
-          <div className="flex-shrink-0 w-10 h-10">
-            <div className="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center">
-              <svg
-                className="w-5 h-5 text-gray-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="ml-4">
-            <div className="text-sm font-medium text-gray-900">
-              {skill.name}
-            </div>
-            <div className="text-sm text-gray-500">
-              {skill.category || "Uncategorized"}
-            </div>
-          </div>
-        </div>
-      </td>
-
-      <td className="px-6 py-4 whitespace-nowrap">
-        <span
-          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeColor(
-            skill.type
-          )}`}
-        >
-          {skill.type === "teach" ? "Teaching" : "Learning"}
-        </span>
-      </td>
-
-      <td className="px-6 py-4 whitespace-nowrap">
-        <span
-          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getLevelColor(
-            skill.level
-          )}`}
-        >
-          {skill.level
-            ? skill.level.charAt(0).toUpperCase() + skill.level.slice(1)
-            : "N/A"}
-        </span>
-      </td>
-
       <td className="px-6 py-4">
-        <div className="text-sm text-gray-900 max-w-xs truncate">
-          {skill.description || "No description"}
-        </div>
-      </td>
-
-      <td className="px-6 py-4 whitespace-nowrap">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+        <div className="flex items-start gap-3">
+          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
             {skill.user?.avatar ? (
               <img
                 src={skill.user.avatar}
@@ -103,37 +43,97 @@ const SkillRow = ({ skill, onDelete, isDeleting }) => {
               </span>
             )}
           </div>
-          <div>
-            <div className="text-sm font-medium text-gray-900">
-              {skill.user?.name || "Unknown User"}
+          <div className="min-w-0 flex-1">
+            <div className="text-sm font-medium text-gray-900 truncate">
+              {skill.user?.name || "Anonymous"}
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500 truncate">
               {skill.user?.email || "No email"}
             </div>
           </div>
         </div>
       </td>
 
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        {new Date(skill.createdAt).toLocaleDateString()}
+      <td className="px-6 py-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-gray-900">
+            {skill.name}
+          </span>
+          {skill.category && (
+            <span className="inline-flex px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">
+              {skill.category}
+            </span>
+          )}
+        </div>
+      </td>
+
+      <td className="px-6 py-4">
+        <div className="max-w-xs">
+          <p className="text-sm text-gray-900">
+            {truncateText(skill.description)}
+          </p>
+        </div>
+      </td>
+
+      <td className="px-6 py-4">
+        <span
+          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getSkillTypeColor(
+            skill.type
+          )}`}
+        >
+          {skill.type || "N/A"}
+        </span>
+      </td>
+
+      <td className="px-6 py-4">
+        <div className="flex items-center gap-2">
+          {skill.level && (
+            <span className="inline-flex px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+              Level {skill.level}
+            </span>
+          )}
+          {skill.isVerified && (
+            <span className="inline-flex px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+              Verified
+            </span>
+          )}
+        </div>
+      </td>
+
+      <td className="px-6 py-4 whitespace-nowrap">
+        <div className="text-sm text-gray-900">
+          {new Date(skill.createdAt).toLocaleDateString()}
+        </div>
+        <div className="text-sm text-gray-500">
+          {new Date(skill.createdAt).toLocaleTimeString()}
+        </div>
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-        <Button
-          variant="danger"
-          size="sm"
-          onClick={() => onDelete(skill)}
-          disabled={isDeleting === skill._id}
-        >
-          {isDeleting === skill._id ? (
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
-              Deleting...
-            </div>
-          ) : (
-            "Delete"
-          )}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onViewDetails(skill)}
+          >
+            View
+          </Button>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => onDelete(skill)}
+            disabled={isDeleting === skill._id}
+          >
+            {isDeleting === skill._id ? (
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
+                Deleting...
+              </div>
+            ) : (
+              "Delete"
+            )}
+          </Button>
+        </div>
       </td>
     </tr>
   );
@@ -145,10 +145,38 @@ const SkillDetailsModal = ({ skill, isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Skill Details" size="lg">
       <div className="space-y-6">
-        {/* Basic Info */}
+        {/* User Info */}
+        <div className="space-y-3">
+          <h4 className="font-medium text-gray-900">Skill Owner</h4>
+          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+            <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+              {skill.user?.avatar ? (
+                <img
+                  src={skill.user.avatar}
+                  alt={skill.user.name}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+              ) : (
+                <span className="text-gray-600 font-medium">
+                  {skill.user?.name?.charAt(0)?.toUpperCase() || "?"}
+                </span>
+              )}
+            </div>
+            <div>
+              <div className="font-medium text-gray-900">
+                {skill.user?.name || "Anonymous"}
+              </div>
+              <div className="text-sm text-gray-500">
+                {skill.user?.email || "No email"}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Skill Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">Skill Information</h4>
+            <h4 className="font-medium text-gray-900">Basic Information</h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">Name:</span>
@@ -156,81 +184,65 @@ const SkillDetailsModal = ({ skill, isOpen, onClose }) => {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Category:</span>
-                <span className="text-gray-900">
-                  {skill.category || "Uncategorized"}
-                </span>
+                <span className="text-gray-900">{skill.category || "N/A"}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Type:</span>
-                <span className="text-gray-900 capitalize">{skill.type}</span>
+                <span className="text-gray-900 capitalize">
+                  {skill.type || "N/A"}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Level:</span>
-                <span className="text-gray-900 capitalize">
-                  {skill.level || "Not specified"}
-                </span>
+                <span className="text-gray-900">{skill.level || "N/A"}</span>
               </div>
             </div>
           </div>
 
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">User Information</h4>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                {skill.user?.avatar ? (
-                  <img
-                    src={skill.user.avatar}
-                    alt={skill.user.name}
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                ) : (
-                  <span className="text-gray-600 font-medium">
-                    {skill.user?.name?.charAt(0)?.toUpperCase() || "?"}
-                  </span>
-                )}
-              </div>
-              <div>
-                <div className="font-medium text-gray-900">
-                  {skill.user?.name || "Unknown User"}
-                </div>
-                <div className="text-sm text-gray-500">
-                  {skill.user?.email || "No email"}
-                </div>
+            <h4 className="font-medium text-gray-900">Status</h4>
+            <div className="space-y-2">
+              {skill.isVerified && (
+                <span className="inline-flex px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full">
+                  Verified Skill
+                </span>
+              )}
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Created:</span>
+                <span className="text-gray-900">
+                  {new Date(skill.createdAt).toLocaleString()}
+                </span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Description */}
-        {skill.description && (
+        <div className="space-y-3">
+          <h4 className="font-medium text-gray-900">Description</h4>
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="text-gray-900 leading-relaxed">
+              {skill.description || "No description provided"}
+            </p>
+          </div>
+        </div>
+
+        {/* Tags */}
+        {skill.tags && skill.tags.length > 0 && (
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">Description</h4>
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <p className="text-gray-900 leading-relaxed">
-                {skill.description}
-              </p>
+            <h4 className="font-medium text-gray-900">Tags</h4>
+            <div className="flex flex-wrap gap-2">
+              {skill.tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="inline-flex px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
           </div>
         )}
-
-        {/* Metadata */}
-        <div className="space-y-3">
-          <h4 className="font-medium text-gray-900">Timestamps</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Created:</span>
-              <span className="text-gray-900">
-                {new Date(skill.createdAt).toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Updated:</span>
-              <span className="text-gray-900">
-                {new Date(skill.updatedAt).toLocaleString()}
-              </span>
-            </div>
-          </div>
-        </div>
 
         <div className="flex items-center justify-end pt-4">
           <Button variant="outline" onClick={onClose}>
@@ -247,14 +259,13 @@ export default function SkillManagement() {
   const {
     adminSkills,
     skillsPagination,
-    skillStatistics,
-    skillsLoading,
+    loading: skillsLoading,
     error,
   } = useSelector((state) => state.admin);
 
   const [filters, setFilters] = useState({
-    type: "",
     search: "",
+    type: "",
     page: 1,
   });
   const [deleteModal, setDeleteModal] = useState({ show: false, skill: null });
@@ -347,33 +358,6 @@ export default function SkillManagement() {
     );
   };
 
-  const renderStatistics = () => {
-    if (!skillStatistics?.length) return null;
-
-    return (
-      <div className="bg-white rounded-2xl shadow-sm border p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Skill Statistics
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {skillStatistics.map((stat) => (
-            <div
-              key={stat._id}
-              className="text-center p-4 bg-gray-50 rounded-lg"
-            >
-              <div className="text-2xl font-bold text-gray-900">
-                {stat.count}
-              </div>
-              <div className="text-sm text-gray-600 capitalize">
-                {stat._id === "teach" ? "Teaching Skills" : "Learning Skills"}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -382,14 +366,9 @@ export default function SkillManagement() {
           <h2 className="text-2xl font-semibold text-gray-800">
             Skill Management
           </h2>
-          <p className="text-gray-600 mt-1">
-            Manage platform skills and categories
-          </p>
+          <p className="text-gray-600 mt-1">Monitor and manage user skills</p>
         </div>
       </div>
-
-      {/* Statistics */}
-      {renderStatistics()}
 
       {/* Filters */}
       <div className="bg-white rounded-2xl shadow-sm border p-6">
@@ -400,23 +379,22 @@ export default function SkillManagement() {
             </label>
             <input
               type="text"
-              placeholder="Search by skill name..."
               value={filters.search}
               onChange={(e) => handleFilterChange("search", e.target.value)}
+              placeholder="Search by skill name..."
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#FF7A59] focus:border-transparent"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Skill Type
+              Type Filter
             </label>
             <select
               value={filters.type}
               onChange={(e) => handleFilterChange("type", e.target.value)}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#FF7A59] focus:border-transparent"
             >
-              <option value="">All Types</option>
               <option value="teach">Teaching</option>
               <option value="learn">Learning</option>
             </select>
@@ -425,7 +403,7 @@ export default function SkillManagement() {
           <div className="flex items-end">
             <Button
               variant="outline"
-              onClick={() => setFilters({ type: "", search: "", page: 1 })}
+              onClick={() => setFilters({ search: "", type: "", page: 1 })}
               className="w-full"
             >
               Clear Filters
@@ -455,22 +433,22 @@ export default function SkillManagement() {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Skill
+                    User
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Type
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Level
+                    Skill Name
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Description
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    User
+                    Type
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Created
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
@@ -483,6 +461,7 @@ export default function SkillManagement() {
                     key={skill._id}
                     skill={skill}
                     onDelete={handleDeleteSkill}
+                    onViewDetails={handleViewDetails}
                     isDeleting={deletingId}
                   />
                 ))}
@@ -514,14 +493,16 @@ export default function SkillManagement() {
           </p>
           {deleteModal.skill && (
             <div className="p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-3 mb-2">
                 <span className="font-medium">{deleteModal.skill.name}</span>
-                <span className="text-sm text-gray-500 capitalize">
-                  {deleteModal.skill.type}
+                <span className="text-sm text-gray-500">
+                  by {deleteModal.skill.user?.name || "Unknown"}
                 </span>
               </div>
               <p className="text-sm text-gray-600">
-                Owner: {deleteModal.skill.user?.name || "Unknown User"}
+                {deleteModal.skill.description?.length > 100
+                  ? deleteModal.skill.description.substring(0, 100) + "..."
+                  : deleteModal.skill.description || "No description"}
               </p>
             </div>
           )}
