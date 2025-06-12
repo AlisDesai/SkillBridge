@@ -57,7 +57,7 @@ const ErrorMessage = ({ message }) => {
   );
 };
 
-const SuccessMessage = ({ show }) => {
+const SuccessMessage = ({ show, userRole }) => {
   if (!show) return null;
 
   return (
@@ -85,7 +85,7 @@ const SuccessMessage = ({ show }) => {
           </h3>
           <p className="text-gray-300 mb-6">
             Login successful! Redirecting to your{" "}
-            {data?.user?.role === "admin" ? "admin" : ""} dashboard...
+            {userRole === "admin" ? "admin" : ""} dashboard...
           </p>
 
           <div className="w-full bg-gray-800 rounded-full h-2 mb-4">
@@ -111,6 +111,7 @@ export default function LoginForm() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [userRole, setUserRole] = useState("");
   const [touched, setTouched] = useState({});
 
   const navigate = useNavigate();
@@ -201,6 +202,7 @@ export default function LoginForm() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
+      setUserRole(data.user.role); // Store user role
       setShowSuccess(true);
       setForm({ email: "", password: "" });
       setErrors({});
@@ -566,7 +568,7 @@ export default function LoginForm() {
         </div>
       </div>
 
-      <SuccessMessage show={showSuccess} />
+      <SuccessMessage show={showSuccess} userRole={userRole} />
     </>
   );
 }
