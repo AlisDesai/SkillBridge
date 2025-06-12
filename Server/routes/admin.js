@@ -1,32 +1,41 @@
-// /routes/admin.js
-
-const { adminOnly } = require("../middleware/admin");
-
 const express = require("express");
-const { getAllUsers, deleteUser } = require("../controllers/adminController");
 const { protect } = require("../middleware/auth");
+const { adminOnly } = require("../middleware/admin");
 const router = express.Router();
 
 const {
   getAdminStats,
+  getSystemHealth,
+  getUserAnalytics,
+  getAllUsers,
   updateUser,
+  deleteUser,
   getAllReviews,
   deleteReview,
   getAllSkills,
   deleteSkill,
 } = require("../controllers/adminController");
 
-router.get("/stats", protect, adminOnly, getAdminStats);
-router.put("/users/:id", protect, adminOnly, updateUser);
-router.get("/reviews", protect, adminOnly, getAllReviews);
-router.delete("/reviews/:id", protect, adminOnly, deleteReview);
-router.get("/skills", protect, adminOnly, getAllSkills);
-router.delete("/skills/:id", protect, adminOnly, deleteSkill);
+// Protect all routes - require authentication and admin role
+router.use(protect);
+router.use(adminOnly);
 
-// @route   GET /api/admin/users
-router.get("/users", protect, adminOnly, getAllUsers);
+// Admin Dashboard Routes
+router.get("/stats", getAdminStats);
+router.get("/system-health", getSystemHealth);
+router.get("/user-analytics", getUserAnalytics);
 
-// @route   DELETE /api/admin/users/:id
-router.delete("/users/:id", protect, adminOnly, deleteUser);
+// User Management Routes
+router.get("/users", getAllUsers);
+router.put("/users/:id", updateUser);
+router.delete("/users/:id", deleteUser);
+
+// Review Management Routes
+router.get("/reviews", getAllReviews);
+router.delete("/reviews/:id", deleteReview);
+
+// Skill Management Routes
+router.get("/skills", getAllSkills);
+router.delete("/skills/:id", deleteSkill);
 
 module.exports = router;

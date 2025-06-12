@@ -1,10 +1,21 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAdminStatsAsync } from "../redux/slices/adminSlice";
-import { showError } from "../utils/toast";
+import {
+  fetchAdminStatsAsync,
+  fetchSystemHealthAsync,
+  fetchUserAnalyticsAsync,
+} from "../redux/slices/adminSlice";
+import { showError, showSuccess } from "../utils/toast";
 import Button from "../components/common/Button";
 
-const StatCard = ({ title, value, icon, color = "blue", trend = null }) => {
+const StatCard = ({
+  title,
+  value,
+  icon,
+  color = "blue",
+  trend = null,
+  loading = false,
+}) => {
   const colorClasses = {
     blue: "bg-blue-50 border-blue-200 text-blue-600",
     green: "bg-green-50 border-green-200 text-green-600",
@@ -19,8 +30,12 @@ const StatCard = ({ title, value, icon, color = "blue", trend = null }) => {
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
           <div className="flex items-center gap-2">
-            <p className="text-3xl font-bold text-gray-900">{value || 0}</p>
-            {trend && (
+            {loading ? (
+              <div className="w-8 h-8 bg-gray-200 rounded animate-pulse"></div>
+            ) : (
+              <p className="text-3xl font-bold text-gray-900">{value || 0}</p>
+            )}
+            {trend && !loading && (
               <span
                 className={`text-xs px-2 py-1 rounded-full ${
                   trend.type === "increase"
@@ -38,6 +53,52 @@ const StatCard = ({ title, value, icon, color = "blue", trend = null }) => {
         >
           {icon}
         </div>
+      </div>
+    </div>
+  );
+};
+
+const ActivityItem = ({ activity, loading = false }) => {
+  if (loading) {
+    return (
+      <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg animate-pulse">
+        <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
+        <div className="flex-1">
+          <div className="h-4 bg-gray-300 rounded w-3/4 mb-1"></div>
+          <div className="h-3 bg-gray-300 rounded w-1/2"></div>
+        </div>
+      </div>
+    );
+  }
+
+  const severityColors = {
+    info: "bg-blue-50 border-l-blue-500",
+    success: "bg-green-50 border-l-green-500",
+    warning: "bg-yellow-50 border-l-yellow-500",
+    error: "bg-red-50 border-l-red-500",
+  };
+
+  const dotColors = {
+    info: "bg-blue-500",
+    success: "bg-green-500",
+    warning: "bg-yellow-500",
+    error: "bg-red-500",
+  };
+
+  return (
+    <div
+      className={`flex items-center gap-4 p-4 rounded-lg border-l-4 ${
+        severityColors[activity.severity]
+      }`}
+    >
+      <div
+        className={`w-2 h-2 rounded-full ${dotColors[activity.severity]}`}
+      ></div>
+      <div className="flex-1">
+        <p className="text-sm font-medium text-gray-900">{activity.message}</p>
+        <p className="text-xs text-gray-500">
+          {new Date(activity.timestamp).toLocaleString()}
+        </p>
       </div>
     </div>
   );
@@ -77,18 +138,41 @@ const QuickActionCard = ({
 
 export default function AdminDashboard() {
   const dispatch = useDispatch();
-  const { adminStats, loading, error } = useSelector((state) => state.admin);
-  const [activeTab, setActiveTab] = useState("overview");
+  const {
+    adminStats,
+    systemHealth,
+    userAnalytics,
+    loading,
+    healthLoading,
+    analyticsLoading,
+    error,
+  } = useSelector((state) => state.admin || {});
+
   const [refreshing, setRefreshing] = useState(false);
+  const [lastRefresh, setLastRefresh] = useState(new Date());
 
   useEffect(() => {
-    dispatch(fetchAdminStatsAsync());
+    loadAllData();
   }, [dispatch]);
+
+  const loadAllData = async () => {
+    try {
+      await Promise.all([
+        dispatch(fetchAdminStatsAsync()).unwrap(),
+        dispatch(fetchSystemHealthAsync()).unwrap(),
+        dispatch(fetchUserAnalyticsAsync()).unwrap(),
+      ]);
+      setLastRefresh(new Date());
+    } catch (err) {
+      showError("Failed to load dashboard data");
+    }
+  };
 
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      await dispatch(fetchAdminStatsAsync()).unwrap();
+      await loadAllData();
+      showSuccess("Dashboard refreshed successfully");
     } catch (err) {
       showError("Failed to refresh data");
     } finally {
@@ -97,9 +181,9 @@ export default function AdminDashboard() {
   };
 
   const handleQuickAction = (action) => {
-    // These will be implemented when we add the management components
+    // Navigate to management components
     console.log(`Quick action: ${action}`);
-    showError("Feature will be available in management components");
+    showError("Navigation will be implemented with routing");
   };
 
   if (loading && !adminStats) {
@@ -124,6 +208,9 @@ export default function AdminDashboard() {
   const stats = adminStats?.overview || {};
   const topSkills = adminStats?.topSkills || [];
   const matchStats = adminStats?.matchStatistics || {};
+  const recentActivities = adminStats?.recentActivities || [];
+  const platformHealth = adminStats?.platformHealth || {};
+  const userGrowth = adminStats?.userGrowth || [];
 
   return (
     <div className="space-y-8 max-w-7xl">
@@ -131,7 +218,10 @@ export default function AdminDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-600 mt-1">Manage your SkillBridge platform</p>
+          <p className="text-gray-600 mt-1">
+            Manage your SkillBridge platform · Last updated:{" "}
+            {lastRefresh.toLocaleTimeString()}
+          </p>
         </div>
         <div className="flex items-center gap-3">
           <Button
@@ -172,6 +262,14 @@ export default function AdminDashboard() {
           title="Total Users"
           value={stats.totalUsers}
           color="blue"
+          loading={loading}
+          trend={
+            stats.userGrowthRate && {
+              type:
+                parseFloat(stats.userGrowthRate) >= 0 ? "increase" : "decrease",
+              value: Math.abs(parseFloat(stats.userGrowthRate)),
+            }
+          }
           icon={
             <svg
               className="w-6 h-6"
@@ -193,6 +291,7 @@ export default function AdminDashboard() {
           title="Total Skills"
           value={stats.totalSkills}
           color="green"
+          loading={loading}
           icon={
             <svg
               className="w-6 h-6"
@@ -214,6 +313,7 @@ export default function AdminDashboard() {
           title="Total Matches"
           value={stats.totalMatches}
           color="purple"
+          loading={loading}
           icon={
             <svg
               className="w-6 h-6"
@@ -235,6 +335,7 @@ export default function AdminDashboard() {
           title="Total Reviews"
           value={stats.totalReviews}
           color="yellow"
+          loading={loading}
           icon={
             <svg
               className="w-6 h-6"
@@ -262,15 +363,43 @@ export default function AdminDashboard() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">New Users (30 days)</span>
-              <span className="font-medium text-gray-900">
-                {stats.recentUsers || 0}
-              </span>
+              {loading ? (
+                <div className="w-8 h-4 bg-gray-200 rounded animate-pulse"></div>
+              ) : (
+                <span className="font-medium text-gray-900">
+                  {stats.recentUsers || 0}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Weekly Users</span>
+              {loading ? (
+                <div className="w-8 h-4 bg-gray-200 rounded animate-pulse"></div>
+              ) : (
+                <span className="font-medium text-gray-900">
+                  {stats.weeklyUsers || 0}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Active Users</span>
+              {loading ? (
+                <div className="w-8 h-4 bg-gray-200 rounded animate-pulse"></div>
+              ) : (
+                <span className="font-medium text-green-600">
+                  {stats.activeUsers || 0}
+                </span>
+              )}
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Average Rating</span>
-              <span className="font-medium text-gray-900">
-                {stats.averageRating || 0}★
-              </span>
+              {loading ? (
+                <div className="w-8 h-4 bg-gray-200 rounded animate-pulse"></div>
+              ) : (
+                <span className="font-medium text-gray-900">
+                  {stats.averageRating || 0}★
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -282,21 +411,43 @@ export default function AdminDashboard() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Pending</span>
-              <span className="font-medium text-yellow-600">
-                {matchStats.pending || 0}
-              </span>
+              {loading ? (
+                <div className="w-8 h-4 bg-gray-200 rounded animate-pulse"></div>
+              ) : (
+                <span className="font-medium text-yellow-600">
+                  {matchStats.pending || 0}
+                </span>
+              )}
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Accepted</span>
-              <span className="font-medium text-green-600">
-                {matchStats.accepted || 0}
-              </span>
+              {loading ? (
+                <div className="w-8 h-4 bg-gray-200 rounded animate-pulse"></div>
+              ) : (
+                <span className="font-medium text-green-600">
+                  {matchStats.accepted || 0}
+                </span>
+              )}
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">Completed</span>
-              <span className="font-medium text-blue-600">
-                {matchStats.completed || 0}
-              </span>
+              {loading ? (
+                <div className="w-8 h-4 bg-gray-200 rounded animate-pulse"></div>
+              ) : (
+                <span className="font-medium text-blue-600">
+                  {matchStats.completed || 0}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600">Rejected</span>
+              {loading ? (
+                <div className="w-8 h-4 bg-gray-200 rounded animate-pulse"></div>
+              ) : (
+                <span className="font-medium text-red-600">
+                  {matchStats.rejected || 0}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -306,23 +457,88 @@ export default function AdminDashboard() {
             Top Skills
           </h3>
           <div className="space-y-3">
-            {topSkills.slice(0, 5).map((skill, index) => (
-              <div
-                key={skill._id}
-                className="flex items-center justify-between"
-              >
-                <span className="text-sm text-gray-600 truncate">
-                  {skill._id}
-                </span>
-                <span className="font-medium text-gray-900">{skill.count}</span>
-              </div>
-            ))}
-            {topSkills.length === 0 && (
+            {loading
+              ? Array.from({ length: 5 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="w-20 h-4 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="w-8 h-4 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                ))
+              : topSkills.slice(0, 5).map((skill, index) => (
+                  <div
+                    key={skill._id || index}
+                    className="flex items-center justify-between"
+                  >
+                    <span className="text-sm text-gray-600 truncate">
+                      {skill._id}
+                    </span>
+                    <span className="font-medium text-gray-900">
+                      {skill.count}
+                    </span>
+                  </div>
+                ))}
+            {!loading && topSkills.length === 0 && (
               <p className="text-sm text-gray-500">No skills data available</p>
             )}
           </div>
         </div>
       </div>
+
+      {/* Platform Health */}
+      {(systemHealth || healthLoading) && (
+        <div className="bg-white rounded-2xl shadow-sm border p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">
+            Platform Health
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">
+                {healthLoading ? (
+                  <div className="w-12 h-8 bg-gray-200 rounded animate-pulse mx-auto"></div>
+                ) : (
+                  "Online"
+                )}
+              </div>
+              <div className="text-sm text-gray-600">System Status</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">
+                {healthLoading ? (
+                  <div className="w-16 h-8 bg-gray-200 rounded animate-pulse mx-auto"></div>
+                ) : (
+                  `${Math.floor((systemHealth?.server?.uptime || 0) / 3600)}h`
+                )}
+              </div>
+              <div className="text-sm text-gray-600">Uptime</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">
+                {healthLoading ? (
+                  <div className="w-12 h-8 bg-gray-200 rounded animate-pulse mx-auto"></div>
+                ) : (
+                  `${Math.round(
+                    (systemHealth?.server?.memory?.heapUsed || 0) / 1024 / 1024
+                  )}MB`
+                )}
+              </div>
+              <div className="text-sm text-gray-600">Memory</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-yellow-600">
+                {healthLoading ? (
+                  <div className="w-12 h-8 bg-gray-200 rounded animate-pulse mx-auto"></div>
+                ) : (
+                  platformHealth.activeUsers || 0
+                )}
+              </div>
+              <div className="text-sm text-gray-600">Active Users</div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <div>
@@ -397,8 +613,8 @@ export default function AdminDashboard() {
           />
 
           <QuickActionCard
-            title="System Settings"
-            description="Configure platform settings"
+            title="System Analytics"
+            description="View detailed analytics and reports"
             color="purple"
             icon={
               <svg
@@ -411,17 +627,11 @@ export default function AdminDashboard() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                 />
               </svg>
             }
-            onClick={() => handleQuickAction("settings")}
+            onClick={() => handleQuickAction("analytics")}
           />
         </div>
       </div>
@@ -432,49 +642,157 @@ export default function AdminDashboard() {
           Recent Platform Activity
         </h2>
         <div className="space-y-4">
-          <div className="flex items-center gap-4 p-4 bg-blue-50 rounded-lg">
-            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900">
-                System Status: All services operational
-              </p>
-              <p className="text-xs text-gray-500">
-                Last checked: {new Date().toLocaleString()}
-              </p>
+          {loading ? (
+            Array.from({ length: 5 }).map((_, index) => (
+              <ActivityItem key={index} loading={true} />
+            ))
+          ) : recentActivities.length > 0 ? (
+            recentActivities.map((activity, index) => (
+              <ActivityItem key={index} activity={activity} />
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-500">No recent activities to display</p>
             </div>
-          </div>
-
-          <div className="flex items-center gap-4 p-4 bg-green-50 rounded-lg">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900">
-                Database backup completed
-              </p>
-              <p className="text-xs text-gray-500">Automated daily backup</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 p-4 bg-yellow-50 rounded-lg">
-            <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900">
-                {stats.recentUsers || 0} new users registered in the last 30
-                days
-              </p>
-              <p className="text-xs text-gray-500">User growth tracking</p>
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
+      {/* User Growth Chart Section */}
+      {userGrowth.length > 0 && (
+        <div className="bg-white rounded-2xl shadow-sm border p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">
+            User Growth Trend
+          </h2>
+          <div className="space-y-4">
+            {userGrowth.slice(-6).map((growth, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+              >
+                <span className="text-sm font-medium text-gray-700">
+                  {new Date(
+                    growth._id.year,
+                    growth._id.month - 1
+                  ).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                  })}
+                </span>
+                <div className="flex items-center gap-3">
+                  <div className="w-32 bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      style={{
+                        width: `${Math.min(
+                          (growth.count /
+                            Math.max(...userGrowth.map((g) => g.count))) *
+                            100,
+                          100
+                        )}%`,
+                      }}
+                    ></div>
+                  </div>
+                  <span className="text-sm font-bold text-gray-900 w-8 text-right">
+                    {growth.count}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* User Analytics Section */}
+      {(userAnalytics || analyticsLoading) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white rounded-2xl shadow-sm border p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Users by Role
+            </h3>
+            <div className="space-y-3">
+              {analyticsLoading
+                ? Array.from({ length: 3 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between"
+                    >
+                      <div className="w-16 h-4 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="w-8 h-4 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  ))
+                : userAnalytics?.byRole?.map((role, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between"
+                    >
+                      <span className="text-sm text-gray-600 capitalize">
+                        {role._id || "Unknown"}
+                      </span>
+                      <span className="font-medium text-gray-900">
+                        {role.count}
+                      </span>
+                    </div>
+                  ))}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm border p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Users by Status
+            </h3>
+            <div className="space-y-3">
+              {analyticsLoading
+                ? Array.from({ length: 2 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between"
+                    >
+                      <div className="w-16 h-4 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="w-8 h-4 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  ))
+                : userAnalytics?.byStatus?.map((status, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between"
+                    >
+                      <span className="text-sm text-gray-600">
+                        {status._id ? "Active" : "Inactive"}
+                      </span>
+                      <span
+                        className={`font-medium ${
+                          status._id ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        {status.count}
+                      </span>
+                    </div>
+                  ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Footer Info */}
       <div className="text-center text-sm text-gray-500 pt-4 border-t">
-        <p>
-          Last updated:{" "}
-          {adminStats?.lastUpdated
-            ? new Date(adminStats.lastUpdated).toLocaleString()
-            : "Never"}
-        </p>
+        <div className="flex items-center justify-center gap-4">
+          <p>
+            Last updated:{" "}
+            {adminStats?.lastUpdated
+              ? new Date(adminStats.lastUpdated).toLocaleString()
+              : "Never"}
+          </p>
+          <span>•</span>
+          <p>
+            Total platform uptime:{" "}
+            {platformHealth.systemUptime
+              ? `${Math.floor(
+                  platformHealth.systemUptime / 3600
+                )}h ${Math.floor((platformHealth.systemUptime % 3600) / 60)}m`
+              : "Unknown"}
+          </p>
+        </div>
       </div>
     </div>
   );

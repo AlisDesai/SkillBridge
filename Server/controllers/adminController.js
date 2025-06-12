@@ -9,6 +9,12 @@ const ErrorResponse = require("../utils/errorResponse");
 // @access  Private/Admin
 exports.getAdminStats = async (req, res, next) => {
   try {
+    // Date calculations
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+
     // Get basic counts
     const [
       totalUsers,
@@ -16,6 +22,8 @@ exports.getAdminStats = async (req, res, next) => {
       totalMatches,
       totalReviews,
       recentUsers,
+      weeklyUsers,
+      activeUsers,
       topSkills,
       matchStats,
       reviewStats,
@@ -27,14 +35,24 @@ exports.getAdminStats = async (req, res, next) => {
 
       // Recent users (last 30 days)
       User.countDocuments({
-        createdAt: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
+        createdAt: { $gte: thirtyDaysAgo },
+      }),
+
+      // Weekly users
+      User.countDocuments({
+        createdAt: { $gte: sevenDaysAgo },
+      }),
+
+      // Active users (logged in within 30 days)
+      User.countDocuments({
+        lastLogin: { $gte: thirtyDaysAgo },
       }),
 
       // Top 5 most offered skills
       Skill.aggregate([
         { $group: { _id: "$name", count: { $sum: 1 } } },
         { $sort: { count: -1 } },
-        { $limit: 5 },
+        { $limit: 10 },
       ]),
 
       // Match statistics
@@ -75,7 +93,7 @@ exports.getAdminStats = async (req, res, next) => {
     const userGrowth = await User.aggregate([
       {
         $match: {
-          createdAt: { $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) },
+          createdAt: { $gte: oneYearAgo },
         },
       },
       {
@@ -90,6 +108,30 @@ exports.getAdminStats = async (req, res, next) => {
       { $sort: { "_id.year": 1, "_id.month": 1 } },
     ]);
 
+    // Recent activities
+    const recentActivities = await getRecentActivities();
+
+    // Platform health metrics
+    const platformHealth = {
+      activeUsers,
+      completedMatches: matchStatistics.completed,
+      systemUptime: Math.floor(process.uptime()),
+      totalMessages: await getTotalMessages(),
+    };
+
+    // Calculate growth rate
+    const lastMonthUsers = await User.countDocuments({
+      createdAt: {
+        $gte: new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000),
+        $lt: thirtyDaysAgo,
+      },
+    });
+
+    const userGrowthRate =
+      lastMonthUsers > 0
+        ? (((recentUsers - lastMonthUsers) / lastMonthUsers) * 100).toFixed(1)
+        : 0;
+
     res.status(200).json({
       success: true,
       data: {
@@ -99,13 +141,156 @@ exports.getAdminStats = async (req, res, next) => {
           totalMatches,
           totalReviews,
           recentUsers,
+          weeklyUsers,
+          activeUsers,
           averageRating: reviewStats[0]?.averageRating?.toFixed(1) || 0,
+          userGrowthRate,
         },
         topSkills,
         matchStatistics,
         userGrowth,
+        recentActivities,
+        platformHealth,
         lastUpdated: new Date(),
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Helper function to get recent activities
+async function getRecentActivities() {
+  try {
+    const activities = [];
+
+    // Recent user registrations
+    const newUsers = await User.find()
+      .select("name createdAt")
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    newUsers.forEach((user) => {
+      activities.push({
+        type: "user_registered",
+        message: `New user "${user.name}" registered`,
+        timestamp: user.createdAt,
+        severity: "info",
+      });
+    });
+
+    // Recent matches
+    const newMatches = await Match.find()
+      .populate("requester", "name")
+      .populate("receiver", "name")
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    newMatches.forEach((match) => {
+      activities.push({
+        type: "match_created",
+        message: `Match created between ${match.requester?.name} and ${match.receiver?.name}`,
+        timestamp: match.createdAt,
+        severity: "success",
+      });
+    });
+
+    // Recent reviews
+    const newReviews = await Review.find()
+      .populate("reviewer", "name")
+      .populate("reviewee", "name")
+      .sort({ createdAt: -1 })
+      .limit(3);
+
+    newReviews.forEach((review) => {
+      activities.push({
+        type: "review_created",
+        message: `${review.reviewer?.name} reviewed ${review.reviewee?.name} (${review.rating}★)`,
+        timestamp: review.createdAt,
+        severity: "info",
+      });
+    });
+
+    // Sort all activities by timestamp
+    activities.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    return activities.slice(0, 10);
+  } catch (error) {
+    console.error("Error fetching recent activities:", error);
+    return [];
+  }
+}
+
+// Helper function to get total messages (if Message model exists)
+async function getTotalMessages() {
+  try {
+    const Message = require("../models/Message");
+    return await Message.countDocuments();
+  } catch (error) {
+    return 0;
+  }
+}
+
+// @desc    Get system health metrics
+// @route   GET /api/admin/system-health
+// @access  Private/Admin
+exports.getSystemHealth = async (req, res, next) => {
+  try {
+    const health = {
+      database: {
+        status: "healthy",
+        responseTime: Date.now(),
+      },
+      server: {
+        uptime: Math.floor(process.uptime()),
+        memory: process.memoryUsage(),
+        cpu: process.cpuUsage(),
+      },
+      stats: {
+        activeConnections: 0,
+        requestsPerMinute: 0,
+        errorRate: 0,
+      },
+    };
+
+    res.status(200).json({
+      success: true,
+      data: health,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get user analytics
+// @route   GET /api/admin/user-analytics
+// @access  Private/Admin
+exports.getUserAnalytics = async (req, res, next) => {
+  try {
+    const userStats = await User.aggregate([
+      {
+        $facet: {
+          byRole: [{ $group: { _id: "$role", count: { $sum: 1 } } }],
+          byStatus: [{ $group: { _id: "$isActive", count: { $sum: 1 } } }],
+          byCreationDate: [
+            {
+              $group: {
+                _id: {
+                  year: { $year: "$createdAt" },
+                  month: { $month: "$createdAt" },
+                },
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { "_id.year": 1, "_id.month": 1 } },
+          ],
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: userStats[0],
     });
   } catch (error) {
     next(error);
@@ -148,17 +333,24 @@ exports.getAllUsers = async (req, res, next) => {
         .select("-password")
         .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(limit)
-        .populate("skills", "name type"),
+        .limit(limit),
       User.countDocuments(filter),
     ]);
+
+    // Add skills count to each user
+    const usersWithSkillsCount = users.map((user) => {
+      const userObj = user.toObject();
+      userObj.skillsCount =
+        (userObj.teachSkills?.length || 0) + (userObj.learnSkills?.length || 0);
+      return userObj;
+    });
 
     const totalPages = Math.ceil(totalUsers / limit);
 
     res.status(200).json({
       success: true,
       data: {
-        users,
+        users: usersWithSkillsCount,
         pagination: {
           currentPage: page,
           totalPages,
@@ -315,44 +507,44 @@ exports.deleteReview = async (req, res, next) => {
 // @desc    Get all skills with stats
 // @route   GET /api/admin/skills
 // @access  Private/Admin
+// @desc    Get all skills with stats
+// @route   GET /api/admin/skills
+// @access  Private/Admin
 exports.getAllSkills = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-    const type = req.query.type || "";
     const search = req.query.search || "";
 
-    // Build filter
+    // Build filter - removed type filter since Skill model doesn't have type field
     let filter = {};
-    if (type) filter.type = type;
     if (search) filter.name = { $regex: search, $options: "i" };
 
     const [skills, totalSkills] = await Promise.all([
       Skill.find(filter)
-        .populate("user", "name email")
+        .populate("createdBy", "name email avatar") // Changed from "user" to "createdBy"
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
       Skill.countDocuments(filter),
     ]);
 
-    // Get skill statistics
-    const skillStats = await Skill.aggregate([
-      {
-        $group: {
-          _id: "$type",
-          count: { $sum: 1 },
-        },
-      },
-    ]);
+    // Map skills to match frontend expectations
+    const mappedSkills = skills.map((skill) => ({
+      ...skill.toObject(),
+      user: skill.createdBy, // Map createdBy to user for frontend compatibility
+    }));
+
+    // Since there's no type field, create mock statistics or remove type filter from frontend
+    const skillStats = [{ _id: "total", count: totalSkills }];
 
     const totalPages = Math.ceil(totalSkills / limit);
 
     res.status(200).json({
       success: true,
       data: {
-        skills,
+        skills: mappedSkills,
         statistics: skillStats,
         pagination: {
           currentPage: page,

@@ -6,6 +6,7 @@ import ForgotPassword from "./components/auth/ForgotPassword";
 import ResetPassword from "./components/auth/ResetPassword";
 import RegisterForm from "./components/auth/RegisterForm";
 import Layout from "./components/layout/Layout";
+import AdminLayout from "./components/layout/AdminLayout";
 import DashboardPage from "./pages/DashboardPage";
 import ProfilePage from "./pages/ProfilePage";
 import SkillsPage from "./pages/SkillsPage";
@@ -37,13 +38,15 @@ export default function App() {
           <Route path="matches" element={<MatchesPage />} />
           <Route path="chat" element={<ChatPage />} />
           <Route path="reviews" element={<ReviewsPage />} />
+        </Route>
 
-          {/* Add admin routes here */}
-          <Route path="admin/dashboard" element={<AdminDashboard />} />
-          <Route path="admin/users" element={<UserManagement />} />
-          <Route path="admin/reviews" element={<ReviewManagement />} />
-          <Route path="admin/skills" element={<SkillManagement />} />
-          <Route path="admin/stats" element={<StatsOverview />} />
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="reviews" element={<ReviewManagement />} />
+          <Route path="skills" element={<SkillManagement />} />
+          <Route path="stats" element={<StatsOverview />} />
         </Route>
       </Routes>
     </Router>

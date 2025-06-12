@@ -6,6 +6,10 @@ const initialState = {
   // Admin stats
   adminStats: null,
 
+  // System health and analytics
+  systemHealth: null,
+  userAnalytics: null,
+
   // Users management
   users: [],
   usersPagination: {
@@ -42,6 +46,8 @@ const initialState = {
   usersLoading: false,
   reviewsLoading: false,
   skillsLoading: false,
+  healthLoading: false,
+  analyticsLoading: false,
 
   // Action states
   creating: false,
@@ -62,6 +68,34 @@ export const fetchAdminStatsAsync = createAsyncThunk(
     } catch (error) {
       const message =
         error.response?.data?.message || "Failed to fetch admin statistics";
+      return rejectWithValue({ message });
+    }
+  }
+);
+
+export const fetchSystemHealthAsync = createAsyncThunk(
+  "admin/fetchSystemHealth",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get("/admin/system-health");
+      return response.data.data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Failed to fetch system health";
+      return rejectWithValue({ message });
+    }
+  }
+);
+
+export const fetchUserAnalyticsAsync = createAsyncThunk(
+  "admin/fetchUserAnalytics",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get("/admin/user-analytics");
+      return response.data.data;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Failed to fetch user analytics";
       return rejectWithValue({ message });
     }
   }
@@ -186,6 +220,8 @@ const handleRejected = (state, action) => {
   state.usersLoading = false;
   state.reviewsLoading = false;
   state.skillsLoading = false;
+  state.healthLoading = false;
+  state.analyticsLoading = false;
   state.creating = false;
   state.updating = false;
   state.deleting = false;
@@ -213,6 +249,8 @@ const adminSlice = createSlice({
       if (type === "users") state.usersLoading = value;
       else if (type === "reviews") state.reviewsLoading = value;
       else if (type === "skills") state.skillsLoading = value;
+      else if (type === "health") state.healthLoading = value;
+      else if (type === "analytics") state.analyticsLoading = value;
       else state.loading = value;
     },
 
@@ -251,6 +289,20 @@ const adminSlice = createSlice({
         state.skillsPagination.totalSkills -= 1;
       }
     },
+
+    // Update stats after actions
+    updateStatsAfterAction: (state, action) => {
+      const { type, increment = false } = action.payload;
+      if (state.adminStats?.overview) {
+        if (type === "user") {
+          state.adminStats.overview.totalUsers += increment ? 1 : -1;
+        } else if (type === "review") {
+          state.adminStats.overview.totalReviews += increment ? 1 : -1;
+        } else if (type === "skill") {
+          state.adminStats.overview.totalSkills += increment ? 1 : -1;
+        }
+      }
+    },
   },
 
   extraReducers: (builder) => {
@@ -262,6 +314,30 @@ const adminSlice = createSlice({
         state.adminStats = action.payload;
       })
       .addCase(fetchAdminStatsAsync.rejected, handleRejected);
+
+    // Fetch System Health
+    builder
+      .addCase(fetchSystemHealthAsync.pending, (state) => {
+        state.healthLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchSystemHealthAsync.fulfilled, (state, action) => {
+        state.healthLoading = false;
+        state.systemHealth = action.payload;
+      })
+      .addCase(fetchSystemHealthAsync.rejected, handleRejected);
+
+    // Fetch User Analytics
+    builder
+      .addCase(fetchUserAnalyticsAsync.pending, (state) => {
+        state.analyticsLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserAnalyticsAsync.fulfilled, (state, action) => {
+        state.analyticsLoading = false;
+        state.userAnalytics = action.payload;
+      })
+      .addCase(fetchUserAnalyticsAsync.rejected, handleRejected);
 
     // Fetch Users
     builder
@@ -311,6 +387,10 @@ const adminSlice = createSlice({
         if (state.usersPagination.totalUsers > 0) {
           state.usersPagination.totalUsers -= 1;
         }
+        // Update stats
+        if (state.adminStats?.overview?.totalUsers > 0) {
+          state.adminStats.overview.totalUsers -= 1;
+        }
       })
       .addCase(deleteUserAsync.rejected, (state, action) => {
         state.deleting = false;
@@ -346,6 +426,10 @@ const adminSlice = createSlice({
         if (state.reviewsPagination.totalReviews > 0) {
           state.reviewsPagination.totalReviews -= 1;
         }
+        // Update stats
+        if (state.adminStats?.overview?.totalReviews > 0) {
+          state.adminStats.overview.totalReviews -= 1;
+        }
       })
       .addCase(deleteAdminReviewAsync.rejected, (state, action) => {
         state.deleting = false;
@@ -380,6 +464,10 @@ const adminSlice = createSlice({
         if (state.skillsPagination.totalSkills > 0) {
           state.skillsPagination.totalSkills -= 1;
         }
+        // Update stats
+        if (state.adminStats?.overview?.totalSkills > 0) {
+          state.adminStats.overview.totalSkills -= 1;
+        }
       })
       .addCase(deleteAdminSkillAsync.rejected, (state, action) => {
         state.deleting = false;
@@ -397,10 +485,13 @@ export const {
   removeUserFromList,
   removeReviewFromList,
   removeSkillFromList,
+  updateStatsAfterAction,
 } = adminSlice.actions;
 
 // Selectors
 export const selectAdminStats = (state) => state.admin.adminStats;
+export const selectSystemHealth = (state) => state.admin.systemHealth;
+export const selectUserAnalytics = (state) => state.admin.userAnalytics;
 export const selectUsers = (state) => state.admin.users;
 export const selectUsersPagination = (state) => state.admin.usersPagination;
 export const selectAdminReviews = (state) => state.admin.adminReviews;
@@ -412,6 +503,8 @@ export const selectAdminLoading = (state) => state.admin.loading;
 export const selectUsersLoading = (state) => state.admin.usersLoading;
 export const selectReviewsLoading = (state) => state.admin.reviewsLoading;
 export const selectSkillsLoading = (state) => state.admin.skillsLoading;
+export const selectHealthLoading = (state) => state.admin.healthLoading;
+export const selectAnalyticsLoading = (state) => state.admin.analyticsLoading;
 export const selectAdminError = (state) => state.admin.error;
 export const selectIsCreating = (state) => state.admin.creating;
 export const selectIsUpdating = (state) => state.admin.updating;
