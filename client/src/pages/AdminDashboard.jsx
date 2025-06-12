@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   fetchAdminStatsAsync,
   fetchSystemHealthAsync,
   fetchUserAnalyticsAsync,
+  clearAdminData,
 } from "../redux/slices/adminSlice";
-import { showError, showSuccess } from "../utils/toast";
+import { logout } from "../redux/slices/authSlice";
+import { showError, showSuccess, showConfirm } from "../utils/toast";
 import Button from "../components/common/Button";
+import Modal from "../components/common/Modal";
 
 const StatCard = ({
   title,
@@ -35,7 +39,7 @@ const StatCard = ({
             ) : (
               <p className="text-3xl font-bold text-gray-900">{value || 0}</p>
             )}
-            {trend && !loading && (
+            {trend && !loading && trend.value > 0 && (
               <span
                 className={`text-xs px-2 py-1 rounded-full ${
                   trend.type === "increase"
@@ -138,6 +142,8 @@ const QuickActionCard = ({
 
 export default function AdminDashboard() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
   const {
     adminStats,
     systemHealth,
@@ -150,6 +156,7 @@ export default function AdminDashboard() {
 
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState(new Date());
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useEffect(() => {
     loadAllData();
@@ -184,6 +191,26 @@ export default function AdminDashboard() {
     // Navigate to management components
     console.log(`Quick action: ${action}`);
     showError("Navigation will be implemented with routing");
+  };
+
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = async () => {
+    try {
+      // Clear admin data
+      dispatch(clearAdminData());
+      // Logout user
+      dispatch(logout());
+      showSuccess("Logged out successfully");
+      // Redirect to homepage
+      navigate("/");
+    } catch (err) {
+      showError("Failed to logout");
+    } finally {
+      setShowLogoutModal(false);
+    }
   };
 
   if (loading && !adminStats) {
@@ -221,6 +248,11 @@ export default function AdminDashboard() {
           <p className="text-gray-600 mt-1">
             Manage your SkillBridge platform · Last updated:{" "}
             {lastRefresh.toLocaleTimeString()}
+            {user && (
+              <span className="ml-4">
+                Welcome, <span className="font-medium">{user.name}</span>
+              </span>
+            )}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -252,6 +284,23 @@ export default function AdminDashboard() {
                 Refresh
               </>
             )}
+          </Button>
+
+          <Button variant="danger" onClick={handleLogout}>
+            <svg
+              className="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+            Logout
           </Button>
         </div>
       </div>
@@ -794,6 +843,51 @@ export default function AdminDashboard() {
           </p>
         </div>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      <Modal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        title="Confirm Logout"
+      >
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+              <svg
+                className="w-6 h-6 text-red-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Are you sure you want to logout?
+              </h3>
+              <p className="text-sm text-gray-600">
+                You will be redirected to the homepage and will need to login
+                again to access the admin panel.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-3 pt-4">
+            <Button variant="outline" onClick={() => setShowLogoutModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={confirmLogout}>
+              Yes, Logout
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

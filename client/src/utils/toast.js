@@ -15,3 +15,10 @@ export const showError = (msg) => {
     autoClose: 3000,
   });
 };
+
+export const showConfirm = (msg) => {
+  return new Promise((resolve) => {
+    const result = window.confirm(msg);
+    resolve(result);
+  });
+};

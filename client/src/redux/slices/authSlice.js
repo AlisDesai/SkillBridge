@@ -25,10 +25,10 @@ export const registerUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const res = await api.post("/auth/register", userData);
-      toast.success("Registered successfully!");
+      showSuccess("Registered successfully!");
       return res.data.user;
     } catch (err) {
-      toast.error(err.response?.data?.message || "Registration failed");
+      showError(err.response?.data?.message || "Registration failed");
       return rejectWithValue(err.response?.data?.message);
     }
   }
@@ -48,7 +48,14 @@ const authSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Login
@@ -87,4 +94,5 @@ const authSlice = createSlice({
   },
 });
 
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;
