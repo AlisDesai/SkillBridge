@@ -41,8 +41,12 @@ const UserRow = ({ user, onEdit, onDelete, isDeleting }) => {
             )}
           </div>
           <div className="ml-4">
-            <div className="text-sm font-medium text-gray-900">{user.name}</div>
-            <div className="text-sm text-gray-500">{user.email}</div>
+            <div className="text-sm font-medium text-gray-900">
+              {user.name || "Unknown"}
+            </div>
+            <div className="text-sm text-gray-500">
+              {user.email || "No email"}
+            </div>
           </div>
         </div>
       </td>
@@ -68,7 +72,7 @@ const UserRow = ({ user, onEdit, onDelete, isDeleting }) => {
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-        {user.skills?.length || 0} skills
+        {user.skillsCount || 0} skills
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -183,8 +187,8 @@ const EditUserModal = ({ user, isOpen, onClose, onSave, loading }) => {
 
 export default function UserManagement() {
   const dispatch = useDispatch();
-  const { users, usersPagination, loading, error } = useSelector(
-    (state) => state.admin
+  const { users, usersPagination, usersLoading, loading, error } = useSelector(
+    (state) => state.admin || {}
   );
 
   const [filters, setFilters] = useState({
@@ -325,6 +329,7 @@ export default function UserManagement() {
               placeholder="Search by name or email..."
               value={filters.search}
               onChange={(e) => handleSearch(e.target.value)}
+              disabled={usersLoading}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#FF7A59] focus:border-transparent"
             />
           </div>
@@ -375,7 +380,7 @@ export default function UserManagement() {
 
       {/* Users Table */}
       <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
-        {loading ? (
+        {usersLoading || loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="w-8 h-8 border-2 border-[#FF7A59] border-t-transparent rounded-full animate-spin"></div>
           </div>
