@@ -218,6 +218,7 @@ const ActivityTimeline = ({ activities = [] }) => {
 export default function StatsOverview() {
   const dispatch = useDispatch();
   const { adminStats, loading, error } = useSelector((state) => state.admin);
+
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -246,7 +247,11 @@ export default function StatsOverview() {
   if (error) {
     return (
       <div className="text-center py-12">
-        <div className="text-red-600 mb-4">Failed to load statistics</div>
+        <div className="text-red-600 mb-4">
+          {error.includes("Admin privileges")
+            ? "Access denied. Admin privileges required."
+            : "Failed to load statistics"}
+        </div>
         <Button variant="outline" onClick={handleRefresh}>
           Try Again
         </Button>

@@ -18,7 +18,7 @@ exports.getAdminStats = async (req, res, next) => {
     // Get basic counts
     const [
       totalUsers,
-      totalSkills,
+      totalSkillsResult,
       totalMatches,
       totalReviews,
       recentUsers,
@@ -29,33 +29,51 @@ exports.getAdminStats = async (req, res, next) => {
       reviewStats,
     ] = await Promise.all([
       User.countDocuments(),
-      Skill.countDocuments(),
+      User.aggregate([
+        {
+          $project: {
+            skillCount: {
+              $add: [
+                { $size: { $ifNull: ["$teachSkills", []] } },
+                { $size: { $ifNull: ["$learnSkills", []] } },
+              ],
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalSkills: { $sum: "$skillCount" },
+          },
+        },
+      ]),
       Match.countDocuments(),
       Review.countDocuments(),
-
-      // Recent users (last 30 days)
       User.countDocuments({
         createdAt: { $gte: thirtyDaysAgo },
       }),
-
-      // Weekly users
       User.countDocuments({
         createdAt: { $gte: sevenDaysAgo },
       }),
-
-      // Active users (logged in within 30 days)
       User.countDocuments({
         lastLogin: { $gte: thirtyDaysAgo },
       }),
-
-      // Top 5 most offered skills
-      Skill.aggregate([
-        { $group: { _id: "$name", count: { $sum: 1 } } },
+      User.aggregate([
+        {
+          $project: {
+            allSkills: {
+              $concatArrays: [
+                { $ifNull: ["$teachSkills", []] },
+                { $ifNull: ["$learnSkills", []] },
+              ],
+            },
+          },
+        },
+        { $unwind: "$allSkills" },
+        { $group: { _id: "$allSkills.name", count: { $sum: 1 } } },
         { $sort: { count: -1 } },
         { $limit: 10 },
       ]),
-
-      // Match statistics
       Match.aggregate([
         {
           $group: {
@@ -64,8 +82,6 @@ exports.getAdminStats = async (req, res, next) => {
           },
         },
       ]),
-
-      // Review statistics
       Review.aggregate([
         {
           $group: {
@@ -76,6 +92,8 @@ exports.getAdminStats = async (req, res, next) => {
         },
       ]),
     ]);
+
+    const actualTotalSkills = totalSkillsResult[0]?.totalSkills || 0;
 
     // Format match stats
     const matchStatistics = {
@@ -137,7 +155,7 @@ exports.getAdminStats = async (req, res, next) => {
       data: {
         overview: {
           totalUsers,
-          totalSkills,
+          totalSkills: actualTotalSkills,
           totalMatches,
           totalReviews,
           recentUsers,
@@ -601,14 +619,30 @@ exports.getAllSkills = async (req, res, next) => {
     // Get total count
     const countPipeline = [...pipeline, { $count: "total" }];
     const countResult = await User.aggregate(countPipeline);
-    const totalSkills = countResult[0]?.total || 0;
-
-    // Add pagination
-    pipeline.push(
-      { $sort: { createdAt: -1 } },
-      { $skip: skip },
-      { $limit: limit }
-    );
+    (totalSkills = await User.aggregate([
+      {
+        $project: {
+          skillCount: {
+            $add: [
+              { $size: { $ifNull: ["$teachSkills", []] } },
+              { $size: { $ifNull: ["$learnSkills", []] } },
+            ],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalSkills: { $sum: "$skillCount" },
+        },
+      },
+    ])),
+      // Add pagination
+      pipeline.push(
+        { $sort: { createdAt: -1 } },
+        { $skip: skip },
+        { $limit: limit }
+      );
 
     const skills = await User.aggregate(pipeline);
 

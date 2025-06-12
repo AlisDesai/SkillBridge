@@ -194,7 +194,6 @@ export default function UserManagement() {
   const [filters, setFilters] = useState({
     search: "",
     role: "",
-    status: "",
     page: 1,
   });
   const [editModal, setEditModal] = useState({ show: false, user: null });
@@ -346,21 +345,6 @@ export default function UserManagement() {
               <option value="">All Roles</option>
               <option value="user">User</option>
               <option value="admin">Admin</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Status
-            </label>
-            <select
-              value={filters.status}
-              onChange={(e) => handleFilterChange("status", e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#FF7A59] focus:border-transparent"
-            >
-              <option value="">All Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
             </select>
           </div>
 
