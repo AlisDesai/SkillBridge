@@ -12,6 +12,11 @@ import SkillsPage from "./pages/SkillsPage";
 import MatchesPage from "./pages/MatchesPage";
 import ChatPage from "./pages/ChatPage";
 import ReviewsPage from "./pages/ReviewsPage";
+import AdminDashboard from "./pages/AdminDashboard";
+import UserManagement from "./components/admin/UserManagement";
+import ReviewManagement from "./components/admin/ReviewManagement";
+import SkillManagement from "./components/admin/SkillManagement";
+import StatsOverview from "./components/admin/StatsOverview";
 
 export default function App() {
   return (
@@ -32,6 +37,13 @@ export default function App() {
           <Route path="matches" element={<MatchesPage />} />
           <Route path="chat" element={<ChatPage />} />
           <Route path="reviews" element={<ReviewsPage />} />
+
+          {/* Add admin routes here */}
+          <Route path="admin/dashboard" element={<AdminDashboard />} />
+          <Route path="admin/users" element={<UserManagement />} />
+          <Route path="admin/reviews" element={<ReviewManagement />} />
+          <Route path="admin/skills" element={<SkillManagement />} />
+          <Route path="admin/stats" element={<StatsOverview />} />
         </Route>
       </Routes>
     </Router>

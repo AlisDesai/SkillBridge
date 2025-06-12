@@ -42,3 +42,5 @@ exports.adminOnly = (req, res, next) => {
     next(new ErrorResponse("Access denied: Admins only", 403));
   }
 };
+
+module.exports = { protect: exports.protect, adminOnly: exports.adminOnly };

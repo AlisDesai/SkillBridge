@@ -5,6 +5,7 @@ import skillReducer from "./skillSlice";
 import matchReducer from "./matchSlice";
 import chatReducer from "./chatSlice";
 import reviewReducer from "./reviewSlice";
+import adminReducer from "./adminSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     match: matchReducer,
     chat: chatReducer,
     review: reviewReducer,
+    admin: adminReducer,
   },
 });

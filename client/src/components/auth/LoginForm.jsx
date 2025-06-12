@@ -84,7 +84,8 @@ const SuccessMessage = ({ show }) => {
             Welcome Back! 🎉
           </h3>
           <p className="text-gray-300 mb-6">
-            Login successful! Redirecting to your dashboard...
+            Login successful! Redirecting to your{" "}
+            {data?.user?.role === "admin" ? "admin" : ""} dashboard...
           </p>
 
           <div className="w-full bg-gray-800 rounded-full h-2 mb-4">
@@ -207,7 +208,12 @@ export default function LoginForm() {
 
       setTimeout(() => {
         setShowSuccess(false);
-        navigate("/dashboard");
+        // Check if user is admin and redirect accordingly
+        if (data.user.role === "admin") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/dashboard");
+        }
       }, 1500);
     } catch (err) {
       setErrors({ submit: "Invalid email or password. Please try again." });
