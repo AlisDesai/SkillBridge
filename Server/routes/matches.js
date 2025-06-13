@@ -6,7 +6,8 @@ const {
   getMyMatches,
   getMatchById,
   findCompatibleUsers,
-  checkMatch, // ADD THIS
+  checkMatch, 
+  checkExistingMatch,
 } = require("../controllers/matchController");
 const { protect } = require("../middleware/auth");
 
@@ -29,5 +30,7 @@ router.get("/", protect, getMyMatches);
 
 // Fetch specific match details
 router.get("/:id", protect, getMatchById);
+
+router.get("/existing/:userId", protect, checkExistingMatch);
 
 module.exports = router;

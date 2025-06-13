@@ -44,6 +44,34 @@ exports.requestMatch = async (req, res, next) => {
   try {
     const { receiver, skillOffered, skillRequested } = req.body;
 
+    // PREVENT DUPLICATE REQUESTS - Check if match already exists
+    const existingMatch = await Match.findOne({
+      $or: [
+        { requester: req.user._id, receiver: receiver },
+        { requester: receiver, receiver: req.user._id },
+      ],
+    }).sort({ createdAt: -1 }); // Get the most recent match
+
+    if (existingMatch) {
+      console.log("Found existing match:", existingMatch); // Debug log
+      if (existingMatch.status === "pending") {
+        return next(
+          new ErrorResponse(
+            "Match request already sent! Please wait for their response.",
+            400
+          )
+        );
+      } else if (existingMatch.status === "accepted") {
+        return next(
+          new ErrorResponse(
+            "You already have an active match with this user!",
+            400
+          )
+        );
+      }
+      // If rejected, allow new request (don't return error)
+    }
+
     const match = await Match.create({
       requester: req.user._id,
       receiver,
@@ -58,6 +86,33 @@ exports.requestMatch = async (req, res, next) => {
   } catch (err) {
     next(
       new ErrorResponse(`Failed to create match request: ${err.message}`, 500)
+    );
+  }
+};
+
+// Check if any match request exists between users (pending, accepted, or rejected)
+exports.checkExistingMatch = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const currentUserId = req.user._id;
+
+    // Check if there's ANY match between users (pending, accepted, or rejected)
+    const match = await Match.findOne({
+      $or: [
+        { requester: currentUserId, receiver: userId },
+        { requester: userId, receiver: currentUserId },
+      ],
+    }).sort({ createdAt: -1 }); // Get the most recent match
+
+    res.json({
+      success: true,
+      exists: !!match,
+      status: match ? match.status : null,
+      match: match || null,
+    });
+  } catch (err) {
+    next(
+      new ErrorResponse(`Failed to check existing match: ${err.message}`, 500)
     );
   }
 };

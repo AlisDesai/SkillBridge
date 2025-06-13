@@ -55,6 +55,21 @@ export default function UserDetailPage() {
       const currentUserRes = await api.get("/users/me");
       const currentUser = currentUserRes.data;
 
+      // Check if match request already exists (any status)
+      const existingMatchRes = await api.get(`/matches/existing/${user._id}`);
+
+      if (existingMatchRes.data.exists) {
+        const matchStatus = existingMatchRes.data.status;
+        if (matchStatus === "pending") {
+          alert("Match request already sent! Please wait for confirmation.");
+          return;
+        } else if (matchStatus === "accepted") {
+          alert("You are already matched with this user!");
+          return;
+        }
+        // If rejected, continue to allow new request
+      }
+
       // Find matching skills between users
       const skillOffered =
         currentUser.teachSkills?.[0]?.name || "General Knowledge";
@@ -68,7 +83,11 @@ export default function UserDetailPage() {
       alert("Match request sent!");
     } catch (err) {
       console.error("Match request error:", err);
-      alert("Failed to send match request");
+      if (err.response?.data?.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("Failed to send match request");
+      }
     }
   };
 
