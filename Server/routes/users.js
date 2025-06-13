@@ -6,6 +6,9 @@ const {
   getProfile,
   updateProfile,
   searchUsers,
+  getAllUsers,
+  getDashboardStats,
+  getUserById, // ADDED
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -37,6 +40,15 @@ router.put(
   ],
   updateProfile
 );
+
+// Get all users for discovery
+router.get("/discover", protect, getAllUsers);
+
+// Get dashboard stats
+router.get("/dashboard-stats", protect, getDashboardStats);
+
+// Get single user by ID
+router.get("/:id", protect, getUserById); // ADDED
 
 // Search Users
 router.get("/search", protect, searchUsers);

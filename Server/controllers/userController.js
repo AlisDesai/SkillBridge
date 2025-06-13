@@ -31,7 +31,31 @@ exports.updateProfile = async (req, res, next) => {
   }
 };
 
-// /controllers/userController.js
+// Get all users for discovery
+exports.getAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find({ _id: { $ne: req.user._id } })
+      .select("name bio teachSkills learnSkills location")
+      .limit(20);
+
+    res.json(users);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get user by ID
+exports.getUserById = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) {
+      return next(new ErrorResponse("User not found", 404));
+    }
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+};
 
 exports.getDashboardStats = async (req, res, next) => {
   try {

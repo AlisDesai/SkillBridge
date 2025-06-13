@@ -18,6 +18,7 @@ import UserManagement from "./components/admin/UserManagement";
 import ReviewManagement from "./components/admin/ReviewManagement";
 import SkillManagement from "./components/admin/SkillManagement";
 import StatsOverview from "./components/admin/StatsOverview";
+import UserDetailPage from "./pages/UserDetailPage";
 
 export default function App() {
   return (
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="matches" element={<MatchesPage />} />
           <Route path="chat" element={<ChatPage />} />
           <Route path="reviews" element={<ReviewsPage />} />
+          <Route path="user/:id" element={<UserDetailPage />} />
         </Route>
 
         {/* Admin Routes */}
