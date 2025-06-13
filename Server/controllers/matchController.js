@@ -146,9 +146,29 @@ exports.respondToMatch = async (req, res, next) => {
 
 exports.getMyMatches = async (req, res, next) => {
   try {
-    const matches = await Match.find({
+    const { status, type } = req.query; // Add query parameters for filtering
+
+    let matchQuery = {
       $or: [{ requester: req.user._id }, { receiver: req.user._id }],
-    }).populate("requester receiver", "name email");
+    };
+
+    // Filter by status if provided
+    if (status) {
+      matchQuery.status = status;
+    }
+
+    // Filter by type (sent/received) if provided
+    if (type === "sent") {
+      matchQuery = { requester: req.user._id };
+      if (status) matchQuery.status = status;
+    } else if (type === "received") {
+      matchQuery = { receiver: req.user._id };
+      if (status) matchQuery.status = status;
+    }
+
+    const matches = await Match.find(matchQuery)
+      .populate("requester receiver", "name email bio")
+      .sort({ createdAt: -1 });
 
     res.json({
       success: true,
@@ -157,6 +177,65 @@ exports.getMyMatches = async (req, res, next) => {
     });
   } catch (err) {
     next(new ErrorResponse(`Failed to fetch matches: ${err.message}`, 500));
+  }
+};
+
+// Add this new function to your matchController.js
+
+exports.requestCompletion = async (req, res, next) => {
+  try {
+    const match = await Match.findById(req.params.id);
+
+    if (!match) {
+      return next(new ErrorResponse("Match not found", 404));
+    }
+
+    // Check if user is part of this match
+    if (
+      match.requester.toString() !== req.user._id.toString() &&
+      match.receiver.toString() !== req.user._id.toString()
+    ) {
+      return next(new ErrorResponse("Not authorized", 403));
+    }
+
+    if (match.status !== "accepted") {
+      return next(new ErrorResponse("Match must be accepted first", 400));
+    }
+
+    // Check if user already requested completion
+    const alreadyRequested = match.completionRequests.some(
+      (request) => request.user.toString() === req.user._id.toString()
+    );
+
+    if (alreadyRequested) {
+      return next(new ErrorResponse("You already requested completion", 400));
+    }
+
+    // Add completion request
+    match.completionRequests.push({
+      user: req.user._id,
+      requestedAt: new Date(),
+    });
+
+    // If both users have requested completion, mark as completed
+    if (match.completionRequests.length === 2) {
+      match.status = "completed";
+    }
+
+    await match.save();
+
+    res.json({
+      success: true,
+      data: match,
+      message:
+        match.status === "completed"
+          ? "Match completed successfully!"
+          : "Completion request sent. Waiting for other user confirmation.",
+    });
+  } catch (err) {
+    next(
+      new ErrorResponse(`Failed to request completion: ${err.message}`, 500)
+    );
   }
 };
 

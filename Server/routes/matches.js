@@ -6,8 +6,9 @@ const {
   getMyMatches,
   getMatchById,
   findCompatibleUsers,
-  checkMatch, 
+  checkMatch,
   checkExistingMatch,
+  requestCompletion, // Add this to the imports
 } = require("../controllers/matchController");
 const { protect } = require("../middleware/auth");
 
@@ -32,5 +33,8 @@ router.get("/", protect, getMyMatches);
 router.get("/:id", protect, getMatchById);
 
 router.get("/existing/:userId", protect, checkExistingMatch);
+
+// Add completion route (fix the path - remove extra /matches)
+router.post("/:id/complete", protect, requestCompletion);
 
 module.exports = router;
