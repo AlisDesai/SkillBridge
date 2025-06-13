@@ -1,52 +1,118 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
+import { createContext, useContext, useEffect, useState } from "react";
+import socketService from "../utils/socket";
 
 const SocketContext = createContext(null);
 
-export const SocketProvider = ({ token, children }) => {
-  const socket = useRef(null);
+export const SocketProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState(new Set());
 
   useEffect(() => {
-    if (token && !socket.current) {
-      socket.current = io(
-        import.meta.env.VITE_SOCKET_URL || "http://localhost:5000",
-        {
-          auth: { token },
-          transports: ["websocket"],
-          withCredentials: true,
-        }
-      );
+    const token = localStorage.getItem("token");
 
-      socket.current.on("connect", () => {
-        console.log("Connected to socket server");
+    if (token) {
+      // Connect to socket
+      const socket = socketService.connect(token);
+
+      // Setup connection listeners
+      socket.on("connect", () => {
         setIsConnected(true);
+        console.log("✅ Socket connected");
       });
 
-      socket.current.on("disconnect", () => {
-        console.log("Disconnected from socket server");
+      socket.on("disconnect", () => {
         setIsConnected(false);
+        console.log("❌ Socket disconnected");
       });
 
-      socket.current.on("connect_error", (err) => {
-        console.error("Socket connection error:", err.message);
+      socket.on("connect_error", (error) => {
+        setIsConnected(false);
+        console.error("🔴 Socket connection error:", error.message);
       });
+
+      // Listen for user online/offline events
+      socket.on("userOnline", (userId) => {
+        setOnlineUsers((prev) => new Set([...prev, userId]));
+      });
+
+      socket.on("userOffline", (userId) => {
+        setOnlineUsers((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(userId);
+          return newSet;
+        });
+      });
+
+      // Cleanup on unmount
+      return () => {
+        socketService.disconnect();
+        setIsConnected(false);
+        setOnlineUsers(new Set());
+      };
     }
+  }, []);
 
-    return () => {
-      if (socket.current) {
-        socket.current.disconnect();
-        socket.current = null;
-        console.log("🔌 Socket disconnected on cleanup");
-      }
-    };
-  }, [token]);
+  const joinConversation = (conversationId) => {
+    if (socketService.isConnected()) {
+      socketService.joinConversation(conversationId);
+      console.log(`📱 Joined conversation: ${conversationId}`);
+    }
+  };
+
+  const leaveConversation = (conversationId) => {
+    if (socketService.isConnected()) {
+      socketService.leaveConversation(conversationId);
+      console.log(`📱 Left conversation: ${conversationId}`);
+    }
+  };
+
+  const sendMessage = (messageData) => {
+    if (socketService.isConnected()) {
+      socketService.sendMessage(messageData);
+    } else {
+      console.warn("Cannot send message: Socket not connected");
+    }
+  };
+
+  const onMessageReceived = (callback) => {
+    if (socketService.socket) {
+      socketService.onMessageReceived(callback);
+    }
+  };
+
+  const offMessageReceived = (callback) => {
+    if (socketService.socket) {
+      socketService.off("messageReceived", callback);
+    }
+  };
+
+  const isUserOnline = (userId) => {
+    return onlineUsers.has(userId);
+  };
+
+  const value = {
+    socket: socketService.socket,
+    isConnected,
+    onlineUsers: Array.from(onlineUsers),
+    joinConversation,
+    leaveConversation,
+    sendMessage,
+    onMessageReceived,
+    offMessageReceived,
+    isUserOnline,
+  };
 
   return (
-    <SocketContext.Provider value={{ socket: socket.current, isConnected }}>
-      {children}
-    </SocketContext.Provider>
+    <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
   );
 };
 
-export const useSocketContext = () => useContext(SocketContext);
+export const useSocket = () => {
+  const context = useContext(SocketContext);
+  if (!context) {
+    throw new Error("useSocket must be used within a SocketProvider");
+  }
+  return context;
+};
+
+export default SocketContext;

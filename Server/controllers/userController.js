@@ -36,7 +36,7 @@ exports.getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find({ _id: { $ne: req.user._id } })
       .select("name bio teachSkills learnSkills location")
-      .limit(20);
+      .limit(50);
 
     res.json(users);
   } catch (err) {

@@ -6,6 +6,7 @@ const {
   getMyMatches,
   getMatchById,
   findCompatibleUsers,
+  checkMatch, // ADD THIS
 } = require("../controllers/matchController");
 const { protect } = require("../middleware/auth");
 
@@ -13,6 +14,9 @@ const router = express.Router();
 
 // Suggest compatible users (enhanced matching)
 router.get("/suggestions", protect, findCompatibleUsers);
+
+// Check if match exists between users
+router.get("/check/:userId", protect, checkMatch);
 
 // Create a match request
 router.post("/", protect, requestMatch);

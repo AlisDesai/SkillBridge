@@ -132,3 +132,26 @@ exports.getMatchById = async (req, res, next) => {
     next(new ErrorResponse(`Failed to fetch match: ${err.message}`, 500));
   }
 };
+
+// Check if match exists between current user and target user
+exports.checkMatch = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const currentUserId = req.user._id;
+
+    // Check if there's an accepted match between users
+    const match = await Match.findOne({
+      $or: [
+        { requester: currentUserId, receiver: userId, status: "accepted" },
+        { requester: userId, receiver: currentUserId, status: "accepted" },
+      ],
+    }).populate("requester receiver", "name");
+
+    res.json({
+      success: true,
+      match: match || null,
+    });
+  } catch (err) {
+    next(new ErrorResponse(`Failed to check match: ${err.message}`, 500));
+  }
+};

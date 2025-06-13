@@ -19,38 +19,41 @@ import ReviewManagement from "./components/admin/ReviewManagement";
 import SkillManagement from "./components/admin/SkillManagement";
 import StatsOverview from "./components/admin/StatsOverview";
 import UserDetailPage from "./pages/UserDetailPage";
+import { SocketProvider } from "./contexts/SocketContext";
 
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route index element={<HomePage />} />
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/register" element={<RegisterForm />} />
+    <SocketProvider>
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route index element={<HomePage />} />
+          <Route path="/login" element={<AuthPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/register" element={<RegisterForm />} />
 
-        {/* Protected Routes wrapped inside layout */}
-        <Route path="/" element={<Layout />}>
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="skills" element={<SkillsPage />} />
-          <Route path="matches" element={<MatchesPage />} />
-          <Route path="chat" element={<ChatPage />} />
-          <Route path="reviews" element={<ReviewsPage />} />
-          <Route path="user/:id" element={<UserDetailPage />} />
-        </Route>
+          {/* Protected Routes wrapped inside layout */}
+          <Route path="/" element={<Layout />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="skills" element={<SkillsPage />} />
+            <Route path="matches" element={<MatchesPage />} />
+            <Route path="chat" element={<ChatPage />} />
+            <Route path="reviews" element={<ReviewsPage />} />
+            <Route path="user/:id" element={<UserDetailPage />} />
+          </Route>
 
-        {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="users" element={<UserManagement />} />
-          <Route path="reviews" element={<ReviewManagement />} />
-          <Route path="skills" element={<SkillManagement />} />
-          <Route path="stats" element={<StatsOverview />} />
-        </Route>
-      </Routes>
-    </Router>
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="users" element={<UserManagement />} />
+            <Route path="reviews" element={<ReviewManagement />} />
+            <Route path="skills" element={<SkillManagement />} />
+            <Route path="stats" element={<StatsOverview />} />
+          </Route>
+        </Routes>
+      </Router>
+    </SocketProvider>
   );
 }

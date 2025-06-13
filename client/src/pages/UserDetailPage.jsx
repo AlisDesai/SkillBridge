@@ -24,15 +24,50 @@ export default function UserDetailPage() {
     fetchUser();
   }, [id, navigate]);
 
-  const handleSendMessage = () => {
-    navigate("/chat", { state: { userId: user._id, userName: user.name } });
+  const handleSendMessage = async () => {
+    try {
+      // First check if there's an existing match between users
+      const matchRes = await api.get(`/matches/check/${user._id}`);
+
+      if (matchRes.data.match) {
+        // If match exists, get or create conversation
+        const conversationRes = await api.get(
+          `/chats/conversations/match/${matchRes.data.match._id}`
+        );
+        navigate("/chat", {
+          state: {
+            conversationId: conversationRes.data._id,
+            userName: user.name,
+          },
+        });
+      } else {
+        alert("Please wait for match approval before messaging!");
+      }
+    } catch (err) {
+      console.error("Failed to initiate chat:", err);
+      alert("Failed to start conversation. Please try again.");
+    }
   };
 
   const handleSendMatchRequest = async () => {
     try {
-      await api.post("/matches/request", { receiverId: user._id });
+      // Get current user to determine skills
+      const currentUserRes = await api.get("/users/me");
+      const currentUser = currentUserRes.data;
+
+      // Find matching skills between users
+      const skillOffered =
+        currentUser.teachSkills?.[0]?.name || "General Knowledge";
+      const skillRequested = user.teachSkills?.[0]?.name || "General Knowledge";
+
+      await api.post("/matches", {
+        receiver: user._id,
+        skillOffered,
+        skillRequested,
+      });
       alert("Match request sent!");
     } catch (err) {
+      console.error("Match request error:", err);
       alert("Failed to send match request");
     }
   };

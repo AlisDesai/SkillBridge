@@ -11,6 +11,7 @@ export default function DashboardPage() {
     const fetchUsers = async () => {
       try {
         const res = await api.get("/users/discover");
+        console.log("API Response:", res.data); // Debug log
         setUsers(res.data);
       } catch (err) {
         console.error("Failed to fetch users:", err);
@@ -27,6 +28,7 @@ export default function DashboardPage() {
   };
 
   const getTopSkills = (teachSkills = [], learnSkills = []) => {
+    // Handle both old format (simple objects) and new format (with _id)
     const allSkills = [...teachSkills, ...learnSkills];
     return allSkills.slice(0, 3);
   };
