@@ -13,6 +13,7 @@ import SkillsPage from "./pages/SkillsPage";
 import MatchesPage from "./pages/MatchesPage";
 import ChatPage from "./pages/ChatPage";
 import ReviewsPage from "./pages/ReviewsPage";
+import ReviewPage from "./pages/ReviewPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import UserManagement from "./components/admin/UserManagement";
 import ReviewManagement from "./components/admin/ReviewManagement";
@@ -42,6 +43,7 @@ export default function App() {
             <Route path="chat" element={<ChatPage />} />
             <Route path="/chat/:userId" element={<ChatPage />} />
             <Route path="reviews" element={<ReviewsPage />} />
+            <Route path="review/:matchId" element={<ReviewPage />} />
             <Route path="user/:id" element={<UserDetailPage />} />
           </Route>
 

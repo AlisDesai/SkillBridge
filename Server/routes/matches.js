@@ -1,4 +1,3 @@
-// /routes/matches.js
 const express = require("express");
 const {
   requestMatch,
@@ -8,33 +7,20 @@ const {
   findCompatibleUsers,
   checkMatch,
   checkExistingMatch,
-  requestCompletion, // Add this to the imports
+  requestCompletion, // existing import
 } = require("../controllers/matchController");
+const { createMatchReview } = require("../controllers/reviewController");
 const { protect } = require("../middleware/auth");
 
 const router = express.Router();
 
-// Suggest compatible users (enhanced matching)
+// existing routes...
 router.get("/suggestions", protect, findCompatibleUsers);
-
-// Check if match exists between users
-router.get("/check/:userId", protect, checkMatch);
-
-// Create a match request
 router.post("/", protect, requestMatch);
-
-// Respond to a match
 router.put("/:id", protect, respondToMatch);
-
-// Fetch all matches related to the user
 router.get("/", protect, getMyMatches);
-
-// Fetch specific match details
 router.get("/:id", protect, getMatchById);
-
-router.get("/existing/:userId", protect, checkExistingMatch);
-
-// Add completion route (fix the path - remove extra /matches)
 router.post("/:id/complete", protect, requestCompletion);
+router.post("/:id/review", protect, createMatchReview);
 
 module.exports = router;

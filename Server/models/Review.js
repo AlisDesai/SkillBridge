@@ -53,6 +53,32 @@ const reviewSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    skillDelivered: {
+      type: Boolean,
+      default: null,
+    },
+    wouldRecommend: {
+      type: Boolean,
+      default: null,
+    },
+    teachingQuality: {
+      type: Number,
+      min: [1, "Teaching quality must be at least 1"],
+      max: [5, "Teaching quality cannot exceed 5"],
+      default: null,
+    },
+    communication: {
+      type: Number,
+      min: [1, "Communication must be at least 1"],
+      max: [5, "Communication cannot exceed 5"],
+      default: null,
+    },
+    reliability: {
+      type: Number,
+      min: [1, "Reliability must be at least 1"],
+      max: [5, "Reliability cannot exceed 5"],
+      default: null,
+    },
   },
   {
     timestamps: true,

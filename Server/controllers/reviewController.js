@@ -286,6 +286,111 @@ exports.deleteReview = async (req, res, next) => {
   }
 };
 
+// @desc    Create a review for a specific match
+// @route   POST /api/matches/:matchId/review
+// @access  Private
+// @desc    Create a review for a specific match
+// @route   POST /api/matches/:id/review
+// @access  Private
+exports.createMatchReview = async (req, res, next) => {
+  try {
+    const { id: matchId } = req.params; // ✅ Correct
+    const { rating, comment, reviewee, skillDelivered, wouldRecommend } =
+      req.body;
+
+    // Validation
+    if (!rating || !comment || !reviewee) {
+      return next(
+        new ErrorResponse("Please provide rating, comment, and reviewee", 400)
+      );
+    }
+
+    if (rating < 1 || rating > 5) {
+      return next(new ErrorResponse("Rating must be between 1 and 5", 400));
+    }
+
+    if (req.user._id.toString() === reviewee) {
+      return next(new ErrorResponse("You cannot review yourself", 400));
+    }
+
+    // Check if match exists and is completed
+    const match = await Match.findById(matchId); // ✅ FIXED: Use matchId, not id
+    if (!match) {
+      return next(new ErrorResponse("Match not found", 404));
+    }
+
+    if (match.status !== "completed") {
+      return next(new ErrorResponse("Can only review completed matches", 400));
+    }
+
+    // Verify user is part of the match
+    const isParticipant =
+      match.requester.toString() === req.user._id.toString() ||
+      match.receiver.toString() === req.user._id.toString();
+
+    if (!isParticipant) {
+      return next(
+        new ErrorResponse("You are not authorized to review this match", 403)
+      );
+    }
+
+    // Check if reviewee is the other participant
+    const otherUser =
+      match.requester._id.toString() === req.user._id.toString()
+        ? match.receiver
+        : match.requester;
+
+    if (otherUser.toString() !== reviewee) {
+      return next(new ErrorResponse("Invalid reviewee for this match", 400));
+    }
+
+    // Check if review already exists for this match
+    const existingReview = await Review.findOne({
+      reviewer: req.user._id,
+      reviewee,
+      matchId, // ✅ FIXED: Use matchId, not id
+    });
+
+    if (existingReview) {
+      return next(
+        new ErrorResponse("You have already reviewed this match", 400)
+      );
+    }
+
+    // Create review with additional fields
+    const reviewData = {
+      reviewer: req.user._id,
+      reviewee,
+      rating: parseInt(rating),
+      comment: comment.trim(),
+      matchId, // ✅ FIXED: Use matchId, not id
+    };
+
+    // Add additional review fields if provided
+    if (skillDelivered !== undefined)
+      reviewData.skillDelivered = skillDelivered;
+    if (wouldRecommend !== undefined)
+      reviewData.wouldRecommend = wouldRecommend;
+
+    const review = await Review.create(reviewData);
+
+    // Populate reviewer and reviewee details
+    await review.populate([
+      { path: "reviewer", select: "name avatar email" },
+      { path: "reviewee", select: "name avatar email" },
+      { path: "matchId", select: "skillOffered skillRequested status" },
+    ]);
+
+    res.status(201).json({
+      success: true,
+      data: review,
+      message: "Review submitted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Get review statistics for dashboard
 // @route   GET /api/reviews/stats
 // @access  Private

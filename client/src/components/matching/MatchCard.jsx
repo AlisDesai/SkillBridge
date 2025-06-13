@@ -174,10 +174,18 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
       )}
 
       {match.status === "completed" && (
-        <div className="mt-4 text-center">
-          <span className="text-sm text-green-600 font-medium">
-            🎉 Learning Exchange Completed!
-          </span>
+        <div className="mt-4 space-y-3">
+          <div className="text-center">
+            <span className="text-sm text-green-600 font-medium">
+              🎉 Learning Exchange Completed!
+            </span>
+          </div>
+          <button
+            onClick={() => navigate(`/review/${match._id}`)}
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-xl text-sm font-medium transition-colors"
+          >
+            ⭐ Write Review
+          </button>
         </div>
       )}
     </div>
