@@ -89,10 +89,10 @@ export default function UserDetailPage() {
         alert("Failed to send match request");
       }
     }
-  };
+  };  
 
   const handleViewReviews = () => {
-    navigate("/reviews", { state: { userId: user._id } });
+    navigate(`/user/${user._id}/reviews`);
   };
 
   if (loading) {

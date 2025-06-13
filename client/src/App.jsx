@@ -21,6 +21,7 @@ import SkillManagement from "./components/admin/SkillManagement";
 import StatsOverview from "./components/admin/StatsOverview";
 import UserDetailPage from "./pages/UserDetailPage";
 import { SocketProvider } from "./contexts/SocketContext";
+import UserReviewsPage from "./pages/UserReviewsPage";
 
 export default function App() {
   return (
@@ -45,6 +46,7 @@ export default function App() {
             <Route path="reviews" element={<ReviewsPage />} />
             <Route path="review/:matchId" element={<ReviewPage />} />
             <Route path="user/:id" element={<UserDetailPage />} />
+            <Route path="user/:userId/reviews" element={<UserReviewsPage />} />
           </Route>
 
           {/* Admin Routes */}
