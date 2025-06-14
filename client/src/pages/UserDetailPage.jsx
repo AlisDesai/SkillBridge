@@ -55,19 +55,40 @@ export default function UserDetailPage() {
       const currentUserRes = await api.get("/users/me");
       const currentUser = currentUserRes.data;
 
-      // Check if match request already exists (any status)
-      const existingMatchRes = await api.get(`/matches/existing/${user._id}`);
+      console.log("Current user:", currentUser._id);
+      console.log("Target user:", user._id);
 
-      if (existingMatchRes.data.exists) {
-        const matchStatus = existingMatchRes.data.status;
-        if (matchStatus === "pending") {
-          alert("Match request already sent! Please wait for confirmation.");
-          return;
-        } else if (matchStatus === "accepted") {
-          alert("You are already matched with this user!");
-          return;
+      // Check if match request already exists (any status)
+      // Add cache busting with timestamp
+      const existingMatchRes = await api.get(
+        `/matches/check/${user._id}?t=${Date.now()}`
+      );
+      console.log("Existing match response:", existingMatchRes.data);
+
+      // FIXED: Check the data structure properly
+      if (
+        existingMatchRes.data &&
+        existingMatchRes.data.data &&
+        existingMatchRes.data.data.exists
+      ) {
+        const { status } = existingMatchRes.data.data;
+
+        console.log("Match exists");
+        console.log("Match status:", status);
+
+        switch (status) {
+          case "pending":
+            alert("Match request already sent! Please wait for confirmation.");
+            return;
+          case "accepted":
+            alert("You are already matched with this user!");
+            return;
+          case "rejected":
+            console.log("Previous match was rejected, allowing new request");
+            break;
+          default:
+            console.log("Unknown status:", status);
         }
-        // If rejected, continue to allow new request
       }
 
       // Find matching skills between users
@@ -75,21 +96,31 @@ export default function UserDetailPage() {
         currentUser.teachSkills?.[0]?.name || "General Knowledge";
       const skillRequested = user.teachSkills?.[0]?.name || "General Knowledge";
 
-      await api.post("/matches", {
-        receiver: user._id,
-        skillOffered,
-        skillRequested,
+      console.log("Sending match request with:", {
+        receiverId: user._id,
+        message: `I'd like to learn ${skillRequested} and can teach ${skillOffered}`,
+        skillsInvolved: [skillOffered, skillRequested],
       });
+
+      const matchResponse = await api.post("/matches", {
+        receiverId: user._id,
+        message: `I'd like to learn ${skillRequested} and can teach ${skillOffered}`,
+        skillsInvolved: [skillOffered, skillRequested],
+      });
+
+      console.log("Match request sent successfully:", matchResponse.data);
       alert("Match request sent!");
     } catch (err) {
       console.error("Match request error:", err);
-      if (err.response?.data?.message) {
-        alert(err.response.data.message);
+      console.error("Error response:", err.response?.data);
+
+      if (err.response?.data?.error) {
+        alert(err.response.data.error);
       } else {
         alert("Failed to send match request");
       }
     }
-  };  
+  };
 
   const handleViewReviews = () => {
     navigate(`/user/${user._id}/reviews`);
