@@ -6,6 +6,7 @@ import matchReducer from "./matchSlice";
 import chatReducer from "./chatSlice";
 import reviewReducer from "./reviewSlice";
 import adminReducer from "./adminSlice";
+import smartMatchReducer from "./smartMatchSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     chat: chatReducer,
     review: reviewReducer,
     admin: adminReducer,
+    smartMatch: smartMatchReducer,
   },
 });

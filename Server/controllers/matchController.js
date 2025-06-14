@@ -54,14 +54,16 @@ exports.getSmartMatches = async (req, res, next) => {
       });
     }
 
-    // Get current user with full data
-    const currentUser = await User.findById(userId)
-      .populate("skillsOffered skillsWanted")
-      .lean();
+    // Get current user with correct field names
+    const currentUser = await User.findById(userId).lean();
 
     if (!currentUser) {
       return next(new ErrorResponse("User not found", 404));
     }
+
+    // Map the fields to what the algorithm expects
+    currentUser.skillsOffered = currentUser.teachSkills || [];
+    currentUser.skillsWanted = currentUser.learnSkills || [];
 
     // Get potential matches (exclude current user, blocked users, existing matches)
     const existingMatches = await Match.find({
@@ -79,21 +81,25 @@ exports.getSmartMatches = async (req, res, next) => {
       ),
     ];
 
-    // Build query for potential matches
+    // Build query for potential matches - using correct field names
     const matchQuery = {
       _id: { $nin: excludedUserIds },
-      isActive: true,
       $or: [
-        { skillsOffered: { $exists: true, $not: { $size: 0 } } },
-        { skillsWanted: { $exists: true, $not: { $size: 0 } } },
+        { teachSkills: { $exists: true, $not: { $size: 0 } } },
+        { learnSkills: { $exists: true, $not: { $size: 0 } } },
       ],
     };
 
     // Get potential matches
     const potentialMatches = await User.find(matchQuery)
-      .populate("skillsOffered skillsWanted")
       .limit(maxResults)
       .lean();
+
+    // Map fields for each potential match
+    potentialMatches.forEach((user) => {
+      user.skillsOffered = user.teachSkills || [];
+      user.skillsWanted = user.learnSkills || [];
+    });
 
     if (potentialMatches.length === 0) {
       return res.status(200).json({
@@ -113,9 +119,21 @@ exports.getSmartMatches = async (req, res, next) => {
     let matchHistory = [];
     try {
       matchHistory = await MatchHistory.find({ user: userId })
-        .populate("matchedUser", "skillsOffered skillsWanted experienceLevel")
+        .populate("matchedUser", "teachSkills learnSkills experienceLevel")
         .limit(50)
         .lean();
+
+      // Map skills for match history as well
+      if (matchHistory.length > 0) {
+        matchHistory.forEach((history) => {
+          if (history.matchedUser) {
+            history.matchedUser.skillsOffered =
+              history.matchedUser.teachSkills || [];
+            history.matchedUser.skillsWanted =
+              history.matchedUser.learnSkills || [];
+          }
+        });
+      }
     } catch (error) {
       console.warn("MatchHistory model not available, using empty history");
       matchHistory = [];
@@ -142,7 +160,7 @@ exports.getSmartMatches = async (req, res, next) => {
     const endIndex = startIndex + parseInt(limit);
     const paginatedMatches = filteredMatches.slice(startIndex, endIndex);
 
-    // Prepare response data
+    // Prepare response data - map back to original field names for consistency
     const responseData = {
       matches: paginatedMatches.map((match) => ({
         user: {
@@ -152,8 +170,10 @@ exports.getSmartMatches = async (req, res, next) => {
           avatar: match.user.avatar,
           bio: match.user.bio,
           location: match.user.location,
-          skillsOffered: match.user.skillsOffered,
-          skillsWanted: match.user.skillsWanted,
+          teachSkills: match.user.teachSkills || match.user.skillsOffered,
+          learnSkills: match.user.learnSkills || match.user.skillsWanted,
+          skillsOffered: match.user.skillsOffered, // Keep for backward compatibility
+          skillsWanted: match.user.skillsWanted, // Keep for backward compatibility
           experienceLevel: match.user.experienceLevel,
           averageRating: match.user.averageRating,
           totalReviews: match.user.totalReviews,
@@ -215,23 +235,41 @@ exports.calculateCompatibility = async (req, res, next) => {
       });
     }
 
-    // Get both users with full data
+    // Get both users with correct field names
     const [currentUser, targetUser] = await Promise.all([
-      User.findById(userId).populate("skillsOffered skillsWanted").lean(),
-      User.findById(targetUserId).populate("skillsOffered skillsWanted").lean(),
+      User.findById(userId).lean(),
+      User.findById(targetUserId).lean(),
     ]);
 
     if (!targetUser) {
       return next(new ErrorResponse("Target user not found", 404));
     }
 
+    // Map fields for both users
+    currentUser.skillsOffered = currentUser.teachSkills || [];
+    currentUser.skillsWanted = currentUser.learnSkills || [];
+    targetUser.skillsOffered = targetUser.teachSkills || [];
+    targetUser.skillsWanted = targetUser.learnSkills || [];
+
     // Get user's match history for algorithm learning
     let matchHistory = [];
     try {
       matchHistory = await MatchHistory.find({ user: userId })
-        .populate("matchedUser", "skillsOffered skillsWanted experienceLevel")
+        .populate("matchedUser", "teachSkills learnSkills experienceLevel")
         .limit(20)
         .lean();
+
+      // Map skills for match history
+      if (matchHistory.length > 0) {
+        matchHistory.forEach((history) => {
+          if (history.matchedUser) {
+            history.matchedUser.skillsOffered =
+              history.matchedUser.teachSkills || [];
+            history.matchedUser.skillsWanted =
+              history.matchedUser.learnSkills || [];
+          }
+        });
+      }
     } catch (error) {
       console.warn("MatchHistory model not available, using empty history");
       matchHistory = [];
@@ -250,8 +288,10 @@ exports.calculateCompatibility = async (req, res, next) => {
         name: targetUser.name,
         avatar: targetUser.avatar,
         bio: targetUser.bio,
-        skillsOffered: targetUser.skillsOffered,
-        skillsWanted: targetUser.skillsWanted,
+        teachSkills: targetUser.teachSkills,
+        learnSkills: targetUser.learnSkills,
+        skillsOffered: targetUser.skillsOffered, // For backward compatibility
+        skillsWanted: targetUser.skillsWanted, // For backward compatibility
         experienceLevel: targetUser.experienceLevel,
         averageRating: targetUser.averageRating,
         totalReviews: targetUser.totalReviews,
@@ -489,9 +529,10 @@ exports.getMyMatches = async (req, res, next) => {
       query.status = status;
     }
 
+    // Use correct field names for population
     const matches = await Match.find(query)
-      .populate("requester", "name email avatar skillsOffered skillsWanted")
-      .populate("receiver", "name email avatar skillsOffered skillsWanted")
+      .populate("requester", "name email avatar teachSkills learnSkills")
+      .populate("receiver", "name email avatar teachSkills learnSkills")
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit);
@@ -523,14 +564,15 @@ exports.getMatchById = async (req, res, next) => {
     const { id } = req.params;
     const userId = req.user._id;
 
+    // Use correct field names for population
     const match = await Match.findById(id)
       .populate(
         "requester",
-        "name email avatar skillsOffered skillsWanted bio location"
+        "name email avatar teachSkills learnSkills bio location"
       )
       .populate(
         "receiver",
-        "name email avatar skillsOffered skillsWanted bio location"
+        "name email avatar teachSkills learnSkills bio location"
       );
 
     if (!match) {
@@ -563,10 +605,8 @@ exports.findCompatibleUsers = async (req, res, next) => {
     const userId = req.user._id;
     const { limit = 10 } = req.query;
 
-    // Get current user
-    const currentUser = await User.findById(userId).populate(
-      "skillsOffered skillsWanted"
-    );
+    // Get current user with correct field names
+    const currentUser = await User.findById(userId);
 
     // Get potential matches (exclude current user and existing matches)
     const existingMatches = await Match.find({
@@ -582,16 +622,14 @@ exports.findCompatibleUsers = async (req, res, next) => {
       ),
     ];
 
+    // Use correct field names in query
     const compatibleUsers = await User.find({
       _id: { $nin: excludedUserIds },
-      isActive: true,
       $or: [
-        { skillsOffered: { $exists: true, $not: { $size: 0 } } },
-        { skillsWanted: { $exists: true, $not: { $size: 0 } } },
+        { teachSkills: { $exists: true, $not: { $size: 0 } } },
+        { learnSkills: { $exists: true, $not: { $size: 0 } } },
       ],
-    })
-      .populate("skillsOffered skillsWanted")
-      .limit(parseInt(limit));
+    }).limit(parseInt(limit));
 
     res.status(200).json({
       success: true,
@@ -633,9 +671,6 @@ exports.checkMatch = async (req, res, next) => {
 // @desc    Check existing match with user
 // @route   GET /api/matches/check/:userId
 // @access  Private
-// @desc    Check existing match with user
-// @route   GET /api/matches/check/:userId
-// @access  Private
 exports.checkExistingMatch = async (req, res, next) => {
   try {
     const currentUserId = req.user._id;
@@ -652,7 +687,7 @@ exports.checkExistingMatch = async (req, res, next) => {
       success: true,
       data: {
         exists: !!match,
-        status: match ? match.status : null, // Add this line
+        status: match ? match.status : null,
         match: match || null,
       },
     });
