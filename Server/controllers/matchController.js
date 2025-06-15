@@ -733,14 +733,57 @@ exports.requestCompletion = async (req, res, next) => {
       );
     }
 
-    match.status = "completed";
-    match.completedAt = new Date();
+    // Check if user already requested completion
+    const userAlreadyRequested = match.completionRequests.some(
+      (req) => req.user.toString() === userId.toString()
+    );
+
+    if (userAlreadyRequested) {
+      return next(
+        new ErrorResponse("You have already requested completion", 400)
+      );
+    }
+
+    // Add user to completion requests
+    match.completionRequests.push({
+      user: userId,
+      requestedAt: new Date(),
+    });
+
+    // Check if both users have now requested completion
+    const otherUserId = match.requester.equals(userId)
+      ? match.receiver
+      : match.requester;
+    const otherUserRequested = match.completionRequests.some(
+      (req) => req.user.toString() === otherUserId.toString()
+    );
+
+    let message = "";
+
+    if (otherUserRequested) {
+      // Both users have requested completion - mark as completed
+      match.status = "completed";
+      match.completedAt = new Date();
+      message = "Match marked as completed! Both users confirmed completion.";
+      console.log(`Match ${id} completed - both users confirmed`);
+    } else {
+      // Only current user has requested - wait for other user
+      message =
+        "Completion request sent. Waiting for the other user to confirm.";
+      console.log(`User ${userId} requested completion for match ${id}`);
+    }
+
     await match.save();
+
+    // Populate the match for response
+    const populatedMatch = await Match.findById(match._id)
+      .populate("requester", "name email avatar")
+      .populate("receiver", "name email avatar");
 
     res.status(200).json({
       success: true,
-      data: match,
-      message: "Match marked as completed",
+      data: populatedMatch,
+      message: message,
     });
   } catch (error) {
     console.error("Request completion error:", error);

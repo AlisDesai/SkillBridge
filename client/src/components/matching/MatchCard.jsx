@@ -17,14 +17,20 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
   console.log("MatchCard - match data:", match);
   console.log("MatchCard - other user:", otherUser);
 
-  // Check completion request status
+  // Check completion request status - FIXED: Compare with string IDs
   const userRequestedCompletion = match.completionRequests?.some(
-    (req) => req.user === currentUserId
+    (req) => req.user.toString() === currentUserId.toString()
   );
 
   const otherUserRequestedCompletion = match.completionRequests?.some(
-    (req) => req.user === otherUser._id
+    (req) => req.user.toString() === otherUser._id.toString()
   );
+
+  console.log("Completion status:", {
+    userRequested: userRequestedCompletion,
+    otherUserRequested: otherUserRequestedCompletion,
+    completionRequests: match.completionRequests,
+  });
 
   const handleResponse = async (status) => {
     setResponding(true);
@@ -45,7 +51,7 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
     try {
       const response = await api.post(`/matches/${match._id}/complete`);
       showSuccess(response.data.message);
-      onRespond();
+      onRespond(); // Refresh the matches list
     } catch (err) {
       showError(err.response?.data?.message || "Failed to request completion");
     } finally {
@@ -78,6 +84,31 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
     return "";
   };
 
+  // Get completion button text and state
+  const getCompletionButtonState = () => {
+    if (userRequestedCompletion && otherUserRequestedCompletion) {
+      return { text: "✅ Completed", disabled: true, color: "bg-green-500" };
+    } else if (userRequestedCompletion) {
+      return {
+        text: "⏳ Awaiting Confirmation",
+        disabled: true,
+        color: "bg-gray-400",
+      };
+    } else if (otherUserRequestedCompletion) {
+      return {
+        text: "✅ Confirm Completion",
+        disabled: false,
+        color: "bg-green-600 hover:bg-green-700",
+      };
+    } else {
+      return {
+        text: "✅ Mark Complete",
+        disabled: false,
+        color: "bg-green-600 hover:bg-green-700",
+      };
+    }
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow hover:shadow-lg transition p-5 border border-gray-100">
       <div className="flex items-center gap-4">
@@ -107,7 +138,7 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
         <span className="text-xs text-gray-500">{getRequestType()}</span>
       </div>
 
-      {/* Skills Exchange Info - FIXED: Handle missing skill fields */}
+      {/* Skills Exchange Info */}
       <div className="mt-3 text-xs text-gray-600">
         {match.skillOffered && (
           <div>
@@ -136,18 +167,24 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
         )}
       </div>
 
-      {/* Completion Status Alert */}
+      {/* Completion Status Alert - IMPROVED */}
       {match.status === "accepted" &&
         otherUserRequestedCompletion &&
         !userRequestedCompletion && (
-          <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-xs text-yellow-700">
-              🔔 <strong>{otherUser.name}</strong> has requested to mark this as
-              completed. Do you want to complete this exchange too?
+          <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <p className="text-sm text-yellow-800">
+              🔔 <strong>{otherUser.name}</strong> has requested to mark this
+              exchange as completed.
+              <br />
+              <span className="text-xs">
+                Click "Confirm Completion" if you also want to complete this
+                exchange.
+              </span>
             </p>
           </div>
         )}
 
+      {/* Action Buttons */}
       {isReceiver && isPending && (
         <div className="flex gap-2 mt-4">
           <button
@@ -176,22 +213,18 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
             💬 Start Chat
           </button>
 
-          {!userRequestedCompletion ? (
-            <button
-              onClick={handleRequestCompletion}
-              disabled={responding}
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl text-sm font-medium disabled:opacity-50"
-            >
-              ✅ Mark Complete
-            </button>
-          ) : (
-            <button
-              disabled
-              className="flex-1 bg-gray-400 text-white py-2 rounded-xl text-sm font-medium"
-            >
-              ⏳ Awaiting Confirmation
-            </button>
-          )}
+          {(() => {
+            const buttonState = getCompletionButtonState();
+            return (
+              <button
+                onClick={handleRequestCompletion}
+                disabled={responding || buttonState.disabled}
+                className={`flex-1 ${buttonState.color} text-white py-2 rounded-xl text-sm font-medium disabled:opacity-50 transition-colors`}
+              >
+                {responding ? "..." : buttonState.text}
+              </button>
+            );
+          })()}
         </div>
       )}
 

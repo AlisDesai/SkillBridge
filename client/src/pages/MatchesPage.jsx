@@ -2,15 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Sparkles,
-  Target,
-  Brain,
-  TrendingUp,
-  Filter,
-  Search,
-  RefreshCw,
-} from "lucide-react";
+import { Sparkles, Target, Brain, Search, RefreshCw } from "lucide-react";
 import api from "../utils/api";
 import MatchCard from "../components/matching/MatchCard";
 import SmartMatchCard from "../components/matching/SmartMatchCard";
@@ -234,18 +226,6 @@ export default function MatchesPage() {
               <span>Refresh</span>
             </button>
           )}
-
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
-              showFilters
-                ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
-                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600"
-            }`}
-          >
-            <Filter className="w-4 h-4" />
-            <span>Filters</span>
-          </button>
         </div>
       </div>
 
@@ -291,48 +271,12 @@ export default function MatchesPage() {
             </div>
           </button>
 
-          <button
-            onClick={() => setActiveTab("analytics")}
-            className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
-              activeTab === "analytics"
-                ? "border-emerald-500 text-emerald-600 dark:text-emerald-400"
-                : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-            }`}
-          >
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="w-4 h-4" />
-              <span>Analytics</span>
-            </div>
-          </button>
+          
         </nav>
       </div>
 
       {/* Search and Filters */}
-      {showFilters && (
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-4">
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search by name or skills..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 
-                         rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
-                         focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-            />
-          </div>
-
-          {/* Match Filters - only show for requests tab */}
-          {activeTab === "requests" && (
-            <MatchFilters
-              activeFilter={activeFilter}
-              setActiveFilter={setActiveFilter}
-            />
-          )}
-        </div>
-      )}
+      
 
       {/* Tab Content */}
       {activeTab === "requests" && (
@@ -481,96 +425,7 @@ export default function MatchesPage() {
         </div>
       )}
 
-      {activeTab === "analytics" && (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Match Reasons Analytics */}
-            <ReasonsStats matches={matches} className="lg:col-span-2" />
-
-            {/* Additional analytics can be added here */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                Match Success Insights
-              </h4>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Response Rate
-                  </span>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">
-                    {stats.requests > 0
-                      ? Math.round(
-                          ((stats.current +
-                            matches.filter((m) => m.status === "rejected")
-                              .length) /
-                            stats.requests) *
-                            100
-                        )
-                      : 0}
-                    %
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Acceptance Rate
-                  </span>
-                  <span className="font-medium text-emerald-600">
-                    {stats.requests > 0
-                      ? Math.round((stats.current / stats.requests) * 100)
-                      : 0}
-                    %
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Average Response Time
-                  </span>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">
-                    2.3 days
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                Popular Skills
-              </h4>
-              <div className="space-y-3">
-                {[
-                  "React.js",
-                  "Python",
-                  "UI/UX Design",
-                  "Data Science",
-                  "Machine Learning",
-                ].map((skill, index) => (
-                  <div
-                    key={skill}
-                    className="flex items-center justify-between"
-                  >
-                    <span className="text-gray-600 dark:text-gray-400">
-                      {skill}
-                    </span>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <div
-                          className="bg-emerald-500 h-2 rounded-full"
-                          style={{
-                            width: `${Math.max(20, 100 - index * 15)}%`,
-                          }}
-                        ></div>
-                      </div>
-                      <span className="text-xs text-gray-500 dark:text-gray-400 w-8">
-                        {Math.max(20, 100 - index * 15)}%
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 }
