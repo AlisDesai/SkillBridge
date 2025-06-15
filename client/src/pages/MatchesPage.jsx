@@ -48,14 +48,26 @@ export default function MatchesPage() {
   const fetchMatches = async () => {
     try {
       setLoading(true);
+      console.log("Fetching user info and matches...");
+
       const userRes = await api.get("/users/me");
+      console.log("Current user:", userRes.data);
       setUserId(userRes.data._id);
 
       const matchRes = await api.get("/matches");
-      const allMatches = matchRes.data?.data || [];
+      console.log("Raw match response:", matchRes.data);
+
+      // FIXED: Handle both possible response structures
+      const allMatches = Array.isArray(matchRes.data.data)
+        ? matchRes.data.data
+        : matchRes.data?.data?.matches || [];
+
+      console.log("Processed matches:", allMatches);
       setMatches(allMatches);
       filterMatches(allMatches, activeFilter, userRes.data._id);
     } catch (err) {
+      console.error("Failed to load matches:", err);
+      console.error("Error response:", err.response?.data);
       showError("Failed to load matches");
     } finally {
       setLoading(false);

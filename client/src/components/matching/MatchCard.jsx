@@ -14,6 +14,9 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
 
   const [responding, setResponding] = useState(false);
 
+  console.log("MatchCard - match data:", match);
+  console.log("MatchCard - other user:", otherUser);
+
   // Check completion request status
   const userRequestedCompletion = match.completionRequests?.some(
     (req) => req.user === currentUserId
@@ -30,6 +33,7 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
       showSuccess(`Match ${status}`);
       onRespond();
     } catch (err) {
+      console.error("Error responding to match:", err);
       showError("Failed to update match");
     } finally {
       setResponding(false);
@@ -82,9 +86,9 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
         </div>
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-800">
-            {otherUser.name}
+            {otherUser.name || "Unknown User"}
           </h3>
-          <p className="text-sm text-gray-500">{otherUser.email}</p>
+          <p className="text-sm text-gray-500">{otherUser.email || ""}</p>
         </div>
       </div>
 
@@ -103,15 +107,33 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
         <span className="text-xs text-gray-500">{getRequestType()}</span>
       </div>
 
-      {/* Skills Exchange Info */}
+      {/* Skills Exchange Info - FIXED: Handle missing skill fields */}
       <div className="mt-3 text-xs text-gray-600">
-        <div>
-          Offering: <span className="font-medium">{match.skillOffered}</span>
-        </div>
-        <div>
-          Requesting:{" "}
-          <span className="font-medium">{match.skillRequested}</span>
-        </div>
+        {match.skillOffered && (
+          <div>
+            Offering: <span className="font-medium">{match.skillOffered}</span>
+          </div>
+        )}
+        {match.skillRequested && (
+          <div>
+            Requesting:{" "}
+            <span className="font-medium">{match.skillRequested}</span>
+          </div>
+        )}
+        {match.skillsInvolved && match.skillsInvolved.length > 0 && (
+          <div>
+            Skills:{" "}
+            <span className="font-medium">
+              {match.skillsInvolved.join(", ")}
+            </span>
+          </div>
+        )}
+        {match.message && (
+          <div className="mt-2">
+            Message:{" "}
+            <span className="font-medium italic">"{match.message}"</span>
+          </div>
+        )}
       </div>
 
       {/* Completion Status Alert */}
@@ -131,16 +153,16 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
           <button
             onClick={() => handleResponse("accepted")}
             disabled={responding}
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl text-sm font-medium"
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl text-sm font-medium disabled:opacity-50"
           >
-            Accept
+            {responding ? "..." : "Accept"}
           </button>
           <button
             onClick={() => handleResponse("rejected")}
             disabled={responding}
-            className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-xl text-sm font-medium"
+            className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-xl text-sm font-medium disabled:opacity-50"
           >
-            Reject
+            {responding ? "..." : "Reject"}
           </button>
         </div>
       )}
@@ -158,7 +180,7 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
             <button
               onClick={handleRequestCompletion}
               disabled={responding}
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl text-sm font-medium"
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl text-sm font-medium disabled:opacity-50"
             >
               ✅ Mark Complete
             </button>

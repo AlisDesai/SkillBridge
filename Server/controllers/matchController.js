@@ -521,6 +521,8 @@ exports.getMyMatches = async (req, res, next) => {
     const userId = req.user._id;
     const { status, page = 1, limit = 10 } = req.query;
 
+    console.log("Getting matches for user:", userId.toString());
+
     let query = {
       $or: [{ requester: userId }, { receiver: userId }],
     };
@@ -529,25 +531,34 @@ exports.getMyMatches = async (req, res, next) => {
       query.status = status;
     }
 
+    console.log("Match query:", query);
+
     // Use correct field names for population
     const matches = await Match.find(query)
-      .populate("requester", "name email avatar teachSkills learnSkills")
-      .populate("receiver", "name email avatar teachSkills learnSkills")
+      .populate(
+        "requester",
+        "name email avatar teachSkills learnSkills bio location"
+      )
+      .populate(
+        "receiver",
+        "name email avatar teachSkills learnSkills bio location"
+      )
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit);
 
+    console.log("Found matches:", matches.length);
+
     const total = await Match.countDocuments(query);
 
+    // FIXED: Return matches array directly as 'data' to match frontend expectation
     res.status(200).json({
       success: true,
-      data: {
-        matches,
-        pagination: {
-          currentPage: page,
-          totalPages: Math.ceil(total / limit),
-          totalMatches: total,
-        },
+      data: matches, // Frontend expects this to be the matches array directly
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / limit),
+        totalMatches: total,
       },
     });
   } catch (error) {
