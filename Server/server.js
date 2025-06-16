@@ -40,7 +40,7 @@ const io = require("socket.io")(server, {
 });
 
 // 🔥 MAKE IO INSTANCE AVAILABLE TO ALL CONTROLLERS
-app.set("io", io);
+app.set('io', io);
 
 // Middleware
 app.use(express.json());
@@ -86,16 +86,16 @@ server.listen(PORT, () => {
 });
 
 // Graceful shutdown
-process.on("SIGTERM", () => {
-  console.log("🛑 SIGTERM received. Shutting down gracefully...");
+process.on('SIGTERM', () => {
+  console.log('🛑 SIGTERM received. Shutting down gracefully...');
   server.close(() => {
-    console.log("✅ Process terminated");
+    console.log('✅ Process terminated');
   });
 });
 
-process.on("SIGINT", () => {
-  console.log("🛑 SIGINT received. Shutting down gracefully...");
+process.on('SIGINT', () => {
+  console.log('🛑 SIGINT received. Shutting down gracefully...');
   server.close(() => {
-    console.log("✅ Process terminated");
+    console.log('✅ Process terminated');
   });
 });
