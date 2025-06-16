@@ -29,10 +29,18 @@ export default function UserDetailPage() {
       // First check if there's an existing match between users
       const matchRes = await api.get(`/matches/check/${user._id}`);
 
-      if (matchRes.data.match) {
-        // If match exists, get or create conversation
+      if (matchRes.data.data?.exists && matchRes.data.data?.match) {
+        const match = matchRes.data.data.match;
+
+        // Check if match is accepted
+        if (match.status !== "accepted") {
+          alert("Please wait for match approval before messaging!");
+          return;
+        }
+
+        // If match exists and is accepted, get or create conversation
         const conversationRes = await api.get(
-          `/chats/conversations/match/${matchRes.data.match._id}`
+          `/chats/conversations/match/${match._id}`
         );
         navigate("/chat", {
           state: {

@@ -22,7 +22,7 @@ const requiredEnv = [
 ];
 requiredEnv.forEach((key) => {
   if (!process.env[key]) {
-    console.error(` Missing required env variable: ${key}`);
+    console.error(`❌ Missing required env variable: ${key}`);
     process.exit(1);
   }
 });
@@ -38,6 +38,9 @@ const io = require("socket.io")(server, {
     credentials: true,
   },
 });
+
+// 🔥 MAKE IO INSTANCE AVAILABLE TO ALL CONTROLLERS
+app.set("io", io);
 
 // Middleware
 app.use(express.json());
@@ -63,20 +66,36 @@ app.use("/api/notifications", require("./routes/notifications"));
 app.use("/api/schedules", require("./routes/schedules"));
 app.use("/api/progress", require("./routes/progress"));
 
-//  Test route
+// Test route
 app.get("/", (req, res) => {
   res.send("SkillBridge API is running...");
 });
 
-//  Global Error Handler
+// Global Error Handler
 app.use(errorHandler);
 
-//  Socket setup
+// Socket setup
 socketController(io);
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
   console.log(
-    `Hello, Future Billionare! Your server is running on port ${PORT}`
+    `🚀 Hello, Future Billionaire! Your server is running on port ${PORT}`
   );
+  console.log(`📱 Socket.IO server ready for connections`);
+});
+
+// Graceful shutdown
+process.on("SIGTERM", () => {
+  console.log("🛑 SIGTERM received. Shutting down gracefully...");
+  server.close(() => {
+    console.log("✅ Process terminated");
+  });
+});
+
+process.on("SIGINT", () => {
+  console.log("🛑 SIGINT received. Shutting down gracefully...");
+  server.close(() => {
+    console.log("✅ Process terminated");
+  });
 });

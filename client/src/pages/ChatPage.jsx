@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useSocket } from "../contexts/SocketContext";
 import api from "../utils/api";
 
 export default function ChatPage() {
   const location = useLocation();
+  const { matchId } = useParams();
+  const navigate = useNavigate();
   const {
     isConnected,
     joinConversation,
@@ -19,6 +21,7 @@ export default function ChatPage() {
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   const messagesEndRef = useRef(null);
   const userId = JSON.parse(localStorage.getItem("user"))?._id;
@@ -33,31 +36,69 @@ export default function ChatPage() {
     const loadConversations = async () => {
       try {
         setLoading(true);
-        const res = await api.get("/chats/conversations");
-        setConversations(res.data);
+        setError("");
 
-        // If coming from UserDetailPage with userId, find or create conversation
-        if (location.state?.userId) {
-          // This would need a match ID - for now just select first conversation
-          if (res.data.length > 0) {
+        // If matchId is provided, try to get/create conversation for that match
+        if (matchId) {
+          try {
+            const matchRes = await api.get(
+              `/chats/conversations/match/${matchId}`
+            );
+            setSelectedConversation(matchRes.data);
+
+            // Also load all conversations for the sidebar
+            const allRes = await api.get("/chats/conversations");
+            setConversations(allRes.data);
+          } catch (matchError) {
+            console.error("Match conversation error:", matchError);
+            if (matchError.response?.status === 403) {
+              setError(
+                matchError.response.data.message ||
+                  "Please wait for match approval before messaging!"
+              );
+            } else {
+              setError("Failed to load conversation");
+            }
+
+            // Still try to load other conversations
+            try {
+              const allRes = await api.get("/chats/conversations");
+              setConversations(allRes.data);
+            } catch (err) {
+              console.error("Failed to load conversations:", err);
+            }
+          }
+        } else {
+          // Load all conversations
+          const res = await api.get("/chats/conversations");
+          setConversations(res.data);
+
+          // If coming from UserDetailPage with userId, find conversation
+          if (location.state?.userId) {
+            const conversation = res.data.find((conv) =>
+              conv.participants.some((p) => p._id === location.state.userId)
+            );
+            if (conversation) {
+              setSelectedConversation(conversation);
+            }
+          } else if (res.data.length > 0) {
             setSelectedConversation(res.data[0]);
           }
-        } else if (res.data.length > 0) {
-          setSelectedConversation(res.data[0]);
         }
       } catch (error) {
         console.error("Failed to load conversations:", error);
+        setError("Failed to load conversations");
       } finally {
         setLoading(false);
       }
     };
 
     loadConversations();
-  }, [location.state]);
+  }, [location.state, matchId]);
 
   // Load messages when conversation is selected
   useEffect(() => {
-    if (selectedConversation) {
+    if (selectedConversation && !error) {
       loadMessages(selectedConversation._id);
       joinConversation(selectedConversation._id);
 
@@ -65,27 +106,45 @@ export default function ChatPage() {
         leaveConversation(selectedConversation._id);
       };
     }
-  }, [selectedConversation]);
+  }, [selectedConversation, error, joinConversation, leaveConversation]);
 
-  // Listen for new messages
+  // Listen for new messages with better real-time handling
   useEffect(() => {
     const handleNewMessage = (message) => {
+      console.log("Real-time message received:", message);
+
+      // Add message to current conversation if it matches
       if (message.conversationId === selectedConversation?._id) {
-        setMessages((prev) => [...prev, message]);
+        setMessages((prev) => {
+          // Check if message already exists to prevent duplicates
+          const messageExists = prev.some((msg) => msg._id === message._id);
+          if (messageExists) return prev;
+          return [...prev, message];
+        });
       }
 
       // Update conversation list with new last message
       setConversations((prev) =>
         prev.map((conv) =>
           conv._id === message.conversationId
-            ? { ...conv, lastMessage: message, lastMessageAt: new Date() }
+            ? {
+                ...conv,
+                lastMessage: message,
+                lastMessageAt: message.createdAt || new Date(),
+              }
             : conv
         )
       );
     };
 
-    onMessageReceived(handleNewMessage);
-    return () => offMessageReceived(handleNewMessage);
+    if (onMessageReceived) {
+      onMessageReceived(handleNewMessage);
+      return () => {
+        if (offMessageReceived) {
+          offMessageReceived(handleNewMessage);
+        }
+      };
+    }
   }, [selectedConversation, onMessageReceived, offMessageReceived]);
 
   // Scroll to bottom when messages change
@@ -106,22 +165,62 @@ export default function ChatPage() {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim() || !selectedConversation || sending) return;
+    if (!newMessage.trim() || !selectedConversation || sending || error) return;
 
     setSending(true);
+    const tempMessage = {
+      _id: Date.now().toString(),
+      text: newMessage.trim(),
+      sender: { _id: userId, name: "You" },
+      createdAt: new Date(),
+      conversationId: selectedConversation._id,
+      isTemporary: true,
+    };
+
+    // Optimistically add message to UI
+    setMessages((prev) => [...prev, tempMessage]);
+    const messageText = newMessage.trim();
+    setNewMessage("");
+
     try {
       const messageData = {
         conversationId: selectedConversation._id,
-        text: newMessage.trim(),
+        text: messageText,
       };
 
       // Send via API
-      await api.post("/chats/messages", messageData);
+      const response = await api.post("/chats/messages", messageData);
 
-      // Clear input
-      setNewMessage("");
+      // Remove temporary message and replace with real one
+      setMessages((prev) => prev.filter((msg) => msg._id !== tempMessage._id));
+
+      // The real message will come through socket, but if not, add it manually
+      if (response.data) {
+        setMessages((prev) => {
+          const messageExists = prev.some(
+            (msg) => msg._id === response.data._id
+          );
+          if (!messageExists) {
+            return [...prev, response.data];
+          }
+          return prev;
+        });
+      }
     } catch (error) {
       console.error("Failed to send message:", error);
+
+      // Remove temporary message on error
+      setMessages((prev) => prev.filter((msg) => msg._id !== tempMessage._id));
+
+      // Restore message text
+      setNewMessage(messageText);
+
+      if (error.response?.status === 403) {
+        setError(
+          error.response.data.message ||
+            "Please wait for match approval before messaging!"
+        );
+      }
     } finally {
       setSending(false);
     }
@@ -157,6 +256,51 @@ export default function ChatPage() {
     );
   }
 
+  // Show error if match is not accepted
+  if (error && matchId) {
+    return (
+      <div className="h-[calc(100vh-150px)] flex items-center justify-center">
+        <div className="text-center bg-white rounded-2xl shadow-md p-8 max-w-md">
+          <div className="mb-4">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg
+                className="w-8 h-8 text-red-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.728-.833-2.498 0L4.316 15.5c-.77.833.192 2.5 1.732 2.5z"
+                />
+              </svg>
+            </div>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            Chat Not Available
+          </h3>
+          <p className="text-red-500 mb-6">{error}</p>
+          <div className="space-y-3">
+            <button
+              onClick={() => navigate("/matches")}
+              className="w-full px-4 py-2 bg-[#4A6FFF] text-white rounded-lg hover:bg-[#3A5FEF] transition-colors"
+            >
+              View Matches
+            </button>
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+            >
+              Back to Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-[calc(100vh-150px)] flex gap-6">
       {/* Conversations List */}
@@ -186,7 +330,10 @@ export default function ChatPage() {
               return (
                 <div
                   key={conversation._id}
-                  onClick={() => setSelectedConversation(conversation)}
+                  onClick={() => {
+                    setSelectedConversation(conversation);
+                    setError("");
+                  }}
                   className={`p-3 rounded-lg cursor-pointer transition-colors ${
                     isSelected ? "bg-[#4A6FFF] text-white" : "hover:bg-gray-100"
                   }`}
@@ -238,7 +385,7 @@ export default function ChatPage() {
 
       {/* Chat Window */}
       <div className="flex-1 bg-white rounded-2xl shadow-md flex flex-col">
-        {selectedConversation ? (
+        {selectedConversation && !error ? (
           <>
             {/* Chat Header */}
             <div className="p-4 border-b border-gray-200">
@@ -289,7 +436,7 @@ export default function ChatPage() {
                             isOwnMessage
                               ? "bg-[#4A6FFF] text-white"
                               : "bg-gray-100 text-gray-800"
-                          }`}
+                          } ${message.isTemporary ? "opacity-70" : ""}`}
                         >
                           <p className="text-sm">{message.text}</p>
                           <p
@@ -298,6 +445,7 @@ export default function ChatPage() {
                             }`}
                           >
                             {formatTime(message.createdAt)}
+                            {message.isTemporary && " ⏳"}
                           </p>
                         </div>
                       </div>
@@ -320,11 +468,13 @@ export default function ChatPage() {
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Type your message..."
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4A6FFF] focus:border-transparent"
-                  disabled={sending || !isConnected}
+                  disabled={sending || !isConnected || error}
                 />
                 <button
                   type="submit"
-                  disabled={!newMessage.trim() || sending || !isConnected}
+                  disabled={
+                    !newMessage.trim() || sending || !isConnected || error
+                  }
                   className="px-6 py-2 bg-[#4A6FFF] text-white rounded-lg hover:bg-[#3A5FEF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {sending ? "Sending..." : "Send"}
@@ -334,7 +484,9 @@ export default function ChatPage() {
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center text-gray-500">
-            Select a conversation to start chatting
+            {error
+              ? "Please select another conversation"
+              : "Select a conversation to start chatting"}
           </div>
         )}
       </div>

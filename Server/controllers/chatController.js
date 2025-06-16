@@ -21,6 +21,16 @@ exports.getOrCreateConversation = async (req, res, next) => {
       );
     }
 
+    // Check if match is accepted before allowing conversation access
+    if (match.status !== "accepted") {
+      return next(
+        new ErrorResponse(
+          "Please wait for match approval before messaging!",
+          403
+        )
+      );
+    }
+
     // Find existing conversation
     let conversation = await Conversation.findOne({ matchId })
       .populate("participants", "name")
@@ -82,6 +92,21 @@ exports.sendMessage = async (req, res, next) => {
       );
     }
 
+    // Check if match is accepted before allowing messages
+    const match = await Match.findById(conversation.matchId);
+    if (!match) {
+      return next(new ErrorResponse("Match not found", 404));
+    }
+
+    if (match.status !== "accepted") {
+      return next(
+        new ErrorResponse(
+          "Please wait for match approval before messaging!",
+          403
+        )
+      );
+    }
+
     // Create message
     const message = await Message.create({
       conversationId,
@@ -99,6 +124,28 @@ exports.sendMessage = async (req, res, next) => {
 
     // Populate sender info
     await message.populate("sender", "name");
+
+    // 🔥 EMIT SOCKET EVENT TO ALL USERS IN THE CONVERSATION
+    const io = req.app.get("io"); // Get io instance from app
+    if (io) {
+      io.to(conversationId).emit("messageReceived", {
+        _id: message._id,
+        conversationId: message.conversationId,
+        sender: {
+          _id: message.sender._id,
+          name: message.sender.name,
+        },
+        text: message.text,
+        messageType: message.messageType,
+        seen: message.seen,
+        createdAt: message.createdAt,
+        updatedAt: message.updatedAt,
+      });
+
+      console.log(
+        `💬 Message broadcasted via socket for conversation: ${conversationId}`
+      );
+    }
 
     res.status(201).json(message);
   } catch (err) {
