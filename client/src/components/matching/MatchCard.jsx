@@ -66,15 +66,15 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
   const getStatusColor = () => {
     switch (match.status) {
       case "accepted":
-        return "text-emerald-700 bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200";
+        return "text-emerald-700 dark:text-emerald-300 bg-gradient-to-r from-emerald-50/80 to-green-50/80 dark:from-emerald-900/30 dark:to-green-900/30 border border-emerald-200/60 dark:border-emerald-400/30";
       case "rejected":
-        return "text-red-700 bg-gradient-to-r from-red-50 to-rose-50 border border-red-200";
+        return "text-red-700 dark:text-red-300 bg-gradient-to-r from-red-50/80 to-rose-50/80 dark:from-red-900/30 dark:to-rose-900/30 border border-red-200/60 dark:border-red-400/30";
       case "pending":
-        return "text-amber-700 bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200";
+        return "text-amber-700 dark:text-amber-300 bg-gradient-to-r from-amber-50/80 to-yellow-50/80 dark:from-amber-900/30 dark:to-yellow-900/30 border border-amber-200/60 dark:border-amber-400/30";
       case "completed":
-        return "text-blue-700 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200";
+        return "text-blue-700 dark:text-blue-300 bg-gradient-to-r from-blue-50/80 to-indigo-50/80 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-200/60 dark:border-blue-400/30";
       default:
-        return "text-slate-700 bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200";
+        return "text-slate-700 dark:text-slate-300 bg-gradient-to-r from-slate-50/80 to-gray-50/80 dark:from-slate-800/30 dark:to-gray-800/30 border border-slate-200/60 dark:border-slate-400/30";
     }
   };
 
@@ -87,12 +87,16 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
   // Get completion button text and state
   const getCompletionButtonState = () => {
     if (userRequestedCompletion && otherUserRequestedCompletion) {
-      return { text: "✅ Completed", disabled: true, color: "bg-gradient-to-r from-emerald-500 to-green-500 shadow-lg shadow-emerald-500/25" };
+      return { 
+        text: "✅ Completed", 
+        disabled: true, 
+        color: "bg-gradient-to-r from-emerald-500 to-green-500 shadow-lg shadow-emerald-500/25" 
+      };
     } else if (userRequestedCompletion) {
       return {
         text: "⏳ Awaiting Confirmation",
         disabled: true,
-        color: "bg-gradient-to-r from-slate-400 to-gray-400",
+        color: "bg-gradient-to-r from-slate-600 to-gray-600 dark:from-slate-500 dark:to-gray-500",
       };
     } else if (otherUserRequestedCompletion) {
       return {
@@ -110,66 +114,68 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-white via-slate-50/50 to-white backdrop-blur-sm rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 p-8 border border-slate-200/60 hover:border-slate-300/80 group relative overflow-hidden hover:-translate-y-2">
+    <div className="group relative bg-gradient-to-br from-gray-950/90 via-slate-950/90 to-gray-900/90 backdrop-blur-xl rounded-3xl border border-slate-600/20 p-8 hover:border-emerald-400/30 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:shadow-emerald-500/10 overflow-hidden animate-fadeInUp min-h-[500px]">
       {/* Subtle background glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/0 via-green-500/3 to-teal-600/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
       
       {/* Header Section */}
-      <div className="relative z-10 flex items-center gap-6">
+      <div className="relative z-10 flex items-center gap-6 mb-6">
         <div className="relative">
-          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xl shadow-xl shadow-indigo-500/25 group-hover:shadow-indigo-500/40 transition-all duration-500 group-hover:scale-110">
+          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600 flex items-center justify-center text-white font-bold text-xl shadow-xl shadow-emerald-500/25 group-hover:shadow-emerald-500/40 transition-all duration-500 group-hover:scale-110">
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 rounded-2xl"></div>
             <span className="relative z-10">{otherUser.name?.charAt(0)?.toUpperCase() || "U"}</span>
           </div>
-          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-white shadow-lg"></div>
+          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-gray-950 shadow-lg"></div>
         </div>
         <div className="flex-1">
-          <h3 className="text-2xl font-bold text-slate-800 mb-1 group-hover:text-indigo-700 transition-colors duration-300">
+          <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-emerald-300 transition-colors duration-300">
             {otherUser.name || "Unknown User"}
           </h3>
-          <p className="text-slate-500 font-medium">{otherUser.email || ""}</p>
+          <p className="text-slate-400 font-medium">{otherUser.email || ""}</p>
         </div>
       </div>
 
       {otherUser.bio && (
-        <div className="relative z-10 mt-6">
-          <p className="text-slate-600 leading-relaxed bg-gradient-to-r from-slate-50 to-gray-50 rounded-2xl p-4 border border-slate-200/50 line-clamp-2">
+        <div className="relative z-10 mb-6">
+          <p className="text-slate-300 leading-relaxed bg-gradient-to-r from-slate-800/30 to-gray-800/30 rounded-2xl p-4 border border-slate-600/20 line-clamp-2">
             "{otherUser.bio}"
           </p>
         </div>
       )}
 
-      <div className="relative z-10 flex items-center justify-between mt-6">
+      <div className="relative z-10 flex items-center justify-between mb-6">
         <span className={`text-sm px-4 py-2 rounded-full font-semibold ${getStatusColor()} shadow-sm`}>
           Status: {match.status}
         </span>
-        <span className="text-sm text-slate-500 font-medium bg-slate-100 px-3 py-1 rounded-full">{getRequestType()}</span>
+        <span className="text-sm text-slate-400 font-medium bg-slate-800/30 px-3 py-1 rounded-full border border-slate-600/20">
+          {getRequestType()}
+        </span>
       </div>
 
       {/* Skills Exchange Info */}
-      <div className="relative z-10 mt-6 space-y-3">
+      <div className="relative z-10 mb-8 space-y-3">
         {match.skillOffered && (
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-3 border border-blue-200/50">
-            <span className="text-blue-700 text-sm font-medium">Offering: </span>
-            <span className="text-blue-800 font-bold">{match.skillOffered}</span>
+          <div className="bg-gradient-to-r from-emerald-900/30 to-green-900/30 rounded-xl p-3 border border-emerald-500/20">
+            <span className="text-emerald-400 text-sm font-medium">Offering: </span>
+            <span className="text-emerald-300 font-bold">{match.skillOffered}</span>
           </div>
         )}
         {match.skillRequested && (
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-3 border border-purple-200/50">
-            <span className="text-purple-700 text-sm font-medium">Requesting: </span>
-            <span className="text-purple-800 font-bold">{match.skillRequested}</span>
+          <div className="bg-gradient-to-r from-teal-900/30 to-cyan-900/30 rounded-xl p-3 border border-teal-500/20">
+            <span className="text-teal-400 text-sm font-medium">Requesting: </span>
+            <span className="text-teal-300 font-bold">{match.skillRequested}</span>
           </div>
         )}
         {match.skillsInvolved && match.skillsInvolved.length > 0 && (
-          <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-3 border border-emerald-200/50">
-            <span className="text-emerald-700 text-sm font-medium">Skills: </span>
-            <span className="text-emerald-800 font-bold">{match.skillsInvolved.join(", ")}</span>
+          <div className="bg-gradient-to-r from-emerald-900/30 to-green-900/30 rounded-xl p-3 border border-emerald-500/20">
+            <span className="text-emerald-400 text-sm font-medium">Skills: </span>
+            <span className="text-emerald-300 font-bold">{match.skillsInvolved.join(", ")}</span>
           </div>
         )}
         {match.message && (
-          <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl p-4 border border-amber-200/50">
-            <span className="text-amber-700 text-sm font-medium">Message: </span>
-            <p className="text-amber-800 font-semibold italic mt-1">"{match.message}"</p>
+          <div className="bg-gradient-to-r from-slate-800/40 to-gray-800/40 rounded-xl p-4 border border-slate-500/20">
+            <span className="text-slate-400 text-sm font-medium">Message: </span>
+            <p className="text-slate-200 font-medium italic mt-1">"{match.message}"</p>
           </div>
         )}
       </div>
@@ -178,16 +184,16 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
       {match.status === "accepted" &&
         otherUserRequestedCompletion &&
         !userRequestedCompletion && (
-          <div className="relative z-10 mt-6 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-300/50 rounded-2xl shadow-lg">
+          <div className="relative z-10 mb-6 p-4 bg-gradient-to-r from-yellow-900/30 to-amber-900/30 border border-yellow-500/30 rounded-2xl shadow-lg">
             <div className="flex items-start space-x-3">
               <div className="flex-shrink-0 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
                 <span className="text-white text-lg">🔔</span>
               </div>
               <div>
-                <p className="text-yellow-800 font-semibold">
+                <p className="text-yellow-300 font-semibold">
                   <strong>{otherUser.name}</strong> has requested to mark this exchange as completed.
                 </p>
-                <p className="text-yellow-700 text-sm mt-1">
+                <p className="text-yellow-400 text-sm mt-1">
                   Click "Confirm Completion" if you also want to complete this exchange.
                 </p>
               </div>
@@ -197,7 +203,7 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
 
       {/* Action Buttons */}
       {isReceiver && isPending && (
-        <div className="relative z-10 flex gap-4 mt-8">
+        <div className="relative z-10 flex gap-4 mt-auto">
           <button
             onClick={() => handleResponse("accepted")}
             disabled={responding}
@@ -230,10 +236,10 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
       )}
 
       {match.status === "accepted" && (
-        <div className="relative z-10 flex gap-4 mt-8">
+        <div className="relative z-10 flex gap-4 mt-auto">
           <button
             onClick={handleStartChat}
-            className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-4 rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40"
+            className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-4 rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40"
           >
             <span className="flex items-center justify-center space-x-2">
               <span>💬</span>
@@ -264,11 +270,11 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
       )}
 
       {match.status === "completed" && (
-        <div className="relative z-10 mt-8 space-y-4">
-          <div className="text-center bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-4 border border-emerald-200/50">
+        <div className="relative z-10 mt-auto space-y-4">
+          <div className="text-center bg-gradient-to-r from-emerald-900/40 to-green-900/40 rounded-2xl p-4 border border-emerald-500/30">
             <div className="flex items-center justify-center space-x-2 mb-2">
               <span className="text-2xl">🎉</span>
-              <span className="text-emerald-700 font-bold text-lg">Learning Exchange Completed!</span>
+              <span className="text-emerald-300 font-bold text-lg">Learning Exchange Completed!</span>
             </div>
           </div>
           <button
