@@ -55,7 +55,7 @@ export default function HomePage() {
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400/80 rounded-full animate-pulse shadow-lg shadow-green-400/50"></div>
             <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 rounded-xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-300 -z-10"></div>
           </div>
-          <div className="text-2xl font-bold bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 bg-clip-text text-transparent">
+          <div className="text-2xl font-bold bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 bg-clip-text text-transparent leading-normal">
             SkillBridge
           </div>
         </div>
@@ -114,10 +114,10 @@ export default function HomePage() {
           <div className="space-y-8">
             <div className="relative">
               <h1 className="text-6xl md:text-8xl font-black leading-normal">
-                <span className="block bg-gradient-to-r from-white via-gray-100 to-slate-200 bg-clip-text text-transparent mb-6 drop-shadow-2xl">
+                <span className="block bg-gradient-to-r from-white via-gray-100 to-slate-200 bg-clip-text text-transparent mb-6 drop-shadow-2xl pb-4">
                   Swap Skills.
                 </span>
-                <span className="block bg-gradient-to-r from-emerald-300 via-green-400 to-teal-400 bg-clip-text text-transparent drop-shadow-2xl">
+                <span className="block bg-gradient-to-r from-emerald-300 via-green-400 to-teal-400 bg-clip-text text-transparent drop-shadow-2xl pb-4">
                   Spark Growth.
                 </span>
               </h1>
@@ -126,7 +126,7 @@ export default function HomePage() {
             </div>
 
             <div className="max-w-4xl mx-auto">
-              <p className="text-3xl md:text-4xl text-slate-300 leading-relaxed font-light pb-4">
+              <p className="text-3xl md:text-4xl text-slate-300 leading-relaxed font-light pb-8">
                 Transform your career through{" "}
                 <span className="bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent font-semibold">
                   peer-to-peer learning
@@ -142,10 +142,10 @@ export default function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 via-green-500/5 to-teal-600/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400/20 via-green-500/20 to-teal-600/20 rounded-3xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-500 -z-10"></div>
               <div className="relative">
-                <div className="text-3xl font-black bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent mb-3">
+                <div className="text-3xl font-black bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent mb-3 pb-2">
                   10K+
                 </div>
-                <div className="text-sm text-slate-400 font-medium">
+                <div className="text-sm text-slate-400 font-medium pb-2">
                   Active Learners
                 </div>
                 <div className="w-12 h-1 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full mx-auto mt-3 group-hover:w-16 transition-all duration-300"></div>
@@ -156,10 +156,10 @@ export default function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-teal-600/5 to-emerald-400/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 via-teal-600/20 to-emerald-400/20 rounded-3xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-500 -z-10"></div>
               <div className="relative">
-                <div className="text-3xl font-black bg-gradient-to-r from-green-500 to-teal-600 bg-clip-text text-transparent mb-3">
+                <div className="text-3xl font-black bg-gradient-to-r from-green-500 to-teal-600 bg-clip-text text-transparent mb-3 pb-2">
                   500+
                 </div>
-                <div className="text-sm text-slate-400 font-medium">
+                <div className="text-sm text-slate-400 font-medium pb-2">
                   Skills Available
                 </div>
                 <div className="w-12 h-1 bg-gradient-to-r from-green-500 to-teal-600 rounded-full mx-auto mt-3 group-hover:w-16 transition-all duration-300"></div>
@@ -170,10 +170,10 @@ export default function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-r from-teal-600/10 via-emerald-400/5 to-green-500/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="absolute -inset-1 bg-gradient-to-r from-teal-600/20 via-emerald-400/20 to-green-500/20 rounded-3xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-500 -z-10"></div>
               <div className="relative">
-                <div className="text-3xl font-black bg-gradient-to-r from-teal-600 to-emerald-400 bg-clip-text text-transparent mb-3">
+                <div className="text-3xl font-black bg-gradient-to-r from-teal-600 to-emerald-400 bg-clip-text text-transparent mb-3 pb-2">
                   95%
                 </div>
-                <div className="text-sm text-slate-400 font-medium">
+                <div className="text-sm text-slate-400 font-medium pb-2">
                   Success Rate
                 </div>
                 <div className="w-12 h-1 bg-gradient-to-r from-teal-600 to-emerald-400 rounded-full mx-auto mt-3 group-hover:w-16 transition-all duration-300"></div>
@@ -215,10 +215,10 @@ export default function HomePage() {
               How It Works
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-6 drop-shadow-lg leading-normal">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-6 drop-shadow-lg leading-normal pb-4">
             Simple. Powerful. Effective.
           </h2>
-          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed pb-4">
+          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed pb-8">
             Our revolutionary platform makes skill exchange as easy as having a
             conversation with a friend
           </p>
@@ -233,10 +233,10 @@ export default function HomePage() {
               <div className="absolute -top-3 -right-3 w-8 h-8 bg-emerald-400/30 rounded-full animate-ping"></div>
               <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-green-400/20 rounded-full animate-pulse delay-1000"></div>
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-emerald-400 transition-colors duration-300 leading-normal">
+            <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-emerald-400 transition-colors duration-300 leading-normal pb-2">
               Find Your Match
             </h3>
-            <p className="text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 pb-4">
+            <p className="text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 pb-8">
               Browse skills, connect with experts, and find the perfect learning
               partner for your journey
             </p>
@@ -250,10 +250,10 @@ export default function HomePage() {
               <div className="absolute -top-3 -right-3 w-8 h-8 bg-green-400/30 rounded-full animate-ping delay-1000"></div>
               <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-teal-400/20 rounded-full animate-pulse delay-2000"></div>
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-green-400 transition-colors duration-300 leading-normal">
+            <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-green-400 transition-colors duration-300 leading-normal pb-2">
               Start Learning
             </h3>
-            <p className="text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 pb-4">
+            <p className="text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 pb-8">
               Exchange knowledge through video calls, workshops, or hands-on
               collaboration sessions
             </p>
@@ -267,10 +267,10 @@ export default function HomePage() {
               <div className="absolute -top-3 -right-3 w-8 h-8 bg-teal-400/30 rounded-full animate-ping delay-2000"></div>
               <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-emerald-400/20 rounded-full animate-pulse delay-3000"></div>
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-teal-400 transition-colors duration-300 leading-normal">
+            <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-teal-400 transition-colors duration-300 leading-normal pb-2">
               Grow Together
             </h3>
-            <p className="text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 pb-4">
+            <p className="text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 pb-8">
               Build lasting relationships while expanding your skillset and
               advancing your career
             </p>
@@ -281,10 +281,10 @@ export default function HomePage() {
       {/* Enhanced Features Section with morphing effects */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-20">
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-6 drop-shadow-lg leading-normal">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-6 drop-shadow-lg leading-normal pb-4">
             Why Choose SkillBridge?
           </h2>
-          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed pb-4">
+          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed pb-8">
             Experience learning like never before with our cutting-edge platform
             designed for modern professionals
           </p>
@@ -299,10 +299,10 @@ export default function HomePage() {
               <div className="text-emerald-400 text-3xl">👥</div>
             </div>
 
-            <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-emerald-400 transition-colors duration-300 leading-normal">
+            <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-emerald-400 transition-colors duration-300 leading-normal pb-2">
               Connect & Learn
             </h3>
-            <p className="text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 pb-4">
+            <p className="text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 pb-8">
               Join thousands of passionate learners and teachers in our thriving
               professional community ecosystem
             </p>
@@ -318,10 +318,10 @@ export default function HomePage() {
               <div className="text-green-400 text-3xl">📚</div>
             </div>
 
-            <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-green-400 transition-colors duration-300 leading-normal">
+            <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-green-400 transition-colors duration-300 leading-normal pb-2">
               Skill Exchange
             </h3>
-            <p className="text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 pb-4">
+            <p className="text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 pb-8">
               Trade your expertise for new knowledge in our innovative
               peer-to-peer learning system
             </p>
@@ -337,10 +337,10 @@ export default function HomePage() {
               <div className="text-teal-400 text-3xl">⭐</div>
             </div>
 
-            <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-teal-400 transition-colors duration-300 leading-normal">
+            <h3 className="text-2xl font-bold text-white mb-6 group-hover:text-teal-400 transition-colors duration-300 leading-normal pb-2">
               Quality First
             </h3>
-            <p className="text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 pb-4">
+            <p className="text-base text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300 pb-8">
               Every interaction is rated and reviewed to ensure the highest
               quality learning experience possible
             </p>
@@ -353,10 +353,10 @@ export default function HomePage() {
       {/* Enhanced Testimonials with premium styling */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-20">
         <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-6 drop-shadow-lg leading-normal">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-6 drop-shadow-lg leading-normal pb-4">
             Success Stories
           </h2>
-          <p className="text-xl text-slate-300 max-w-2xl mx-auto pb-4">
+          <p className="text-xl text-slate-300 max-w-2xl mx-auto pb-8">
             Real people. Real transformations. Real results.
           </p>
         </div>
@@ -374,8 +374,8 @@ export default function HomePage() {
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-gray-950 animate-pulse shadow-lg shadow-green-400/50"></div>
               </div>
               <div className="ml-6">
-                <div className="text-white font-bold text-lg">Sarah Chen</div>
-                <div className="text-emerald-400 font-semibold text-sm">
+                <div className="text-white font-bold text-lg pb-1">Sarah Chen</div>
+                <div className="text-emerald-400 font-semibold text-sm pb-1">
                   UI/UX Designer → Full-Stack Designer
                 </div>
                 <div className="text-slate-400 text-xs">
@@ -397,7 +397,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <p className="text-slate-300 text-base leading-relaxed italic group-hover:text-slate-200 transition-colors duration-300 pb-4">
+            <p className="text-slate-300 text-base leading-relaxed italic group-hover:text-slate-200 transition-colors duration-300 pb-8">
               "SkillBridge completely transformed my career trajectory! I taught
               design principles and learned coding from amazing developers. Now
               I'm a full-stack designer earning 40% more. The community here is
@@ -417,10 +417,10 @@ export default function HomePage() {
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-teal-400 rounded-full border-2 border-gray-950 animate-pulse shadow-lg shadow-teal-400/50"></div>
               </div>
               <div className="ml-6">
-                <div className="text-white font-bold text-lg">
+                <div className="text-white font-bold text-lg pb-1">
                   Marcus Johnson
                 </div>
-                <div className="text-green-400 font-semibold text-sm">
+                <div className="text-green-400 font-semibold text-sm pb-1">
                   Marketing Specialist → Growth Expert
                 </div>
                 <div className="text-slate-400 text-xs">
@@ -442,7 +442,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <p className="text-slate-300 text-base leading-relaxed italic group-hover:text-slate-200 transition-colors duration-300 pb-4">
+            <p className="text-slate-300 text-base leading-relaxed italic group-hover:text-slate-200 transition-colors duration-300 pb-8">
               "The connections I've made here are invaluable. I've mastered
               photography, data analytics, and psychology while teaching digital
               marketing. It's not just learning - it's building lifelong
@@ -463,13 +463,13 @@ export default function HomePage() {
             </div>
 
             <div className="relative">
-              <h2 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-8 leading-normal drop-shadow-2xl">
+              <h2 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-8 leading-normal drop-shadow-2xl pb-4">
                 Your Journey Starts Now
               </h2>
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 via-green-500/10 to-teal-600/10 blur-3xl -z-10"></div>
             </div>
 
-            <p className="text-2xl text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed pb-4">
+            <p className="text-2xl text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed pb-8">
               Join thousands of professionals who are already transforming their
               careers through
               <span className="bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent font-semibold">
@@ -495,19 +495,19 @@ export default function HomePage() {
           </div>
 
           <div className="text-slate-400 text-base flex flex-wrap justify-center gap-6">
-            <div className="flex items-center gap-2 group cursor-pointer">
+            <div className="flex items-center gap-2 group cursor-pointer pb-2">
               <span className="text-lg">💳</span>
               <span className="group-hover:text-emerald-400 transition-colors duration-300">
                 No credit card required
               </span>
             </div>
-            <div className="flex items-center gap-2 group cursor-pointer">
+            <div className="flex items-center gap-2 group cursor-pointer pb-2">
               <span className="text-lg">🎯</span>
               <span className="group-hover:text-green-400 transition-colors duration-300">
                 Find your first skill match in minutes
               </span>
             </div>
-            <div className="flex items-center gap-2 group cursor-pointer">
+            <div className="flex items-center gap-2 group cursor-pointer pb-2">
               <span className="text-lg">🌟</span>
               <span className="group-hover:text-teal-400 transition-colors duration-300">
                 Join 10,000+ active learners
@@ -530,11 +530,11 @@ export default function HomePage() {
                   <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400/80 rounded-full animate-pulse shadow-lg shadow-green-400/50"></div>
                   <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 rounded-xl blur opacity-20 group-hover:opacity-40 transition-opacity duration-300 -z-10"></div>
                 </div>
-                <div className="text-2xl font-bold bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 bg-clip-text text-transparent">
+                <div className="text-2xl font-bold bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 bg-clip-text text-transparent leading-normal">
                   SkillBridge
                 </div>
               </div>
-              <p className="text-slate-400 text-base leading-relaxed max-w-sm mb-8">
+              <p className="text-slate-400 text-base leading-relaxed max-w-sm mb-8 pb-4">
                 Empowering professional growth through collaborative learning
                 and meaningful connections in our global community.
               </p>
@@ -563,33 +563,33 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h4 className="text-white font-bold text-base mb-6">Platform</h4>
+              <h4 className="text-white font-bold text-base mb-6 pb-2">Platform</h4>
               <div className="space-y-4 text-slate-400">
-                <div className="hover:text-emerald-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-emerald-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
                   <span>How it Works</span>
                 </div>
-                <div className="hover:text-emerald-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-emerald-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
                   <span>Find Skills</span>
                 </div>
-                <div className="hover:text-emerald-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-emerald-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
                   <span>Teach Skills</span>
                 </div>
-                <div className="hover:text-emerald-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-emerald-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
                   <span>Community</span>
                 </div>
-                <div className="hover:text-emerald-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-emerald-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
@@ -599,33 +599,33 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h4 className="text-white font-bold text-base mb-6">Support</h4>
+              <h4 className="text-white font-bold text-base mb-6 pb-2">Support</h4>
               <div className="space-y-4 text-slate-400">
-                <div className="hover:text-green-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-green-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
                   <span>Help Center</span>
                 </div>
-                <div className="hover:text-green-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-green-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
                   <span>Contact Us</span>
                 </div>
-                <div className="hover:text-green-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-green-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
                   <span>Safety Guidelines</span>
                 </div>
-                <div className="hover:text-green-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-green-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
                   <span>Community Rules</span>
                 </div>
-                <div className="hover:text-green-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-green-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
@@ -635,33 +635,33 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h4 className="text-white font-bold text-base mb-6">Company</h4>
+              <h4 className="text-white font-bold text-base mb-6 pb-2">Company</h4>
               <div className="space-y-4 text-slate-400">
-                <div className="hover:text-teal-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-teal-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
                   <span>About Us</span>
                 </div>
-                <div className="hover:text-teal-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-teal-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
                   <span>Careers</span>
                 </div>
-                <div className="hover:text-teal-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-teal-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
                   <span>Press Kit</span>
                 </div>
-                <div className="hover:text-teal-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-teal-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
                   <span>Partnership</span>
                 </div>
-                <div className="hover:text-teal-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center">
+                <div className="hover:text-teal-400 cursor-pointer transition-all duration-300 hover:translate-x-1 transform text-sm group flex items-center pb-1">
                   <span className="group-hover:mr-2 transition-all duration-300">
                     →
                   </span>
@@ -672,18 +672,18 @@ export default function HomePage() {
           </div>
 
           <div className="border-t border-gray-800/50 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <div className="text-slate-500 text-center md:text-left mb-4 md:mb-0 text-sm">
+            <div className="text-slate-500 text-center md:text-left mb-4 md:mb-0 text-sm pb-2">
               © 2025 SkillBridge. Professional skill exchange platform. All
               rights reserved.
             </div>
             <div className="flex items-center space-x-6 text-slate-400">
-              <span className="hover:text-emerald-400 cursor-pointer transition-colors duration-300 text-sm">
+              <span className="hover:text-emerald-400 cursor-pointer transition-colors duration-300 text-sm pb-1">
                 Privacy
               </span>
-              <span className="hover:text-green-400 cursor-pointer transition-colors duration-300 text-sm">
+              <span className="hover:text-green-400 cursor-pointer transition-colors duration-300 text-sm pb-1">
                 Terms
               </span>
-              <span className="hover:text-teal-400 cursor-pointer transition-colors duration-300 text-sm">
+              <span className="hover:text-teal-400 cursor-pointer transition-colors duration-300 text-sm pb-1">
                 Cookies
               </span>
             </div>
