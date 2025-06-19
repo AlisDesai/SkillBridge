@@ -87,28 +87,32 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
   // Get completion button text and state
   const getCompletionButtonState = () => {
     if (userRequestedCompletion && otherUserRequestedCompletion) {
-      return { 
-        text: "✅ Completed", 
-        disabled: true, 
-        color: "bg-gradient-to-r from-emerald-500 to-green-500 shadow-lg shadow-emerald-500/25" 
+      return {
+        text: "✅ Completed",
+        disabled: true,
+        color:
+          "bg-gradient-to-r from-emerald-500 to-green-500 shadow-lg shadow-emerald-500/25",
       };
     } else if (userRequestedCompletion) {
       return {
         text: "⏳ Awaiting Confirmation",
         disabled: true,
-        color: "bg-gradient-to-r from-slate-600 to-gray-600 dark:from-slate-500 dark:to-gray-500",
+        color:
+          "bg-gradient-to-r from-slate-600 to-gray-600 dark:from-slate-500 dark:to-gray-500",
       };
     } else if (otherUserRequestedCompletion) {
       return {
         text: "✅ Confirm Completion",
         disabled: false,
-        color: "bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40",
+        color:
+          "bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40",
       };
     } else {
       return {
         text: "✅ Mark Complete",
         disabled: false,
-        color: "bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40",
+        color:
+          "bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40",
       };
     }
   };
@@ -117,15 +121,17 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
     <div className="group relative bg-gradient-to-br from-gray-950/90 via-slate-950/90 to-gray-900/90 backdrop-blur-xl rounded-3xl border border-slate-600/20 p-8 hover:border-emerald-400/30 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:shadow-emerald-500/10 overflow-hidden animate-fadeInUp min-h-[500px]">
       {/* Subtle background glow */}
       <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/0 via-green-500/3 to-teal-600/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
-      
+
       {/* Header Section */}
       <div className="relative z-10 flex items-center gap-6 mb-6">
         <div className="relative">
-          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600 flex items-center justify-center text-white font-bold text-xl shadow-xl shadow-emerald-500/25 group-hover:shadow-emerald-500/40 transition-all duration-500 group-hover:scale-110">
+          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-emerald-500 via-green-500 to-teal-600 flex items-center justify-center text-white font-bold text-xl transition-all duration-500 group-hover:scale-110">
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 rounded-2xl"></div>
-            <span className="relative z-10">{otherUser.name?.charAt(0)?.toUpperCase() || "U"}</span>
+            <span className="relative z-10">
+              {otherUser.name?.charAt(0)?.toUpperCase() || "U"}
+            </span>
           </div>
-          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-gray-950 shadow-lg"></div>
+          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-gray-950"></div>
         </div>
         <div className="flex-1">
           <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-emerald-300 transition-colors duration-300">
@@ -144,7 +150,9 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
       )}
 
       <div className="relative z-10 flex items-center justify-between mb-6">
-        <span className={`text-sm px-4 py-2 rounded-full font-semibold ${getStatusColor()} shadow-sm`}>
+        <span
+          className={`text-sm px-4 py-2 rounded-full font-semibold ${getStatusColor()} shadow-sm`}
+        >
           Status: {match.status}
         </span>
         <span className="text-sm text-slate-400 font-medium bg-slate-800/30 px-3 py-1 rounded-full border border-slate-600/20">
@@ -156,26 +164,42 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
       <div className="relative z-10 mb-8 space-y-3">
         {match.skillOffered && (
           <div className="bg-gradient-to-r from-emerald-900/30 to-green-900/30 rounded-xl p-3 border border-emerald-500/20">
-            <span className="text-emerald-400 text-sm font-medium">Offering: </span>
-            <span className="text-emerald-300 font-bold">{match.skillOffered}</span>
+            <span className="text-emerald-400 text-sm font-medium">
+              Offering:{" "}
+            </span>
+            <span className="text-emerald-300 font-bold">
+              {match.skillOffered}
+            </span>
           </div>
         )}
         {match.skillRequested && (
           <div className="bg-gradient-to-r from-teal-900/30 to-cyan-900/30 rounded-xl p-3 border border-teal-500/20">
-            <span className="text-teal-400 text-sm font-medium">Requesting: </span>
-            <span className="text-teal-300 font-bold">{match.skillRequested}</span>
+            <span className="text-teal-400 text-sm font-medium">
+              Requesting:{" "}
+            </span>
+            <span className="text-teal-300 font-bold">
+              {match.skillRequested}
+            </span>
           </div>
         )}
         {match.skillsInvolved && match.skillsInvolved.length > 0 && (
           <div className="bg-gradient-to-r from-emerald-900/30 to-green-900/30 rounded-xl p-3 border border-emerald-500/20">
-            <span className="text-emerald-400 text-sm font-medium">Skills: </span>
-            <span className="text-emerald-300 font-bold">{match.skillsInvolved.join(", ")}</span>
+            <span className="text-emerald-400 text-sm font-medium">
+              Skills:{" "}
+            </span>
+            <span className="text-emerald-300 font-bold">
+              {match.skillsInvolved.join(", ")}
+            </span>
           </div>
         )}
         {match.message && (
           <div className="bg-gradient-to-r from-slate-800/40 to-gray-800/40 rounded-xl p-4 border border-slate-500/20">
-            <span className="text-slate-400 text-sm font-medium">Message: </span>
-            <p className="text-slate-200 font-medium italic mt-1">"{match.message}"</p>
+            <span className="text-slate-400 text-sm font-medium">
+              Message:{" "}
+            </span>
+            <p className="text-slate-200 font-medium italic mt-1">
+              "{match.message}"
+            </p>
           </div>
         )}
       </div>
@@ -191,10 +215,12 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
               </div>
               <div>
                 <p className="text-yellow-300 font-semibold">
-                  <strong>{otherUser.name}</strong> has requested to mark this exchange as completed.
+                  <strong>{otherUser.name}</strong> has requested to mark this
+                  exchange as completed.
                 </p>
                 <p className="text-yellow-400 text-sm mt-1">
-                  Click "Confirm Completion" if you also want to complete this exchange.
+                  Click "Confirm Completion" if you also want to complete this
+                  exchange.
                 </p>
               </div>
             </div>
@@ -274,7 +300,9 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
           <div className="text-center bg-gradient-to-r from-emerald-900/40 to-green-900/40 rounded-2xl p-4 border border-emerald-500/30">
             <div className="flex items-center justify-center space-x-2 mb-2">
               <span className="text-2xl">🎉</span>
-              <span className="text-emerald-300 font-bold text-lg">Learning Exchange Completed!</span>
+              <span className="text-emerald-300 font-bold text-lg">
+                Learning Exchange Completed!
+              </span>
             </div>
           </div>
           <button

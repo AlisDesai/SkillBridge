@@ -142,7 +142,7 @@ export default function ReviewsPage() {
         </div>
 
         {/* Given Reviews */}
-        <div className="group bg-gray-950/25 backdrop-blur-xl border border-gray-800/30 rounded-3xl p-6 hover:bg-gray-950/40 hover:border-green-500/30 transition-all duration-500 transform hover:scale-105 relative overflow-hidden shadow-xl hover:shadow-green-500/20">
+        <div className="group bg-gray-950/25 backdrop-blur-xl border border-gray-800/30 rounded-3xl p-6 hover:bg-gray-950/40 hover:border-green-500/30 transition-all duration-500 transform hover:scale-105 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-teal-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <div className="absolute -inset-1 bg-gradient-to-r from-green-500/10 to-teal-600/10 rounded-3xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-500 -z-10"></div>
           
@@ -178,7 +178,7 @@ export default function ReviewsPage() {
         </div>
 
         {/* Recent Activity */}
-        <div className="group bg-gray-950/25 backdrop-blur-xl border border-gray-800/30 rounded-3xl p-6 hover:bg-gray-950/40 hover:border-teal-600/30 transition-all duration-500 transform hover:scale-105 relative overflow-hidden shadow-xl hover:shadow-teal-500/20">
+        <div className="group bg-gray-950/25 backdrop-blur-xl border border-gray-800/30 rounded-3xl p-6 hover:bg-gray-950/40 hover:border-teal-600/30 transition-all duration-500 transform hover:scale-105 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-teal-600/5 to-emerald-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <div className="absolute -inset-1 bg-gradient-to-r from-teal-600/10 to-emerald-400/10 rounded-3xl blur opacity-0 group-hover:opacity-50 transition-opacity duration-500 -z-10"></div>
           
@@ -220,7 +220,7 @@ export default function ReviewsPage() {
     if (!reviewStats?.recentReviews?.length) return null;
 
     return (
-      <div className="bg-gray-950/25 backdrop-blur-xl border border-gray-800/30 rounded-3xl p-6 mb-8 shadow-xl">
+      <div className="bg-gray-950/25 backdrop-blur-xl border border-gray-800/30 rounded-3xl p-6 mb-8">
         <h3 className="text-xl font-bold text-white mb-6 pb-2">
           Recent Reviews
         </h3>
@@ -299,7 +299,7 @@ export default function ReviewsPage() {
             {loading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="relative">
-                  <div className="w-12 h-12 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 rounded-2xl flex items-center justify-center animate-pulse shadow-2xl shadow-emerald-500/25">
+                  <div className="w-12 h-12 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 rounded-2xl flex items-center justify-center animate-pulse">
                     <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                   </div>
                 </div>
@@ -462,7 +462,7 @@ export default function ReviewsPage() {
         </div>
 
         {/* Tab Content */}
-        <div className="bg-gray-950/25 backdrop-blur-xl border border-gray-800/30 rounded-3xl p-8 shadow-xl">
+        <div className="bg-gray-950/25 backdrop-blur-xl border border-gray-800/30 rounded-3xl p-8">
           {renderTabContent()}
         </div>
 

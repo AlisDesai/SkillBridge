@@ -151,24 +151,24 @@ export default function ProfilePage() {
       {/* Enhanced Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {/* Primary Orbs */}
-        <div className="absolute -top-96 -right-96 w-[800px] h-[800px] bg-gradient-to-br from-emerald-400/5 via-green-500/3 to-teal-600/2 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-96 -left-96 w-[800px] h-[800px] bg-gradient-to-tr from-green-400/4 via-teal-500/3 to-emerald-600/2 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-teal-400/3 via-emerald-500/2 to-green-600/2 rounded-full blur-2xl animate-pulse delay-500"></div>
+        <div className="absolute -top-96 -right-96 w-[800px] h-[800px] bg-gradient-to-br from-emerald-400/3 via-green-500/2 to-teal-600/1 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-96 -left-96 w-[800px] h-[800px] bg-gradient-to-tr from-green-400/2 via-teal-500/2 to-emerald-600/1 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-teal-400/2 via-emerald-500/1 to-green-600/1 rounded-full blur-2xl animate-pulse delay-500"></div>
         
         {/* Secondary Accent Orbs */}
-        <div className="absolute top-20 right-20 w-[300px] h-[300px] bg-gradient-to-bl from-emerald-300/4 via-green-400/3 to-teal-400/2 rounded-full blur-2xl animate-pulse delay-2000"></div>
-        <div className="absolute bottom-40 left-40 w-[200px] h-[200px] bg-gradient-to-tr from-green-300/3 via-emerald-400/2 to-teal-300/2 rounded-full blur-xl animate-pulse delay-3000"></div>
+        <div className="absolute top-20 right-20 w-[300px] h-[300px] bg-gradient-to-bl from-emerald-300/2 via-green-400/2 to-teal-400/1 rounded-full blur-2xl animate-pulse delay-2000"></div>
+        <div className="absolute bottom-40 left-40 w-[200px] h-[200px] bg-gradient-to-tr from-green-300/2 via-emerald-400/1 to-teal-300/1 rounded-full blur-xl animate-pulse delay-3000"></div>
         
         {/* Floating Particles */}
         {[...Array(12)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-2 h-2 rounded-full animate-ping opacity-40"
+            className="absolute w-2 h-2 rounded-full animate-ping opacity-20"
             style={{
               background: `linear-gradient(45deg, 
-                ${i % 3 === 0 ? 'rgba(52, 211, 153, 0.3)' : 
-                  i % 3 === 1 ? 'rgba(34, 197, 94, 0.3)' : 
-                  'rgba(20, 184, 166, 0.3)'}
+                ${i % 3 === 0 ? 'rgba(52, 211, 153, 0.15)' : 
+                  i % 3 === 1 ? 'rgba(34, 197, 94, 0.15)' : 
+                  'rgba(20, 184, 166, 0.15)'}
               )`,
               top: `${10 + (i * 6)}%`,
               left: `${5 + (i * 6.5)}%`,
@@ -179,10 +179,10 @@ export default function ProfilePage() {
         ))}
 
         {/* Animated Grid Pattern */}
-        <div className="absolute inset-0 opacity-[0.02]" style={{
+        <div className="absolute inset-0 opacity-[0.01]" style={{
           backgroundImage: `
-            linear-gradient(rgba(52, 211, 153, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(52, 211, 153, 0.1) 1px, transparent 1px)
+            linear-gradient(rgba(52, 211, 153, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(52, 211, 153, 0.05) 1px, transparent 1px)
           `,
           backgroundSize: '40px 40px',
           animation: 'gridMove 15s linear infinite'
@@ -197,27 +197,27 @@ export default function ProfilePage() {
             <div className="lg:col-span-1">
               <div className="bg-gradient-to-br from-gray-800/70 via-slate-800/60 to-gray-900/70 backdrop-blur-xl rounded-2xl border border-emerald-500/20 p-6 shadow-xl hover:shadow-emerald-500/15 transition-all duration-500 hover:border-emerald-400/30 relative overflow-hidden group">
                 {/* Card Background Animation */}
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-green-500/3 to-teal-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-green-500/2 to-teal-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
                 
                 <div className="text-center relative z-10">
                   <div className="relative inline-block mb-5">
-                    <div className="w-28 h-28 bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-xl shadow-emerald-500/40 relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/25 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <div className="w-28 h-28 bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 rounded-full flex items-center justify-center text-slate-950 text-4xl font-bold shadow-lg relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-black/15 to-black/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                       <span className="relative z-10">
                         {profileData?.name?.charAt(0)?.toUpperCase() || user?.name?.charAt(0)?.toUpperCase() || "U"}
                       </span>
                       {/* Animated Ring */}
-                      <div className="absolute inset-0 rounded-full border-2 border-white/15 animate-spin" style={{animationDuration: '6s'}}></div>
+                      <div className="absolute inset-0 rounded-full border-2 border-black/10 animate-spin" style={{animationDuration: '6s'}}></div>
                     </div>
                     
                     {/* Enhanced Status Indicator */}
                     <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full border-2 border-gray-800 flex items-center justify-center shadow-md shadow-emerald-500/30">
-                      <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                      <div className="w-3 h-3 bg-slate-900 rounded-full animate-pulse"></div>
                       <div className="absolute inset-0 rounded-full bg-emerald-400/25 animate-ping"></div>
                     </div>
                   </div>
                   
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-300 bg-clip-text text-transparent mb-2">
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-100 via-slate-200 to-slate-300 bg-clip-text text-transparent mb-2">
                     {user?.name || "Your Name"}
                   </h2>
                   <p className="text-emerald-400 font-medium mb-4">
@@ -245,9 +245,9 @@ export default function ProfilePage() {
 
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="w-full py-3 px-6 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 hover:from-emerald-500 hover:via-green-600 hover:to-teal-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/30 relative overflow-hidden group"
+                    className="w-full py-3 px-6 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 hover:from-emerald-500 hover:via-green-600 hover:to-teal-700 text-slate-950 font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/30 relative overflow-hidden group"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/15 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-black/10 to-black/0 -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
                     <span className="relative z-10 flex items-center justify-center space-x-2">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -272,7 +272,7 @@ export default function ProfilePage() {
                     }}
                   >
                     {/* Card Shimmer Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/3 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 rounded-2xl"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-200/3 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 rounded-2xl"></div>
                     
                     <div className="relative z-10">
                       <div className="text-3xl mb-3 transform group-hover:scale-110 transition-transform duration-300 filter drop-shadow-md">
@@ -287,15 +287,15 @@ export default function ProfilePage() {
                     </div>
                     
                     {/* Floating Background Elements */}
-                    <div className="absolute top-1 right-1 w-6 h-6 bg-white/3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-bounce"></div>
-                    <div className="absolute bottom-1 left-1 w-4 h-4 bg-white/2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-bounce delay-100"></div>
+                    <div className="absolute top-1 right-1 w-6 h-6 bg-slate-100/3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-bounce"></div>
+                    <div className="absolute bottom-1 left-1 w-4 h-4 bg-slate-100/2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-bounce delay-100"></div>
                   </div>
                 ))}
               </div>
 
               {/* Enhanced Navigation Tabs */}
               <div className="bg-gradient-to-r from-gray-800/80 via-slate-800/70 to-gray-900/80 backdrop-blur-xl rounded-2xl border border-slate-600/40 p-3 mb-6 shadow-xl hover:shadow-emerald-500/8 transition-all duration-300 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/2 via-green-500/1 to-teal-500/2 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/1 via-green-500/1 to-teal-500/1 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
                 
                 <div className="flex space-x-3 relative z-10">
                   {tabs.map((tab) => (
@@ -304,12 +304,12 @@ export default function ProfilePage() {
                       onClick={() => setActiveTab(tab.id)}
                       className={`flex-1 flex items-center justify-center space-x-2 py-3 px-5 rounded-xl font-semibold transition-all duration-500 transform hover:scale-105 relative overflow-hidden group ${
                         activeTab === tab.id
-                          ? 'bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 text-white shadow-lg shadow-emerald-500/40 border border-white/15'
-                          : 'text-slate-400 hover:text-white hover:bg-gradient-to-r hover:from-slate-700/60 hover:to-gray-700/60 hover:shadow-md border border-transparent hover:border-slate-500/25'
+                          ? 'bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 text-gray-950 shadow-lg shadow-emerald-500/40 border border-gray-950/10'
+                          : 'text-slate-300 bg-gradient-to-r from-gray-800/80 via-slate-800/70 to-gray-900/80 hover:text-slate-100 hover:bg-gradient-to-r hover:from-slate-700/60 hover:to-gray-700/60 hover:shadow-md border border-slate-600/25 hover:border-slate-500/40'
                       }`}
                     >
                       {activeTab === tab.id && (
-                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-black/15 to-black/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                       )}
                       <div className="relative z-10 flex items-center space-x-2">
                         <div className={`transition-transform duration-300 ${activeTab === tab.id ? 'scale-110' : 'group-hover:scale-105'}`}>
@@ -329,11 +329,11 @@ export default function ProfilePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Enhanced Quick Stats */}
               <div className="bg-gradient-to-br from-gray-800/70 via-slate-800/60 to-gray-900/70 backdrop-blur-xl rounded-2xl border border-emerald-500/25 p-6 shadow-xl hover:shadow-emerald-500/15 transition-all duration-300 relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-teal-500/3 to-green-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-teal-500/2 to-green-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
                 
-                <h3 className="text-2xl font-bold text-white mb-6 flex items-center space-x-3 relative z-10">
+                <h3 className="text-2xl font-bold text-slate-100 mb-6 flex items-center space-x-3 relative z-10">
                   <div className="w-8 h-8 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center shadow-md shadow-emerald-500/30">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                   </div>
@@ -365,11 +365,11 @@ export default function ProfilePage() {
 
               {/* Enhanced Recent Activity */}
               <div className="bg-gradient-to-br from-gray-800/70 via-slate-800/60 to-gray-900/70 backdrop-blur-xl rounded-2xl border border-green-500/25 p-6 shadow-xl hover:shadow-green-500/15 transition-all duration-300 relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-r from-green-500/0 via-teal-500/3 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-green-500/0 via-teal-500/2 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
                 
-                <h3 className="text-2xl font-bold text-white mb-6 flex items-center space-x-3 relative z-10">
+                <h3 className="text-2xl font-bold text-slate-100 mb-6 flex items-center space-x-3 relative z-10">
                   <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-teal-500 rounded-lg flex items-center justify-center shadow-md shadow-green-500/30">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
@@ -387,7 +387,7 @@ export default function ProfilePage() {
                         <span className="text-lg">{activity.icon}</span>
                       </div>
                       <div className="flex-1">
-                        <p className="text-white font-medium">{activity.text}</p>
+                        <p className="text-slate-100 font-medium">{activity.text}</p>
                         <p className={`${activity.color} text-sm font-medium`}>{activity.time}</p>
                       </div>
                     </div>
@@ -398,101 +398,169 @@ export default function ProfilePage() {
           )}
 
           {activeTab === 'skills' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Enhanced Teaching Skills */}
-              <div className="bg-gradient-to-br from-gray-800/70 via-slate-800/60 to-gray-900/70 backdrop-blur-xl rounded-2xl border border-emerald-500/25 p-6 shadow-xl hover:shadow-emerald-500/15 transition-all duration-300 relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-green-500/3 to-teal-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+              <div className="bg-gradient-to-br from-gray-800/80 via-slate-800/70 to-gray-900/80 backdrop-blur-xl rounded-3xl border border-emerald-500/30 p-8 shadow-2xl hover:shadow-emerald-500/25 transition-all duration-500 relative overflow-hidden group hover:border-emerald-400/50">
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-green-500/3 to-teal-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-3xl"></div>
                 
-                <h3 className="text-2xl font-bold text-white mb-6 flex items-center space-x-3 relative z-10">
-                  <div className="w-8 h-8 bg-gradient-to-r from-emerald-400 to-green-500 rounded-lg flex items-center justify-center shadow-md shadow-emerald-500/30">
-                    <span className="text-white text-lg">🎓</span>
+                {/* Header */}
+                <div className="relative z-10 mb-8">
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div className="relative">
+                      <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg relative overflow-hidden group-hover:scale-110 transition-transform duration-300">
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-black/15 to-black/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                        <svg className="w-7 h-7 text-slate-950 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-3xl font-black bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent">Skills I Teach</h3>
+                      <p className="text-slate-400 font-medium mt-1">Share your expertise with others</p>
+                    </div>
                   </div>
-                  <span className="bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent">Skills I Teach</span>
-                </h3>
+                  
+                  {/* Skills Counter */}
+                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-500/15 via-green-500/10 to-teal-500/8 rounded-2xl border border-emerald-500/30">
+                    <span className="text-slate-200 font-semibold">Teaching Skills</span>
+                    <div className="px-4 py-2 bg-gradient-to-r from-emerald-400 to-green-500 rounded-xl text-slate-950 font-bold shadow-sm">
+                      {teachSkills.length}
+                    </div>
+                  </div>
+                </div>
                 
                 {teachSkills.length > 0 ? (
-                  <div className="grid gap-4 relative z-10">
+                  <div className="space-y-4 relative z-10">
                     {teachSkills.map((skill, index) => (
                       <div
                         key={index}
-                        className="p-4 bg-gradient-to-r from-emerald-500/12 to-green-500/8 border border-emerald-500/25 rounded-xl hover:bg-gradient-to-r hover:from-emerald-500/15 hover:to-green-500/10 hover:border-emerald-400/40 transition-all duration-300 group hover:-translate-y-1 hover:shadow-md hover:shadow-emerald-500/15 relative overflow-hidden"
+                        className="group/skill p-6 bg-gradient-to-r from-emerald-500/15 via-green-500/12 to-teal-500/8 border border-emerald-500/30 rounded-2xl hover:bg-gradient-to-r hover:from-emerald-500/25 hover:via-green-500/20 hover:to-teal-500/15 hover:border-emerald-400/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-emerald-500/25 relative overflow-hidden"
+                        style={{ animationDelay: `${index * 100}ms` }}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/3 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 rounded-xl"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/0 via-emerald-400/3 to-emerald-400/0 -translate-x-full group-hover/skill:translate-x-full transition-transform duration-1000 rounded-2xl"></div>
                         
                         <div className="flex justify-between items-center relative z-10">
-                          <span className="text-white font-semibold">{skill.name}</span>
-                          <div className="flex items-center space-x-1">
-                            {[...Array(5)].map((_, i) => (
-                              <svg
-                                key={i}
-                                className={`w-4 h-4 transition-all duration-300 ${i < skill.level ? 'text-yellow-400 drop-shadow-sm scale-105' : 'text-gray-600'} hover:scale-110`}
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                              </svg>
-                            ))}
+                          <div className="flex items-center space-x-4">
+                            <span className="text-slate-100 font-bold text-lg group-hover/skill:text-emerald-200 transition-colors duration-300">{skill.name}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-emerald-400 text-sm font-semibold uppercase tracking-wider mr-2">Level</span>
+                            <div className="flex items-center space-x-1">
+                              {[...Array(5)].map((_, i) => (
+                                <div key={i} className="relative">
+                                  <svg
+                                    className={`w-5 h-5 transition-all duration-300 ${i < skill.level ? 'text-yellow-400 drop-shadow-lg scale-110' : 'text-gray-600/50'} hover:scale-125 cursor-pointer`}
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                  </svg>
+                                  {i < skill.level && (
+                                    <div className="absolute inset-0 bg-yellow-400/30 rounded-full animate-ping"></div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-12 relative z-10">
-                    <div className="w-16 h-16 bg-gradient-to-r from-emerald-500/15 to-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-3xl">🎓</span>
+                  <div className="text-center py-16 relative z-10">
+                    <div className="w-20 h-20 bg-gradient-to-r from-emerald-500/20 via-green-500/15 to-teal-500/12 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <svg className="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
                     </div>
-                    <p className="text-slate-400">No teaching skills added yet</p>
-                    <p className="text-slate-500 text-sm mt-1">Add your expertise to start teaching others</p>
+                    <h4 className="text-xl font-bold text-slate-300 mb-3">No Teaching Skills Yet</h4>
+                    <p className="text-slate-400 mb-6 leading-relaxed">Share your knowledge and help others grow</p>
+                    <button className="px-6 py-3 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 hover:from-emerald-500 hover:via-green-600 hover:to-teal-700 text-slate-950 font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/30">
+                      Add Teaching Skills
+                    </button>
                   </div>
                 )}
               </div>
 
               {/* Enhanced Learning Skills */}
-              <div className="bg-gradient-to-br from-gray-800/70 via-slate-800/60 to-gray-900/70 backdrop-blur-xl rounded-2xl border border-teal-500/25 p-6 shadow-xl hover:shadow-teal-500/15 transition-all duration-300 relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-r from-teal-500/0 via-green-500/3 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+              <div className="bg-gradient-to-br from-gray-800/80 via-slate-800/70 to-gray-900/80 backdrop-blur-xl rounded-3xl border border-teal-500/30 p-8 shadow-2xl hover:shadow-teal-500/25 transition-all duration-500 relative overflow-hidden group hover:border-teal-400/50">
+                <div className="absolute inset-0 bg-gradient-to-r from-teal-500/0 via-green-500/3 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-3xl"></div>
                 
-                <h3 className="text-2xl font-bold text-white mb-6 flex items-center space-x-3 relative z-10">
-                  <div className="w-8 h-8 bg-gradient-to-r from-teal-400 to-green-500 rounded-lg flex items-center justify-center shadow-md shadow-teal-500/30">
-                    <span className="text-white text-lg">📚</span>
+                {/* Header */}
+                <div className="relative z-10 mb-8">
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div className="relative">
+                      <div className="w-14 h-14 bg-gradient-to-br from-teal-400 via-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg relative overflow-hidden group-hover:scale-110 transition-transform duration-300">
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-black/15 to-black/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                        <svg className="w-7 h-7 text-slate-950 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-3xl font-black bg-gradient-to-r from-teal-400 via-green-400 to-emerald-400 bg-clip-text text-transparent">Skills I Want to Learn</h3>
+                      <p className="text-slate-400 font-medium mt-1">Expand your knowledge and grow</p>
+                    </div>
                   </div>
-                  <span className="bg-gradient-to-r from-teal-400 via-green-400 to-emerald-400 bg-clip-text text-transparent">Skills I Want to Learn</span>
-                </h3>
+                  
+                  {/* Skills Counter */}
+                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-teal-500/15 via-green-500/10 to-emerald-500/8 rounded-2xl border border-teal-500/30">
+                    <span className="text-slate-200 font-semibold">Learning Goals</span>
+                    <div className="px-4 py-2 bg-gradient-to-r from-teal-400 to-green-500 rounded-xl text-slate-950 font-bold shadow-sm">
+                      {learnSkills.length}
+                    </div>
+                  </div>
+                </div>
                 
                 {learnSkills.length > 0 ? (
-                  <div className="grid gap-4 relative z-10">
+                  <div className="space-y-4 relative z-10">
                     {learnSkills.map((skill, index) => (
                       <div
                         key={index}
-                        className="p-4 bg-gradient-to-r from-teal-500/12 to-green-500/8 border border-teal-500/25 rounded-xl hover:bg-gradient-to-r hover:from-teal-500/15 hover:to-green-500/10 hover:border-teal-400/40 transition-all duration-300 group hover:-translate-y-1 hover:shadow-md hover:shadow-teal-500/15 relative overflow-hidden"
+                        className="group/skill p-6 bg-gradient-to-r from-teal-500/15 via-green-500/12 to-emerald-500/8 border border-teal-500/30 rounded-2xl hover:bg-gradient-to-r hover:from-teal-500/25 hover:via-green-500/20 hover:to-emerald-500/15 hover:border-teal-400/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-teal-500/25 relative overflow-hidden"
+                        style={{ animationDelay: `${index * 100}ms` }}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/3 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 rounded-xl"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-teal-400/0 via-teal-400/3 to-teal-400/0 -translate-x-full group-hover/skill:translate-x-full transition-transform duration-1000 rounded-2xl"></div>
                         
                         <div className="flex justify-between items-center relative z-10">
-                          <span className="text-white font-semibold">{skill.name}</span>
-                          <div className="flex items-center space-x-1">
-                            {[...Array(5)].map((_, i) => (
-                              <svg
-                                key={i}
-                                className={`w-4 h-4 transition-all duration-300 ${i < skill.level ? 'text-yellow-400 drop-shadow-sm scale-105' : 'text-gray-600'} hover:scale-110`}
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                              </svg>
-                            ))}
+                          <div className="flex items-center space-x-4">
+                            <span className="text-slate-100 font-bold text-lg group-hover/skill:text-teal-200 transition-colors duration-300">{skill.name}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-teal-400 text-sm font-semibold uppercase tracking-wider mr-2">Level</span>
+                            <div className="flex items-center space-x-1">
+                              {[...Array(5)].map((_, i) => (
+                                <div key={i} className="relative">
+                                  <svg
+                                    className={`w-5 h-5 transition-all duration-300 ${i < skill.level ? 'text-yellow-400 drop-shadow-lg scale-110' : 'text-gray-600/50'} hover:scale-125 cursor-pointer`}
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                  </svg>
+                                  {i < skill.level && (
+                                    <div className="absolute inset-0 bg-yellow-400/30 rounded-full animate-ping"></div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-12 relative z-10">
-                    <div className="w-16 h-16 bg-gradient-to-r from-teal-500/15 to-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-3xl">📚</span>
+                  <div className="text-center py-16 relative z-10">
+                    <div className="w-20 h-20 bg-gradient-to-r from-teal-500/20 via-green-500/15 to-emerald-500/12 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                      <svg className="w-10 h-10 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
                     </div>
-                    <p className="text-slate-400">No learning skills added yet</p>
-                    <p className="text-slate-500 text-sm mt-1">Add skills you want to master</p>
+                    <h4 className="text-xl font-bold text-slate-300 mb-3">No Learning Goals Yet</h4>
+                    <p className="text-slate-400 mb-6 leading-relaxed">Start your learning journey today</p>
+                    <button className="px-6 py-3 bg-gradient-to-r from-teal-400 via-green-500 to-emerald-600 hover:from-teal-500 hover:via-green-600 hover:to-emerald-700 text-slate-950 font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-teal-500/30">
+                      Add Learning Goals
+                    </button>
                   </div>
                 )}
               </div>
@@ -501,7 +569,7 @@ export default function ProfilePage() {
 
           {activeTab === 'activity' && (
             <div className="bg-gradient-to-br from-gray-800/70 via-slate-800/60 to-gray-900/70 backdrop-blur-xl rounded-2xl border border-emerald-500/25 p-6 shadow-xl text-center relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-teal-500/3 to-green-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-teal-500/2 to-green-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
               
               <div className="py-16 relative z-10">
                 <div className="w-24 h-24 bg-gradient-to-r from-emerald-400/15 via-teal-500/12 to-green-600/8 rounded-full flex items-center justify-center mx-auto mb-6 relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
@@ -519,8 +587,8 @@ export default function ProfilePage() {
                   Start connecting with others and building your skill portfolio
                 </p>
                 
-                <button className="px-10 py-3 bg-gradient-to-r from-emerald-400 via-teal-500 to-green-600 hover:from-emerald-500 hover:via-teal-600 hover:to-green-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/30 relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/15 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
+                <button className="px-10 py-3 bg-gradient-to-r from-emerald-400 via-teal-500 to-green-600 hover:from-emerald-500 hover:via-teal-600 hover:to-green-700 text-slate-950 font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-emerald-500/30 relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-black/10 to-black/0 -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
                   <span className="relative z-10 flex items-center space-x-2">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -536,13 +604,13 @@ export default function ProfilePage() {
           {isEditing && (
             <div className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 z-50">
               <div className="bg-gradient-to-br from-gray-800/90 via-slate-800/85 to-gray-900/90 backdrop-blur-xl rounded-2xl border border-emerald-500/25 p-6 max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-xl shadow-emerald-500/15 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/3 via-green-500/2 to-teal-500/3 rounded-2xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/2 via-green-500/1 to-teal-500/2 rounded-2xl"></div>
                 
                 <div className="flex items-center justify-between mb-6 relative z-10">
                   <h3 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent">Edit Profile</h3>
                   <button
                     onClick={() => setIsEditing(false)}
-                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-700/40 rounded-xl transition-all duration-300 hover:rotate-90 hover:scale-110"
+                    className="p-2 text-slate-400 hover:text-slate-100 hover:bg-slate-700/40 rounded-xl transition-all duration-300 hover:rotate-90 hover:scale-110"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
