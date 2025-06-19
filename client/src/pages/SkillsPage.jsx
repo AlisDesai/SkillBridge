@@ -87,33 +87,40 @@ export default function SkillsPage() {
         <div className="absolute -top-96 -right-96 w-[800px] h-[800px] bg-gradient-to-br from-emerald-400/4 via-green-500/3 to-teal-600/2 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-96 -left-96 w-[800px] h-[800px] bg-gradient-to-tr from-green-400/3 via-teal-500/2 to-emerald-600/2 rounded-full blur-3xl animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-teal-400/2 via-emerald-500/2 to-green-600/1 rounded-full blur-2xl animate-pulse delay-500"></div>
-        
+
         {[...Array(10)].map((_, i) => (
           <div
             key={i}
             className="absolute w-2 h-2 rounded-full animate-ping opacity-30"
             style={{
               background: `linear-gradient(45deg, 
-                ${i % 3 === 0 ? 'rgba(52, 211, 153, 0.4)' : 
-                  i % 3 === 1 ? 'rgba(34, 197, 94, 0.4)' : 
-                  'rgba(20, 184, 166, 0.4)'}
+                ${
+                  i % 3 === 0
+                    ? "rgba(52, 211, 153, 0.4)"
+                    : i % 3 === 1
+                    ? "rgba(34, 197, 94, 0.4)"
+                    : "rgba(20, 184, 166, 0.4)"
+                }
               )`,
-              top: `${15 + (i * 8)}%`,
-              left: `${10 + (i * 7)}%`,
+              top: `${15 + i * 8}%`,
+              left: `${10 + i * 7}%`,
               animationDelay: `${i * 0.6}s`,
-              animationDuration: '4s'
+              animationDuration: "4s",
             }}
           />
         ))}
 
-        <div className="absolute inset-0 opacity-[0.02]" style={{
-          backgroundImage: `
+        <div
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `
             linear-gradient(rgba(52, 211, 153, 0.1) 1px, transparent 1px),
             linear-gradient(90deg, rgba(52, 211, 153, 0.1) 1px, transparent 1px)
           `,
-          backgroundSize: '40px 40px',
-          animation: 'gridMove 15s linear infinite'
-        }}></div>
+            backgroundSize: "40px 40px",
+            animation: "gridMove 15s linear infinite",
+          }}
+        ></div>
       </div>
 
       <div className="relative z-10 p-5 lg:p-6">
@@ -121,15 +128,26 @@ export default function SkillsPage() {
           {/* Header Section */}
           <div className="text-center mb-10">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-2xl mb-6 shadow-lg shadow-emerald-500/40">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              <svg
+                className="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                />
               </svg>
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent mb-3">
               Skill Management
             </h1>
             <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-              Build your expertise profile by adding skills you can teach and skills you want to learn
+              Build your expertise profile by adding skills you can teach and
+              skills you want to learn
             </p>
           </div>
 
@@ -139,7 +157,7 @@ export default function SkillsPage() {
             <div className="space-y-6">
               <div className="bg-gradient-to-br from-gray-800/70 via-slate-800/60 to-gray-900/70 backdrop-blur-xl rounded-2xl border border-emerald-500/25 p-6 shadow-xl hover:shadow-emerald-500/15 transition-all duration-300 relative overflow-hidden group">
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-green-500/3 to-teal-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-                
+
                 <div className="relative z-10">
                   <div className="flex items-center space-x-3 mb-6">
                     <div className="w-10 h-10 bg-gradient-to-r from-emerald-400 to-green-500 rounded-xl flex items-center justify-center shadow-md shadow-emerald-500/30">
@@ -149,7 +167,9 @@ export default function SkillsPage() {
                       <h2 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent">
                         Skills I Teach
                       </h2>
-                      <p className="text-slate-400 text-sm">Share your expertise with others</p>
+                      <p className="text-slate-400 text-sm">
+                        Share your expertise with others
+                      </p>
                     </div>
                   </div>
 
@@ -166,7 +186,7 @@ export default function SkillsPage() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/5 to-green-400/5 rounded-xl opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                       </div>
-                      
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="relative">
                           <select
@@ -178,30 +198,65 @@ export default function SkillsPage() {
                             <option value="Intermediate">Intermediate</option>
                             <option value="Advanced">Advanced</option>
                           </select>
-                          <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          <svg
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
                           </svg>
                         </div>
-                        
+
                         <button
                           onClick={addSkill}
                           disabled={loading || !teachSkill.trim()}
-                          className="px-6 py-3 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 hover:from-emerald-500 hover:via-green-600 hover:to-teal-700 disabled:from-gray-600 disabled:via-gray-700 disabled:to-gray-800 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 disabled:hover:scale-100 shadow-lg hover:shadow-emerald-500/30 disabled:shadow-none relative overflow-hidden group"
+                          className="px-8 py-3 bg-slate-800/90 hover:bg-slate-700/90 disabled:bg-gray-700/50 border border-emerald-500/30 hover:border-emerald-400/50 disabled:border-gray-600/30 text-emerald-300 hover:text-emerald-200 disabled:text-gray-500 font-medium rounded-xl transition-all duration-300 transform hover:scale-[1.02] disabled:hover:scale-100 backdrop-blur-sm relative overflow-hidden group"
                         >
-                          <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/15 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
+                          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                           <span className="relative z-10 flex items-center justify-center space-x-2">
                             {loading ? (
                               <>
-                                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                <svg
+                                  className="w-4 h-4 animate-spin"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                  ></circle>
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                  ></path>
                                 </svg>
                                 <span>Adding...</span>
                               </>
                             ) : (
                               <>
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                  />
                                 </svg>
                                 <span>Add Skill</span>
                               </>
@@ -215,14 +270,22 @@ export default function SkillsPage() {
                   {/* Skills List */}
                   <div className="space-y-3">
                     {skills.length > 0 ? (
-                      <SkillList skills={skills} editable={true} onRemove={removeSkill} />
+                      <SkillList
+                        skills={skills}
+                        editable={true}
+                        onRemove={removeSkill}
+                      />
                     ) : (
                       <div className="text-center py-12 border-2 border-dashed border-emerald-500/20 rounded-xl bg-emerald-500/5">
                         <div className="w-16 h-16 bg-gradient-to-r from-emerald-500/15 to-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
                           <span className="text-3xl">🎯</span>
                         </div>
-                        <p className="text-slate-400 mb-2">No teaching skills added yet</p>
-                        <p className="text-slate-500 text-sm">Add your first skill to start teaching others</p>
+                        <p className="text-slate-400 mb-2">
+                          No teaching skills added yet
+                        </p>
+                        <p className="text-slate-500 text-sm">
+                          Add your first skill to start teaching others
+                        </p>
                       </div>
                     )}
                   </div>
@@ -234,7 +297,7 @@ export default function SkillsPage() {
             <div className="space-y-6">
               <div className="bg-gradient-to-br from-gray-800/70 via-slate-800/60 to-gray-900/70 backdrop-blur-xl rounded-2xl border border-teal-500/25 p-6 shadow-xl hover:shadow-teal-500/15 transition-all duration-300 relative overflow-hidden group">
                 <div className="absolute inset-0 bg-gradient-to-r from-teal-500/0 via-green-500/3 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-                
+
                 <div className="relative z-10">
                   <div className="flex items-center space-x-3 mb-6">
                     <div className="w-10 h-10 bg-gradient-to-r from-teal-400 to-green-500 rounded-xl flex items-center justify-center shadow-md shadow-teal-500/30">
@@ -244,7 +307,9 @@ export default function SkillsPage() {
                       <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-400 via-green-400 to-emerald-400 bg-clip-text text-transparent">
                         Skills I Want to Learn
                       </h2>
-                      <p className="text-slate-400 text-sm">Discover new areas of knowledge</p>
+                      <p className="text-slate-400 text-sm">
+                        Discover new areas of knowledge
+                      </p>
                     </div>
                   </div>
 
@@ -261,7 +326,7 @@ export default function SkillsPage() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-r from-teal-400/5 to-green-400/5 rounded-xl opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                       </div>
-                      
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="relative">
                           <select
@@ -273,30 +338,65 @@ export default function SkillsPage() {
                             <option value="Intermediate">Intermediate</option>
                             <option value="Advanced">Advanced</option>
                           </select>
-                          <svg className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          <svg
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
                           </svg>
                         </div>
-                        
+
                         <button
                           onClick={addLearnSkill}
                           disabled={learnLoading || !learnSkill.trim()}
-                          className="px-6 py-3 bg-gradient-to-r from-teal-400 via-green-500 to-emerald-600 hover:from-teal-500 hover:via-green-600 hover:to-emerald-700 disabled:from-gray-600 disabled:via-gray-700 disabled:to-gray-800 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 disabled:hover:scale-100 shadow-lg hover:shadow-teal-500/30 disabled:shadow-none relative overflow-hidden group"
+                          className="px-8 py-3 bg-slate-800/90 hover:bg-slate-700/90 disabled:bg-gray-700/50 border border-teal-500/30 hover:border-teal-400/50 disabled:border-gray-600/30 text-teal-300 hover:text-teal-200 disabled:text-gray-500 font-medium rounded-xl transition-all duration-300 transform hover:scale-[1.02] disabled:hover:scale-100 backdrop-blur-sm relative overflow-hidden group"
                         >
-                          <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/15 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
+                          <div className="absolute inset-0 bg-gradient-to-r from-teal-500/0 via-teal-500/5 to-teal-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                           <span className="relative z-10 flex items-center justify-center space-x-2">
                             {learnLoading ? (
                               <>
-                                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                <svg
+                                  className="w-4 h-4 animate-spin"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                  ></circle>
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                  ></path>
                                 </svg>
                                 <span>Adding...</span>
                               </>
                             ) : (
                               <>
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                  />
                                 </svg>
                                 <span>Add Skill</span>
                               </>
@@ -310,14 +410,22 @@ export default function SkillsPage() {
                   {/* Learn Skills List */}
                   <div className="space-y-3">
                     {learnSkills.length > 0 ? (
-                      <SkillList skills={learnSkills} editable={true} onRemove={removeLearnSkill} />
+                      <SkillList
+                        skills={learnSkills}
+                        editable={true}
+                        onRemove={removeLearnSkill}
+                      />
                     ) : (
                       <div className="text-center py-12 border-2 border-dashed border-teal-500/20 rounded-xl bg-teal-500/5">
                         <div className="w-16 h-16 bg-gradient-to-r from-teal-500/15 to-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
                           <span className="text-3xl">🎯</span>
                         </div>
-                        <p className="text-slate-400 mb-2">No learning goals added yet</p>
-                        <p className="text-slate-500 text-sm">Add skills you want to master</p>
+                        <p className="text-slate-400 mb-2">
+                          No learning goals added yet
+                        </p>
+                        <p className="text-slate-500 text-sm">
+                          Add skills you want to master
+                        </p>
                       </div>
                     )}
                   </div>
@@ -364,8 +472,12 @@ export default function SkillsPage() {
       {/* CSS Animations */}
       <style jsx>{`
         @keyframes gridMove {
-          0% { transform: translate(0, 0); }
-          100% { transform: translate(40px, 40px); }
+          0% {
+            transform: translate(0, 0);
+          }
+          100% {
+            transform: translate(40px, 40px);
+          }
         }
       `}</style>
     </div>

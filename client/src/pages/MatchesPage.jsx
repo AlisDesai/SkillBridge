@@ -259,23 +259,23 @@ export default function MatchesPage() {
     <div className="relative overflow-hidden min-h-screen bg-gradient-to-br from-black via-gray-950 to-slate-950">
       {/* Enhanced Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-96 -right-96 w-[800px] h-[800px] bg-emerald-400/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-96 -left-96 w-[800px] h-[800px] bg-green-500/4 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-teal-400/3 rounded-full blur-2xl animate-pulse delay-500"></div>
+        <div className="absolute -top-96 -right-96 w-[800px] h-[800px] bg-emerald-400/2 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-96 -left-96 w-[800px] h-[800px] bg-green-500/2 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-teal-400/2 rounded-full blur-2xl animate-pulse delay-500"></div>
 
-        <div className="absolute top-1/4 left-1/4 w-48 h-48 bg-emerald-500/4 rounded-full blur-xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-56 h-56 bg-green-400/3 rounded-full blur-xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-48 h-48 bg-emerald-500/2 rounded-full blur-xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-56 h-56 bg-green-400/2 rounded-full blur-xl"></div>
 
-        <div className="absolute top-20 left-20 w-2 h-2 bg-emerald-400/30 rounded-full animate-ping"></div>
-        <div className="absolute top-40 right-32 w-1.5 h-1.5 bg-green-400/20 rounded-full animate-ping delay-300"></div>
-        <div className="absolute bottom-32 left-1/3 w-2 h-2 bg-teal-500/25 rounded-full animate-ping delay-700"></div>
-        <div className="absolute top-60 right-1/4 w-1 h-1 bg-emerald-300/20 rounded-full animate-ping delay-1000"></div>
+        <div className="absolute top-20 left-20 w-2 h-2 bg-emerald-400/15 rounded-full animate-ping"></div>
+        <div className="absolute top-40 right-32 w-1.5 h-1.5 bg-green-400/10 rounded-full animate-ping delay-300"></div>
+        <div className="absolute bottom-32 left-1/3 w-2 h-2 bg-teal-500/12 rounded-full animate-ping delay-700"></div>
+        <div className="absolute top-60 right-1/4 w-1 h-1 bg-emerald-300/10 rounded-full animate-ping delay-1000"></div>
 
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-5">
           <div
             className="w-full h-full"
             style={{
-              backgroundImage: `radial-gradient(circle at 2px 2px, rgba(52, 211, 153, 0.08) 1px, transparent 0)`,
+              backgroundImage: `radial-gradient(circle at 2px 2px, rgba(52, 211, 153, 0.04) 1px, transparent 0)`,
               backgroundSize: "50px 50px",
             }}
           ></div>
@@ -342,7 +342,7 @@ export default function MatchesPage() {
         {/* Enhanced Search Section */}
         <div className="max-w-3xl mx-auto mb-12">
           <div className="relative group">
-            <div className="absolute inset-0 bg-emerald-500/10 rounded-3xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="absolute inset-0 bg-emerald-500/5 rounded-3xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <div className="absolute left-6 top-1/2 transform -translate-y-1/2 text-slate-400 group-hover:text-emerald-400 transition-colors duration-300">
               <Search className="w-6 h-6" />
             </div>
@@ -382,7 +382,7 @@ export default function MatchesPage() {
 
         {/* Enhanced Tab Navigation */}
         <div className="bg-gradient-to-r from-gray-900/90 via-gray-950/95 to-black/90 backdrop-blur-xl rounded-3xl border border-slate-800/40 p-2 mb-8 shadow-2xl relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-green-500/3 to-teal-500/5 opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/3 via-green-500/2 to-teal-500/3 opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
 
           <div className="flex space-x-2 relative z-10">
             {[
@@ -426,16 +426,12 @@ export default function MatchesPage() {
                     <tab.icon
                       className={`w-5 h-5 ${
                         activeTab === tab.id
-                          ? "text-white drop-shadow-lg"
+                          ? "text-white"
                           : "text-slate-400 group-hover:text-emerald-400"
                       }`}
                     />
                   </div>
-                  <span
-                    className={`${
-                      activeTab === tab.id ? "drop-shadow-lg" : ""
-                    }`}
-                  >
+                  <span className={`${activeTab === tab.id ? "" : ""}`}>
                     {tab.label}
                   </span>
                   {tab.special && (
@@ -488,14 +484,14 @@ export default function MatchesPage() {
         {activeTab === "requests" && (
           <div>
             {/* Enhanced Filter Section */}
-            <div className="bg-gradient-to-r from-gray-900/80 via-gray-950/90 to-black/80 backdrop-blur-xl rounded-3xl border border-slate-800/40 p-8 mb-10 shadow-2xl relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-teal-500/5 opacity-0 hover:opacity-100 transition-opacity duration-700 rounded-3xl"></div>
+            <div className="bg-gradient-to-r from-black/90 via-gray-950/95 to-slate-950/90 backdrop-blur-xl rounded-3xl border border-emerald-500/30 p-8 mb-10 shadow-2xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/8 via-green-500/6 to-teal-500/8 opacity-0 hover:opacity-100 transition-opacity duration-700 rounded-3xl"></div>
 
               {/* Animated background pattern */}
               <div className="absolute inset-0 opacity-5">
-                <div className="absolute top-0 left-0 w-40 h-40 bg-emerald-400 rounded-full filter blur-3xl animate-blob"></div>
-                <div className="absolute top-0 right-0 w-40 h-40 bg-teal-400 rounded-full filter blur-3xl animate-blob animation-delay-2000"></div>
-                <div className="absolute bottom-0 left-0 w-40 h-40 bg-green-400 rounded-full filter blur-3xl animate-blob animation-delay-4000"></div>
+                <div className="absolute top-0 left-0 w-40 h-40 bg-emerald-400/60 rounded-full filter blur-3xl animate-blob"></div>
+                <div className="absolute top-0 right-0 w-40 h-40 bg-teal-400/60 rounded-full filter blur-3xl animate-blob animation-delay-2000"></div>
+                <div className="absolute bottom-0 left-0 w-40 h-40 bg-green-400/60 rounded-full filter blur-3xl animate-blob animation-delay-4000"></div>
               </div>
 
               <div className="relative z-10">
@@ -508,9 +504,9 @@ export default function MatchesPage() {
                       Filter Matches
                     </span>
                   </h3>
-                  <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-gray-800/50 to-slate-800/50 rounded-full border border-slate-700/50">
+                  <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-emerald-500/15 to-green-500/10 rounded-full border border-emerald-500/40">
                     <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                    <span className="text-sm text-slate-300 font-medium">
+                    <span className="text-sm text-emerald-300 font-medium">
                       {filteredMatches.length} of {matches.length} matches
                     </span>
                   </div>
@@ -528,19 +524,19 @@ export default function MatchesPage() {
                         onClick={() => setActiveFilter(option.key)}
                         className={`relative p-5 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 group ${
                           isActive
-                            ? "bg-gradient-to-br from-gray-900/90 via-slate-900/90 to-black/90 text-emerald-300 border-emerald-400/60 shadow-2xl shadow-emerald-500/40 ring-2 ring-emerald-400/30"
-                            : "bg-gradient-to-br from-gray-900/60 to-slate-900/60 text-slate-400 border-slate-700/50 hover:border-emerald-500/40 hover:text-emerald-300 hover:shadow-xl hover:shadow-emerald-500/20"
+                            ? "bg-gradient-to-br from-gray-900/90 via-slate-900/90 to-black/90 text-emerald-300 border-emerald-400/70 shadow-2xl shadow-emerald-500/50 ring-2 ring-emerald-400/40"
+                            : "bg-gradient-to-br from-slate-900/80 via-gray-900/90 to-black/80 text-slate-300 border-slate-800/50 hover:border-emerald-500/50 hover:text-emerald-300 hover:shadow-xl hover:shadow-emerald-500/30"
                         }`}
                         style={{ animationDelay: `${index * 100}ms` }}
                       >
                         <div
-                          className={`absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-green-500/15 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl ${
+                          className={`absolute inset-0 bg-gradient-to-r from-emerald-500/8 via-green-500/12 to-teal-500/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl ${
                             isActive ? "opacity-100" : ""
                           }`}
                         ></div>
 
                         {isActive && (
-                          <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/50 animate-pulse">
+                          <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/60 animate-pulse">
                             <svg
                               className="w-3 h-3 text-white"
                               fill="none"
@@ -561,8 +557,8 @@ export default function MatchesPage() {
                           <div
                             className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-3 transition-all duration-500 ${
                               isActive
-                                ? "bg-gradient-to-br from-emerald-500/40 to-green-500/40 text-emerald-300 shadow-lg shadow-emerald-500/40 rotate-12 scale-110"
-                                : "bg-gradient-to-br from-gray-800/70 to-slate-800/70 text-slate-400 group-hover:from-emerald-500/20 group-hover:to-green-500/20 group-hover:text-emerald-400 group-hover:shadow-lg group-hover:shadow-emerald-500/20 group-hover:rotate-6"
+                                ? "bg-gradient-to-br from-emerald-500/50 to-green-500/50 text-emerald-200 shadow-lg shadow-emerald-500/50 rotate-12 scale-110"
+                                : "bg-gradient-to-br from-slate-800/50 to-gray-900/60 text-slate-300 group-hover:from-emerald-500/30 group-hover:to-green-500/30 group-hover:text-emerald-300 group-hover:shadow-lg group-hover:shadow-emerald-500/30 group-hover:rotate-6"
                             }`}
                           >
                             <IconComponent className="w-6 h-6" />
@@ -581,7 +577,6 @@ export default function MatchesPage() {
                           </div>
                         </div>
 
-                        {/* Hover effect line */}
                         <div
                           className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 rounded-b-2xl transition-all duration-300 ${
                             isActive
@@ -651,8 +646,8 @@ export default function MatchesPage() {
         {activeTab === "smart" && (
           <div>
             {/* Enhanced Smart Matches Header */}
-            <div className="bg-gradient-to-r from-emerald-50/10 to-teal-50/10 backdrop-blur-xl rounded-2xl border border-emerald-500/20 p-8 mb-8 shadow-xl relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-green-500/3 to-teal-500/5 rounded-2xl"></div>
+            <div className="bg-gradient-to-r from-emerald-50/5 to-teal-50/5 backdrop-blur-xl rounded-2xl border border-emerald-500/20 p-8 mb-8 shadow-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/3 via-green-500/2 to-teal-500/3 rounded-2xl"></div>
 
               <div className="relative z-10">
                 <div className="flex items-center space-x-4 mb-4">
@@ -820,33 +815,10 @@ export default function MatchesPage() {
           </div>
         )}
 
-        {/* Enhanced Floating Action Button */}
-        <div className="fixed bottom-8 right-8 z-50">
-          <button
-            onClick={() => (window.location.href = "/dashboard")}
-            className="w-16 h-16 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 hover:from-emerald-500 hover:via-green-600 hover:to-teal-700 text-white rounded-full shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 transform hover:scale-110 relative overflow-hidden group"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 rounded-full"></div>
-            <svg
-              className="w-8 h-8 relative z-10"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
-          </button>
-        </div>
-
         {/* Enhanced Footer Stats */}
         {matches.length > 0 && (
           <div className="mt-16 bg-gradient-to-r from-gray-800/70 via-slate-800/60 to-gray-900/70 backdrop-blur-xl rounded-2xl border border-slate-600/30 p-8 shadow-xl relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-green-500/3 to-teal-500/0 opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-green-500/2 to-teal-500/0 opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
 
             <div className="relative z-10">
               <h3 className="text-2xl font-bold text-white mb-6 text-center">
@@ -900,7 +872,7 @@ export default function MatchesPage() {
                         animation: "fadeInUp 0.6s ease-out forwards",
                       }}
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/3 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 rounded-xl"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/2 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 rounded-xl"></div>
 
                       <div className="relative z-10">
                         <div
