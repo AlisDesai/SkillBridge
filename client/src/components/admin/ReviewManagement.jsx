@@ -8,16 +8,17 @@ import {
 import { showError, showSuccess } from "../../utils/toast";
 import Button from "../common/Button";
 import Modal from "../common/Modal";
-const ReviewRow = ({ review, onDelete, isDeleting }) => {
+
+const ReviewRow = ({ review, onDelete, isDeleting, onViewDetails }) => {
   const getRatingColor = (rating) => {
     const colors = {
-      5: "text-green-600 bg-green-100",
-      4: "text-blue-600 bg-blue-100",
-      3: "text-yellow-600 bg-yellow-100",
-      2: "text-orange-600 bg-orange-100",
-      1: "text-red-600 bg-red-100",
+      5: "text-emerald-400 bg-emerald-500/20",
+      4: "text-green-400 bg-green-500/20",
+      3: "text-teal-400 bg-teal-500/20",
+      2: "text-yellow-400 bg-yellow-400/20",
+      1: "text-red-400 bg-red-500/20",
     };
-    return colors[rating] || "text-gray-600 bg-gray-100";
+    return colors[rating] || "text-slate-400 bg-slate-500/20";
   };
 
   const renderStars = (rating) => {
@@ -25,7 +26,7 @@ const ReviewRow = ({ review, onDelete, isDeleting }) => {
       <span
         key={index}
         className={`text-sm ${
-          index < rating ? "text-yellow-400" : "text-gray-300"
+          index < rating ? "text-yellow-400" : "text-slate-600"
         }`}
       >
         ★
@@ -34,10 +35,10 @@ const ReviewRow = ({ review, onDelete, isDeleting }) => {
   };
 
   return (
-    <tr className="hover:bg-gray-50">
+    <tr className="hover:bg-slate-900/50 border-b border-slate-800/50 transition-colors duration-200">
       <td className="px-6 py-4">
         <div className="flex items-start gap-3">
-          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
             {review.reviewer?.avatar ? (
               <img
                 src={review.reviewer.avatar}
@@ -45,16 +46,16 @@ const ReviewRow = ({ review, onDelete, isDeleting }) => {
                 className="w-8 h-8 rounded-full object-cover"
               />
             ) : (
-              <span className="text-xs text-gray-600">
+              <span className="text-xs text-white font-medium">
                 {review.reviewer?.name?.charAt(0)?.toUpperCase() || "?"}
               </span>
             )}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-medium text-gray-900 truncate">
+            <div className="text-sm font-medium text-white truncate">
               {review.reviewer?.name || "Anonymous"}
             </div>
-            <div className="text-sm text-gray-500 truncate">
+            <div className="text-sm text-slate-400 truncate">
               {review.reviewer?.email || "No email"}
             </div>
           </div>
@@ -63,7 +64,7 @@ const ReviewRow = ({ review, onDelete, isDeleting }) => {
 
       <td className="px-6 py-4">
         <div className="flex items-start gap-3">
-          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
             {review.reviewee?.avatar ? (
               <img
                 src={review.reviewee.avatar}
@@ -71,16 +72,16 @@ const ReviewRow = ({ review, onDelete, isDeleting }) => {
                 className="w-8 h-8 rounded-full object-cover"
               />
             ) : (
-              <span className="text-xs text-gray-600">
+              <span className="text-xs text-white font-medium">
                 {review.reviewee?.name?.charAt(0)?.toUpperCase() || "?"}
               </span>
             )}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-medium text-gray-900 truncate">
+            <div className="text-sm font-medium text-white truncate">
               {review.reviewee?.name || "Anonymous"}
             </div>
-            <div className="text-sm text-gray-500 truncate">
+            <div className="text-sm text-slate-400 truncate">
               {review.reviewee?.email || "No email"}
             </div>
           </div>
@@ -102,9 +103,9 @@ const ReviewRow = ({ review, onDelete, isDeleting }) => {
 
       <td className="px-6 py-4">
         <div className="max-w-xs">
-          <p className="text-sm text-gray-900 line-clamp-2">{review.comment}</p>
+          <p className="text-sm text-slate-300 line-clamp-2">{review.comment}</p>
           {review.isEdited && (
-            <span className="inline-flex mt-1 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+            <span className="inline-flex mt-1 px-2 py-1 text-xs bg-teal-500/20 text-teal-400 rounded-full">
               Edited
             </span>
           )}
@@ -112,23 +113,23 @@ const ReviewRow = ({ review, onDelete, isDeleting }) => {
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm text-gray-900">
+        <div className="text-sm text-white">
           {new Date(review.createdAt).toLocaleDateString()}
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-slate-400">
           {new Date(review.createdAt).toLocaleTimeString()}
         </div>
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {review.isReported && (
-            <span className="inline-flex px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">
+            <span className="inline-flex px-2 py-1 text-xs bg-red-500/20 text-red-400 rounded-full">
               Reported ({review.reportCount})
             </span>
           )}
           {review.matchId && (
-            <span className="inline-flex px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+            <span className="inline-flex px-2 py-1 text-xs bg-emerald-500/20 text-emerald-400 rounded-full">
               Verified
             </span>
           )}
@@ -136,21 +137,28 @@ const ReviewRow = ({ review, onDelete, isDeleting }) => {
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-        <Button
-          variant="danger"
-          size="sm"
-          onClick={() => onDelete(review)}
-          disabled={isDeleting === review._id}
-        >
-          {isDeleting === review._id ? (
-            <div className="flex items-center gap-1">
-              <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
-              Deleting...
-            </div>
-          ) : (
-            "Delete"
-          )}
-        </Button>
+        <div className="flex items-center gap-2 justify-end">
+          <button
+            onClick={() => onViewDetails(review)}
+            className="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 rounded-lg hover:bg-emerald-500/30 text-sm font-medium transition-colors"
+          >
+            View
+          </button>
+          <button
+            onClick={() => onDelete(review)}
+            disabled={isDeleting === review._id}
+            className="px-3 py-1.5 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isDeleting === review._id ? (
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 border border-red-400 border-t-transparent rounded-full animate-spin"></div>
+                Deleting...
+              </div>
+            ) : (
+              "Delete"
+            )}
+          </button>
+        </div>
       </td>
     </tr>
   );
@@ -164,7 +172,7 @@ const ReviewDetailsModal = ({ review, isOpen, onClose }) => {
       <span
         key={index}
         className={`text-lg ${
-          index < rating ? "text-yellow-400" : "text-gray-300"
+          index < rating ? "text-yellow-400" : "text-slate-600"
         }`}
       >
         ★
@@ -174,30 +182,30 @@ const ReviewDetailsModal = ({ review, isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Review Details" size="lg">
-      <div className="space-y-6">
+      <div className="space-y-6 bg-slate-950 p-6 rounded-xl">
         {/* Reviewer and Reviewee Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">Reviewer</h4>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+            <h4 className="font-medium text-white">Reviewer</h4>
+            <div className="flex items-center gap-3 p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
+              <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 rounded-full flex items-center justify-center">
                 {review.reviewer?.avatar ? (
                   <img
                     src={review.reviewer.avatar}
                     alt={review.reviewer.name}
-                    className="w-10 h-10 rounded-full object-cover"
+                    className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
-                  <span className="text-gray-600 font-medium">
+                  <span className="text-white font-medium text-lg">
                     {review.reviewer?.name?.charAt(0)?.toUpperCase() || "?"}
                   </span>
                 )}
               </div>
               <div>
-                <div className="font-medium text-gray-900">
+                <div className="font-medium text-white">
                   {review.reviewer?.name || "Anonymous"}
                 </div>
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-slate-400">
                   {review.reviewer?.email || "No email"}
                 </div>
               </div>
@@ -205,26 +213,26 @@ const ReviewDetailsModal = ({ review, isOpen, onClose }) => {
           </div>
 
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">Reviewee</h4>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+            <h4 className="font-medium text-white">Reviewee</h4>
+            <div className="flex items-center gap-3 p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
+              <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 rounded-full flex items-center justify-center">
                 {review.reviewee?.avatar ? (
                   <img
                     src={review.reviewee.avatar}
                     alt={review.reviewee.name}
-                    className="w-10 h-10 rounded-full object-cover"
+                    className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
-                  <span className="text-gray-600 font-medium">
+                  <span className="text-white font-medium text-lg">
                     {review.reviewee?.name?.charAt(0)?.toUpperCase() || "?"}
                   </span>
                 )}
               </div>
               <div>
-                <div className="font-medium text-gray-900">
+                <div className="font-medium text-white">
                   {review.reviewee?.name || "Anonymous"}
                 </div>
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-slate-400">
                   {review.reviewee?.email || "No email"}
                 </div>
               </div>
@@ -234,10 +242,10 @@ const ReviewDetailsModal = ({ review, isOpen, onClose }) => {
 
         {/* Rating */}
         <div className="space-y-3">
-          <h4 className="font-medium text-gray-900">Rating</h4>
-          <div className="flex items-center gap-2">
+          <h4 className="font-medium text-white">Rating</h4>
+          <div className="flex items-center gap-3 p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
             <div className="flex">{renderStars(review.rating)}</div>
-            <span className="text-lg font-semibold text-gray-900">
+            <span className="text-xl font-semibold text-white">
               {review.rating}/5
             </span>
           </div>
@@ -245,34 +253,34 @@ const ReviewDetailsModal = ({ review, isOpen, onClose }) => {
 
         {/* Comment */}
         <div className="space-y-3">
-          <h4 className="font-medium text-gray-900">Comment</h4>
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-900 leading-relaxed">{review.comment}</p>
+          <h4 className="font-medium text-white">Comment</h4>
+          <div className="p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
+            <p className="text-slate-300 leading-relaxed">{review.comment}</p>
           </div>
         </div>
 
         {/* Metadata */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">Review Information</h4>
-            <div className="space-y-2 text-sm">
+            <h4 className="font-medium text-white">Review Information</h4>
+            <div className="space-y-3 text-sm p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
               <div className="flex justify-between">
-                <span className="text-gray-600">Created:</span>
-                <span className="text-gray-900">
+                <span className="text-slate-400">Created:</span>
+                <span className="text-white">
                   {new Date(review.createdAt).toLocaleString()}
                 </span>
               </div>
               {review.isEdited && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Last Edited:</span>
-                  <span className="text-gray-900">
+                  <span className="text-slate-400">Last Edited:</span>
+                  <span className="text-white">
                     {new Date(review.editedAt).toLocaleString()}
                   </span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-gray-600">Verified Match:</span>
-                <span className="text-gray-900">
+                <span className="text-slate-400">Verified Match:</span>
+                <span className="text-white">
                   {review.matchId ? "Yes" : "No"}
                 </span>
               </div>
@@ -280,20 +288,20 @@ const ReviewDetailsModal = ({ review, isOpen, onClose }) => {
           </div>
 
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">Status</h4>
-            <div className="space-y-2">
+            <h4 className="font-medium text-white">Status</h4>
+            <div className="space-y-2 p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
               {review.isReported && (
-                <span className="inline-flex px-3 py-1 text-sm bg-red-100 text-red-800 rounded-full">
+                <span className="inline-flex px-3 py-1 text-sm bg-red-500/20 text-red-400 rounded-full">
                   Reported ({review.reportCount} times)
                 </span>
               )}
               {review.isEdited && (
-                <span className="inline-flex px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">
+                <span className="inline-flex px-3 py-1 text-sm bg-teal-500/20 text-teal-400 rounded-full">
                   Edited Review
                 </span>
               )}
               {review.matchId && (
-                <span className="inline-flex px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full">
+                <span className="inline-flex px-3 py-1 text-sm bg-emerald-500/20 text-emerald-400 rounded-full">
                   Verified Match
                 </span>
               )}
@@ -302,9 +310,12 @@ const ReviewDetailsModal = ({ review, isOpen, onClose }) => {
         </div>
 
         <div className="flex items-center justify-end pt-4">
-          <Button variant="outline" onClick={onClose}>
+          <button
+            onClick={onClose}
+            className="px-6 py-2 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
+          >
             Close
-          </Button>
+          </button>
         </div>
       </div>
     </Modal>
@@ -360,7 +371,7 @@ export default function ReviewManagement() {
       await dispatch(deleteAdminReviewAsync(deleteModal.review._id)).unwrap();
       showSuccess("Review deleted successfully");
       setDeleteModal({ show: false, review: null });
-      dispatch(fetchAdminReviewsAsync(filters)); // Refresh data
+      dispatch(fetchAdminReviewsAsync(filters));
     } catch (error) {
       showError(error?.message || "Failed to delete review");
     } finally {
@@ -381,31 +392,29 @@ export default function ReviewManagement() {
 
     return (
       <div className="flex items-center justify-between mt-6 px-6 pb-6">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
+        <div className="flex items-center gap-3">
+          <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={!hasPrevPage}
+            className="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Previous
-          </Button>
+          </button>
 
-          <span className="text-sm text-gray-600">
+          <span className="px-4 py-2 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 text-white rounded-lg font-medium">
             Page {currentPage} of {totalPages}
           </span>
 
-          <Button
-            variant="outline"
-            size="sm"
+          <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={!hasNextPage}
+            className="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Next
-          </Button>
+          </button>
         </div>
 
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-slate-400">
           Total: {reviewsPagination.totalReviews || 0} reviews
         </p>
       </div>
@@ -413,177 +422,179 @@ export default function ReviewManagement() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-800">
-            Review Management
-          </h2>
-          <p className="text-gray-600 mt-1">Monitor and manage user reviews</p>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div className="bg-white rounded-2xl shadow-sm border p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-slate-950 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Rating Filter
-            </label>
-            <select
-              value={filters.rating}
-              onChange={(e) => handleFilterChange("rating", e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#FF7A59] focus:border-transparent"
-            >
-              <option value="">All Ratings</option>
-              <option value="5">5 Stars</option>
-              <option value="4">4 Stars</option>
-              <option value="3">3 Stars</option>
-              <option value="2">2 Stars</option>
-              <option value="1">1 Star</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Status Filter
-            </label>
-            <select
-              value={filters.reported}
-              onChange={(e) => handleFilterChange("reported", e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#FF7A59] focus:border-transparent"
-            >
-              <option value="">All Reviews</option>
-              <option value="true">Reported Only</option>
-              <option value="false">Non-Reported</option>
-            </select>
-          </div>
-
-          <div className="flex items-end">
-            <Button
-              variant="outline"
-              onClick={() => setFilters({ rating: "", reported: "", page: 1 })}
-              className="w-full"
-            >
-              Clear Filters
-            </Button>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-white via-gray-100 to-slate-200 bg-clip-text text-transparent">
+              Review Management
+            </h2>
+            <p className="text-slate-400 mt-2 text-lg">Monitor and manage user reviews</p>
           </div>
         </div>
-      </div>
 
-      {/* Reviews Table */}
-      <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="w-8 h-8 border-2 border-[#FF7A59] border-t-transparent rounded-full animate-spin"></div>
+        {/* Filters */}
+        <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Rating Filter
+              </label>
+              <select
+                value={filters.rating}
+                onChange={(e) => handleFilterChange("rating", e.target.value)}
+                className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-colors"
+              >
+                <option value="">All Ratings</option>
+                <option value="5">5 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="2">2 Stars</option>
+                <option value="1">1 Star</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Status Filter
+              </label>
+              <select
+                value={filters.reported}
+                onChange={(e) => handleFilterChange("reported", e.target.value)}
+                className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-colors"
+              >
+                <option value="">All Reviews</option>
+                <option value="true">Reported Only</option>
+                <option value="false">Non-Reported</option>
+              </select>
+            </div>
+
+            <div className="flex items-end">
+              <button
+                onClick={() => setFilters({ rating: "", reported: "", page: 1 })}
+                className="w-full px-4 py-3 bg-slate-800 text-slate-300 rounded-xl hover:bg-slate-700 transition-colors"
+              >
+                Clear Filters
+              </button>
+            </div>
           </div>
-        ) : !adminReviews?.length ? (
-          <div className="text-center py-12">
-            <div className="text-gray-500 mb-2">No reviews found</div>
-            <p className="text-sm text-gray-400">
-              {filters.rating || filters.reported
-                ? "Try adjusting your filters"
-                : "No reviews have been created yet"}
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Reviewer
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Reviewee
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Rating
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Comment
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {adminReviews.map((review) => (
-                  <ReviewRow
-                    key={review._id}
-                    review={review}
-                    onDelete={handleDeleteReview}
-                    isDeleting={deletingId}
-                  />
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        </div>
 
-        {renderPagination()}
-      </div>
-
-      {/* Review Details Modal */}
-      <ReviewDetailsModal
-        review={detailsModal.review}
-        isOpen={detailsModal.show}
-        onClose={() => setDetailsModal({ show: false, review: null })}
-      />
-
-      {/* Delete Confirmation Modal */}
-      <Modal
-        isOpen={deleteModal.show}
-        onClose={() => setDeleteModal({ show: false, review: null })}
-        title="Delete Review"
-      >
-        <div className="space-y-4">
-          <p className="text-gray-600">
-            Are you sure you want to delete this review? This action cannot be
-            undone.
-          </p>
-          {deleteModal.review && (
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="font-medium">
-                  {deleteModal.review.reviewer?.name} →{" "}
-                  {deleteModal.review.reviewee?.name}
-                </span>
-                <span className="text-yellow-500">
-                  {"★".repeat(deleteModal.review.rating)}
-                </span>
-              </div>
-              <p className="text-sm text-gray-600 line-clamp-2">
-                {deleteModal.review.comment}
+        {/* Reviews Table */}
+        <div className="bg-slate-900/50 border border-slate-800 rounded-2xl overflow-hidden backdrop-blur-sm">
+          {loading ? (
+            <div className="flex items-center justify-center py-16">
+              <div className="w-10 h-10 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : !adminReviews?.length ? (
+            <div className="text-center py-16">
+              <div className="text-slate-300 mb-2 text-lg">No reviews found</div>
+              <p className="text-sm text-slate-500">
+                {filters.rating || filters.reported
+                  ? "Try adjusting your filters"
+                  : "No reviews have been created yet"}
               </p>
             </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+                <thead className="bg-slate-800/50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                      Reviewer
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                      Reviewee
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                      Rating
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                      Comment
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-6 py-4 text-right text-xs font-medium text-slate-300 uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-slate-900/30">
+                  {adminReviews.map((review) => (
+                    <ReviewRow
+                      key={review._id}
+                      review={review}
+                      onDelete={handleDeleteReview}
+                      onViewDetails={handleViewDetails}
+                      isDeleting={deletingId}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
-          <div className="flex items-center justify-end gap-3">
-            <Button
-              variant="outline"
-              onClick={() => setDeleteModal({ show: false, review: null })}
-              disabled={deletingId}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="danger"
-              onClick={confirmDelete}
-              disabled={deletingId}
-            >
-              {deletingId ? "Deleting..." : "Delete Review"}
-            </Button>
-          </div>
+
+          {renderPagination()}
         </div>
-      </Modal>
+
+        {/* Review Details Modal */}
+        <ReviewDetailsModal
+          review={detailsModal.review}
+          isOpen={detailsModal.show}
+          onClose={() => setDetailsModal({ show: false, review: null })}
+        />
+
+        {/* Delete Confirmation Modal */}
+        <Modal
+          isOpen={deleteModal.show}
+          onClose={() => setDeleteModal({ show: false, review: null })}
+          title="Delete Review"
+        >
+          <div className="space-y-6 bg-slate-950 p-6 rounded-xl">
+            <p className="text-slate-300 text-lg">
+              Are you sure you want to delete this review? This action cannot be
+              undone.
+            </p>
+            {deleteModal.review && (
+              <div className="p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="font-medium text-white">
+                    {deleteModal.review.reviewer?.name} →{" "}
+                    {deleteModal.review.reviewee?.name}
+                  </span>
+                  <span className="text-yellow-400">
+                    {"★".repeat(deleteModal.review.rating)}
+                  </span>
+                </div>
+                <p className="text-sm text-slate-400 line-clamp-2">
+                  {deleteModal.review.comment}
+                </p>
+              </div>
+            )}
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={() => setDeleteModal({ show: false, review: null })}
+                disabled={deletingId}
+                className="px-6 py-2 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 disabled:opacity-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={deletingId}
+                className="px-6 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 disabled:opacity-50 transition-colors"
+              >
+                {deletingId ? "Deleting..." : "Delete Review"}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      </div>
     </div>
   );
 }
