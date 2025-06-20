@@ -510,7 +510,7 @@ export default function HomePage() {
             <div className="flex items-center gap-2 group cursor-pointer pb-2">
               <span className="text-lg">🌟</span>
               <span className="group-hover:text-teal-400 transition-colors duration-300">
-                Join 10,000+ active learners
+                Join 1,000+ active learners
               </span>
             </div>
           </div>
