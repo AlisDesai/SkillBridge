@@ -84,10 +84,8 @@ export default function LoginForm() {
   const [userRole, setUserRole] = useState("");
   const [touched, setTouched] = useState({});
 
-  // Navigation function with immediate redirect
   const navigate = (path) => {
     console.log(`Navigating to: ${path}`);
-    // Immediate redirect without delays to prevent blue screen
     window.location.href = path;
   };
 
@@ -156,7 +154,6 @@ export default function LoginForm() {
     setErrors({});
 
     try {
-      // Replace this with your actual API call
       const API_BASE_URL =
         import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
       const res = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -171,7 +168,6 @@ export default function LoginForm() {
         throw new Error(data.message || "Login failed");
       }
 
-      // Store auth data
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
@@ -181,14 +177,13 @@ export default function LoginForm() {
       setErrors({});
       setTouched({});
 
-      // Direct redirect after success message
       setTimeout(() => {
         if (data.user.role === "admin") {
           window.location.href = "/admin/dashboard";
         } else {
           window.location.href = "/dashboard";
         }
-      }, 100);
+      }, 200);
     } catch (err) {
       setErrors({ submit: "Invalid email or password. Please try again." });
     } finally {
@@ -210,34 +205,34 @@ export default function LoginForm() {
 
   return (
     <>
-      <div className="fixed inset-0 bg-gradient-to-br from-black via-gray-950 to-slate-950 overflow-hidden login-container">
+      <div className="fixed inset-0 bg-gradient-to-br from-black via-gray-950 to-slate-950 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-96 -right-96 w-[600px] h-[600px] bg-emerald-400/8 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-96 -left-96 w-[600px] h-[600px] bg-green-500/6 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-teal-400/4 rounded-full blur-2xl"></div>
+          <div className="absolute -top-96 -right-96 w-[700px] h-[700px] bg-emerald-400/6 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-96 -left-96 w-[700px] h-[700px] bg-green-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-teal-400/3 rounded-full blur-3xl"></div>
 
-          <div className="absolute top-1/4 left-1/4 w-48 h-48 bg-emerald-500/6 rounded-full blur-xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-56 h-56 bg-green-400/4 rounded-full blur-xl"></div>
+          <div className="absolute top-20 left-20 w-64 h-64 bg-emerald-500/4 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-20 right-20 w-72 h-72 bg-green-400/3 rounded-full blur-2xl"></div>
 
-          <div className="absolute top-20 left-20 w-2 h-2 bg-emerald-400/40 rounded-full"></div>
-          <div className="absolute top-40 right-32 w-1.5 h-1.5 bg-green-400/30 rounded-full"></div>
-          <div className="absolute bottom-32 left-1/3 w-2 h-2 bg-teal-500/35 rounded-full"></div>
-          <div className="absolute top-60 right-1/4 w-1 h-1 bg-emerald-300/30 rounded-full"></div>
+          <div className="absolute top-32 left-40 w-2 h-2 bg-emerald-400/50 rounded-full animate-pulse"></div>
+          <div className="absolute top-48 right-40 w-1.5 h-1.5 bg-green-400/40 rounded-full animate-pulse delay-75"></div>
+          <div className="absolute bottom-40 left-1/3 w-2 h-2 bg-teal-500/45 rounded-full animate-pulse delay-150"></div>
+          <div className="absolute top-72 right-1/4 w-1 h-1 bg-emerald-300/35 rounded-full animate-pulse delay-300"></div>
 
-          <div className="absolute inset-0 opacity-2">
+          <div className="absolute inset-0 opacity-30">
             <div
               className="w-full h-full"
               style={{
-                backgroundImage: `radial-gradient(circle at 2px 2px, rgba(52, 211, 153, 0.15) 1px, transparent 0)`,
-                backgroundSize: "50px 50px",
+                backgroundImage: `radial-gradient(circle at 2px 2px, rgba(52, 211, 153, 0.08) 1px, transparent 0)`,
+                backgroundSize: "60px 60px",
               }}
             ></div>
           </div>
         </div>
 
         <div className="relative z-10 h-screen flex items-center justify-center p-4">
-          <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-0 min-h-[630px]">
-            <div className="relative bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 rounded-l-2xl lg:rounded-r-none rounded-r-2xl lg:rounded-br-none p-14 flex flex-col justify-center items-center text-white overflow-hidden shadow-xl">
+          <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-0 min-h-[630px] shadow-2xl rounded-2xl overflow-hidden">
+            <div className="relative bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 rounded-l-2xl lg:rounded-r-none rounded-r-2xl lg:rounded-br-none p-14 flex flex-col justify-center items-center text-white overflow-hidden">
               <div className="absolute top-8 right-8 w-24 h-24 bg-white/8 rounded-full blur-xl"></div>
               <div className="absolute bottom-8 left-8 w-20 h-20 bg-white/6 rounded-full blur-lg"></div>
               <div className="absolute top-1/2 left-1/4 w-28 h-28 bg-white/4 rounded-full blur-2xl"></div>
@@ -245,8 +240,8 @@ export default function LoginForm() {
 
               <div className="relative text-center z-10 max-w-md">
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 rounded-3xl mb-8 shadow-xl backdrop-blur-sm border border-white/20 relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 rounded-3xl"></div>
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-emerald-300/20 via-green-400/20 to-teal-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/8 to-white/4 rounded-3xl"></div>
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-emerald-300/15 via-green-400/15 to-teal-400/15 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                   <svg
                     className="w-10 h-10 text-white relative z-10 transform group-hover:scale-110 transition-transform duration-300"
                     fill="none"
@@ -300,7 +295,7 @@ export default function LoginForm() {
                       </svg>
                     </div>
                     <p className="text-white/90 font-medium">
-                      🔒 Military-Grade Security
+                      🔒 Enterprise-Grade Security
                     </p>
                   </div>
                   <div className="flex items-center justify-center space-x-4 group">
@@ -320,7 +315,7 @@ export default function LoginForm() {
                       </svg>
                     </div>
                     <p className="text-white/90 font-medium">
-                      ⚡ Lightning-Fast Dashboard
+                      ⚡ Lightning-Fast Performance
                     </p>
                   </div>
                   <div className="flex items-center justify-center space-x-4 group">
@@ -340,15 +335,15 @@ export default function LoginForm() {
                       </svg>
                     </div>
                     <p className="text-white/90 font-medium">
-                      🌟 Revolutionary Features
+                      🌟 Premium Experience
                     </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-gray-950/98 via-slate-950/98 to-gray-900/98 backdrop-blur-xl rounded-r-2xl lg:rounded-l-none rounded-l-2xl lg:rounded-bl-none p-14 flex flex-col justify-center border border-slate-500/60 shadow-xl relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/3 via-green-500/2 to-teal-600/3"></div>
+            <div className="bg-gradient-to-br from-gray-950/98 via-slate-950/98 to-gray-900/98 backdrop-blur-xl rounded-r-2xl lg:rounded-l-none rounded-l-2xl lg:rounded-bl-none p-14 flex flex-col justify-center border border-slate-500/60 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/2 via-green-500/1 to-teal-600/2"></div>
               <div className="max-w-md mx-auto w-full space-y-7 relative z-10">
                 <div className="text-center">
                   <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 bg-clip-text text-transparent mb-2 relative">
@@ -447,18 +442,6 @@ export default function LoginForm() {
                     />
                   </div>
 
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => navigate("/forgot-password")}
-                      className="text-emerald-400 hover:text-emerald-300 text-sm font-semibold transition-all duration-300 hover:underline hover:underline-offset-4 relative group"
-                      disabled={loading}
-                    >
-                      <span className="relative z-10">Forgot password?</span>
-                      <div className="absolute inset-0 bg-emerald-400/5 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </button>
-                  </div>
-
                   <button
                     type="button"
                     onClick={handleSubmit}
@@ -506,15 +489,14 @@ export default function LoginForm() {
                     </div>
                   </button>
 
-                  <div className="text-center pt-5">
-                    <p className="text-slate-300 text-base">
+                  <div className="text-center pt-6">
+                    <p className="text-slate-300 text-base font-medium">
                       Don't have an account?{" "}
                       <button
                         onClick={() => navigate("/register")}
-                        className="bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 bg-clip-text text-transparent hover:from-emerald-500 hover:via-green-600 hover:to-teal-700 font-bold transition-all duration-300 hover:underline hover:underline-offset-4 relative group text-base transform hover:scale-105"
+                        className="bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 bg-clip-text text-transparent hover:from-emerald-500 hover:via-green-600 hover:to-teal-700 font-bold transition-colors duration-200 hover:underline"
                       >
-                        <span className="relative z-10">Create Account</span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/5 via-green-400/5 to-teal-500/5 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        Create Account
                       </button>
                     </p>
                   </div>
