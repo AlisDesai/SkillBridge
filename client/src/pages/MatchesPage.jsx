@@ -430,11 +430,11 @@ export default function MatchesPage() {
         {/* Tab Content */}
         {activeTab === "requests" && (
           <div>
-            {/* Enhanced Filter Section */}
+            {/* COMMENTED OUT: Enhanced Filter Section */}
+            {/*
             <div className="bg-gradient-to-r from-black/90 via-gray-950/95 to-slate-950/90 backdrop-blur-xl rounded-3xl border border-emerald-500/30 p-8 mb-10 shadow-2xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/8 via-green-500/6 to-teal-500/8 opacity-0 hover:opacity-100 transition-opacity duration-700 rounded-3xl"></div>
 
-              {/* Animated background pattern */}
               <div className="absolute inset-0 opacity-5">
                 <div className="absolute top-0 left-0 w-40 h-40 bg-emerald-400/60 rounded-full filter blur-3xl animate-blob"></div>
                 <div className="absolute top-0 right-0 w-40 h-40 bg-teal-400/60 rounded-full filter blur-3xl animate-blob animation-delay-2000"></div>
@@ -537,6 +537,7 @@ export default function MatchesPage() {
                 </div>
               </div>
             </div>
+            */}
 
             {/* Enhanced Match Requests Content */}
             {loading ? (
