@@ -285,59 +285,6 @@ export default function MatchesPage() {
       {/* Content */}
       <div className="relative z-10 p-6 lg:p-8">
         {/* Enhanced Header Section */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 rounded-3xl mb-6 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-            <svg
-              className="w-10 h-10 text-white relative z-10"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
-          </div>
-
-          <h1 className="text-6xl font-bold bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 bg-clip-text text-transparent mb-4 leading-tight pb-2">
-            Matching Center
-          </h1>
-          <p className="text-xl text-slate-300 mb-6 max-w-3xl mx-auto leading-relaxed">
-            Discover compatible learning partners, manage your connections, and
-            unlock your potential through intelligent skill matching
-          </p>
-
-          <div className="flex items-center justify-center space-x-6 mb-8 flex-wrap">
-            <div className="flex items-center space-x-2 bg-gradient-to-r from-emerald-400/10 via-green-500/10 to-teal-600/10 backdrop-blur-sm rounded-full px-4 py-2 border border-emerald-400/20">
-              <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse shadow-lg shadow-emerald-400/50"></div>
-              <span className="text-emerald-400 font-semibold">
-                Live Network
-              </span>
-            </div>
-            <div className="flex items-center space-x-2 bg-gradient-to-r from-green-400/10 via-teal-500/10 to-emerald-600/10 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/20">
-              <svg
-                className="w-4 h-4 text-green-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
-              <span className="text-green-400 font-semibold">
-                Smart AI Matching
-              </span>
-            </div>
-          </div>
-        </div>
 
         {/* Enhanced Search Section */}
         <div className="max-w-3xl mx-auto mb-12">

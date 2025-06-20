@@ -186,7 +186,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Header Section */}
-        <div className="text-center mb-12">
+        {/* <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 rounded-2xl mb-6 shadow-2xl shadow-emerald-500/30 relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
             <svg
@@ -239,7 +239,7 @@ export default function DashboardPage() {
               <span className="text-green-400 font-semibold">Live Network</span>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Users Grid */}
         <div className="max-w-7xl mx-auto">
