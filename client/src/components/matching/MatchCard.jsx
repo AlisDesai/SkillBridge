@@ -59,9 +59,9 @@ export default function MatchCard({ match, currentUserId, onRespond }) {
     }
   };
 
-  const handleStartChat = () => {
-    navigate(`/chat/${otherUser._id}`);
-  };
+ const handleStartChat = () => {
+  navigate(`/chat/match/${match._id}`); 
+};
 
   const getStatusColor = () => {
     switch (match.status) {

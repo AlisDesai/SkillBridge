@@ -43,6 +43,7 @@ export default function App() {
             <Route path="matches" element={<MatchesPage />} />
             <Route path="chat" element={<ChatPage />} />
             <Route path="/chat/:userId" element={<ChatPage />} />
+            <Route path="chat/match/:matchId" element={<ChatPage />} />
             <Route path="reviews" element={<ReviewsPage />} />
             <Route path="review/:matchId" element={<ReviewPage />} />
             <Route path="user/:id" element={<UserDetailPage />} />
