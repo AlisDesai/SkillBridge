@@ -3,37 +3,6 @@ A peer-to-peer skill exchange platform built with MERN stack featuring AI-powere
 
 ## 📚 Table of Contents
 - [Features](#-features)
-- [Web-App Images](#-app-images)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Quick Start](#-quick-start)
-- [API Endpoints](#-api-endpoints)
-- [AI Matching](#-ai-smart-matching)
-- [Socket Events](#-socket-events)
-- [Authentication Flow](#-authentication-flow)
-- [UI Components](#-ui-components)
-- [Responsive Design](#-responsive-design)
-- [State Management](#-state-management)
-- [Environment Variables](#-environment-variables)
-- [Security](#-security)
-- [Development](#-development)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Support](#-support)
-
-## 🚀 Features
-
-- **AI-Powered Matching**: Smart algorithm matches users based on complementary skills
-- **Real-time Chat**: Socket.io messaging with typing indicators 
-- **Skill Management**: Add/manage teaching and learning skills
-- **Rating System**: Post-session reviews and ratings
-- **Admin Panel**: User management and content moderation
-
-# SkillBridge 🌉
-A peer-to-peer skill exchange platform built with MERN stack featuring AI-powered smart matching.
-
-## 📚 Table of Contents
-- [Features](#-features)
 - [App Images](#-app-images)
 - [Tech Stack](#-tech-stack)
 - [Project Structure](#-project-structure)
@@ -83,6 +52,7 @@ A peer-to-peer skill exchange platform built with MERN stack featuring AI-powere
   <p><em>Final section with testimonials and registration encouragement</em></p>
 </div>
 
+
 ### 🔐 Authentication Pages
 <div align="center">
   <img src="./screenshots/register_page.jpg" alt="User Registration Page" width="800"/>
@@ -93,6 +63,7 @@ A peer-to-peer skill exchange platform built with MERN stack featuring AI-powere
   <img src="./screenshots/login_page.jpg" alt="User Login Page" width="800"/>
   <p><em>Streamlined login interface with secure authentication and password recovery</em></p>
 </div>
+
 
 ### 🎯 Dashboard & Skill Management
 <div align="center">
@@ -105,6 +76,7 @@ A peer-to-peer skill exchange platform built with MERN stack featuring AI-powere
   <p><em>Intuitive skill addition form with categories and proficiency levels</em></p>
 </div>
 
+
 ### 👤 Profile & User Details
 <div align="center">
   <img src="./screenshots/profile_page.jpg" alt="User Profile Page" width="800"/>
@@ -115,6 +87,7 @@ A peer-to-peer skill exchange platform built with MERN stack featuring AI-powere
   <img src="./screenshots/user_details.jpg" alt="User Detail View" width="800"/>
   <p><em>Comprehensive user information with ratings, reviews, and skill compatibility</em></p>
 </div>
+
 
 ### 🤖 AI Smart Matching Algorithm
 <div align="center">
@@ -127,11 +100,13 @@ A peer-to-peer skill exchange platform built with MERN stack featuring AI-powere
   <p><em>Advanced matching results showing complementary skills and learning opportunities</em></p>
 </div>
 
+
 ### 💬 Real-time Chat System
 <div align="center">
   <img src="./screenshots/chat_page.jpg" alt="Real-time Chat Interface" width="800"/>
   <p><em>Interactive messaging system with typing indicators, read receipts, and file sharing</em></p>
 </div>
+
 
 ### 🤝 Match Request Management
 <div align="center">
