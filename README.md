@@ -18,8 +18,6 @@ A peer-to-peer skill exchange platform built with MERN stack featuring AI-powere
 - [Security](#-security)
 - [Development](#-development)
 - [Contributing](#-contributing)
-- [License](#-license)
-- [Support](#-support)
 
 ## 🚀 Features
 
