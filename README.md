@@ -32,119 +32,119 @@ A peer-to-peer skill exchange platform built with MERN stack featuring AI-powere
 ### 🏠 Landing Page Experience
 <div align="center">
   <img src="./screenshots/landing-page.jpg" alt="SkillBridge Landing Page - Hero Section" width="800"/>
-  <p><em>Modern hero section with compelling call-to-action and platform overview</em></p>
+  <p><em>Hero section with platform overview</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/landing-page_2.jpg" alt="Landing Page - Features Section" width="800"/>
-  <p><em>Feature highlights showcasing AI-powered matching and skill exchange</em></p>
+  <p><em>AI-powered matching features</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/landing-page_3.jpg" alt="Landing Page - How It Works" width="800"/>
-  <p><em>Step-by-step guide demonstrating the platform's user journey</em></p>
+  <p><em>Platform user journey guide</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/landing-page_4.jpg" alt="Landing Page - Call to Action" width="800"/>
-  <p><em>Final section with testimonials and registration encouragement</em></p>
+  <p><em>Testimonials and registration</em></p>
 </div>
 
 ### 🔐 Authentication Pages
 <div align="center">
   <img src="./screenshots/register_page.jpg" alt="User Registration Page" width="800"/>
-  <p><em>Clean registration form with real-time validation and user-friendly design</em></p>
+  <p><em>User registration form</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/login_page.jpg" alt="User Login Page" width="800"/>
-  <p><em>Streamlined login interface with secure authentication and password recovery</em></p>
+  <p><em>Secure login interface</em></p>
 </div>
 
 ### 🎯 Dashboard & Skill Management
 <div align="center">
   <img src="./screenshots/dashboard_page.jpg" alt="User Dashboard" width="800"/>
-  <p><em>Comprehensive dashboard showing matches, notifications, and recent activity</em></p>
+  <p><em>Main dashboard overview</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/add_skill_page.jpg" alt="Add Skill Interface" width="800"/>
-  <p><em>Intuitive skill addition form with categories and proficiency levels</em></p>
+  <p><em>Skill addition interface</em></p>
 </div>
 
 ### 👤 Profile & User Details
 <div align="center">
   <img src="./screenshots/profile_page.jpg" alt="User Profile Page" width="800"/>
-  <p><em>Detailed profile view with skills, achievements, and learning progress</em></p>
+  <p><em>User profile view</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/user_details.jpg" alt="User Detail View" width="800"/>
-  <p><em>Comprehensive user information with ratings, reviews, and skill compatibility</em></p>
+  <p><em>Detailed user information</em></p>
 </div>
 
 ### 🤖 AI Smart Matching Algorithm
 <div align="center">
   <img src="./screenshots/smart_match_1.jpg" alt="Smart Match Recommendations" width="800"/>
-  <p><em>AI-powered match suggestions with compatibility scores and skill analysis</em></p>
+  <p><em>AI match suggestions</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/smart_match_2.jpg" alt="Match Algorithm Results" width="800"/>
-  <p><em>Advanced matching results showing complementary skills and learning opportunities</em></p>
+  <p><em>Advanced matching results</em></p>
 </div>
 
 ### 💬 Real-time Chat System
 <div align="center">
   <img src="./screenshots/chat_page.jpg" alt="Real-time Chat Interface" width="800"/>
-  <p><em>Interactive messaging system with typing indicators, read receipts, and file sharing</em></p>
+  <p><em>Interactive messaging system</em></p>
 </div>
 
 ### 🤝 Match Request Management
 <div align="center">
   <img src="./screenshots/match_request.jpg" alt="Match Request Status" width="800"/>
-  <p><em>Match request tracking with acceptance/rejection status and communication tools</em></p>
+  <p><em>Match request tracking</em></p>
 </div>
 
 ### ⚙️ Admin Panel & Management
 <div align="center">
   <img src="./screenshots/admin_dashboard.png" alt="Admin Dashboard Overview" width="800"/>
-  <p><em>Comprehensive admin dashboard with user analytics and platform overview</em></p>
+  <p><em>Admin Dashboard - Main overview</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/admin_dashboard_2.png" alt="Admin Dashboard Statistics" width="800"/>
-  <p><em>Advanced analytics showing user engagement, match success rates, and platform metrics</em></p>
+  <p><em>Admin Dashboard - Analytics view</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/admin_dashboard_3.png" alt="Admin Dashboard Controls" width="800"/>
-  <p><em>Administrative controls for user management and content moderation</em></p>
+  <p><em>Admin Dashboard - Control panel</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/admin_review.png" alt="Admin Review Management" width="800"/>
-  <p><em>Review and rating management system for quality control</em></p>
+  <p><em>Admin Review Management - Quality control</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/admin_skill.png" alt="Admin Skill Management" width="800"/>
-  <p><em>Skill category management and validation tools for administrators</em></p>
+  <p><em>Admin Skill Management - Category tools</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/admin_stats.png" alt="Admin Statistics Panel" width="800"/>
-  <p><em>Detailed platform statistics and performance metrics dashboard</em></p>
+  <p><em>Admin Statistics - Performance metrics</em></p>
 </div>
 
 <div align="center">
   <img src="./screenshots/admin_stats_2.png" alt="Admin Advanced Analytics" width="800"/>
-  <p><em>Advanced analytics with charts, graphs, and detailed reporting features</em></p>
+  <p><em>Admin Statistics - Advanced analytics</em></p>
 </div>
 
 <div align="center">
-  <img src="./screenshots/admin_user.png" alt="Admin User Management" width="800"/>
-  <p><em>User management interface with search, filter, and moderation capabilities</em></p>
+  <img src="./screenshots/admin_user_.png" alt="Admin User Management" width="800"/>
+  <p><em>Admin User Management - User controls</em></p>
 </div>
 
 ## 🛠️ Tech Stack
