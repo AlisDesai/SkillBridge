@@ -3,6 +3,7 @@ A peer-to-peer skill exchange platform built with MERN stack featuring AI-powere
 
 ## 📚 Table of Contents
 - [Features](#-features)
+- [Web-App Images](#-app-images)
 - [Tech Stack](#-tech-stack)
 - [Project Structure](#-project-structure)
 - [Quick Start](#-quick-start)
@@ -27,6 +28,63 @@ A peer-to-peer skill exchange platform built with MERN stack featuring AI-powere
 - **Skill Management**: Add/manage teaching and learning skills
 - **Rating System**: Post-session reviews and ratings
 - **Admin Panel**: User management and content moderation
+
+## 📸 Web-App Images
+
+### 🏠 Landing Page & Authentication
+<div align="center">
+  <img src="./screenshots/landing-page.png" alt="SkillBridge Landing Page" width="800"/>
+  <p><em>Clean, modern landing page with hero section and feature highlights</em></p>
+</div>
+
+<div align="center">
+  <img src="./screenshots/auth-flow.png" alt="Authentication Flow" width="800"/>
+  <p><em>Seamless login/register experience with form validation</em></p>
+</div>
+
+### 🎯 Smart Matching System
+<div align="center">
+  <img src="./screenshots/landing-page.jpg" alt="AI Smart Matches" width="800"/>
+  <p><em>AI-powered match recommendations with compatibility scores</em></p>
+</div>
+
+<div align="center">
+  <img src="./screenshots/match-details.png" alt="Match Details View" width="800"/>
+  <p><em>Detailed match profile with skills, ratings, and compatibility analysis</em></p>
+</div>
+
+### 👤 User Profile & Skills
+<div align="center">
+  <img src="./screenshots/user-profile.png" alt="User Profile Dashboard" width="800"/>
+  <p><em>Comprehensive user profile with skills, achievements, and statistics</em></p>
+</div>
+
+<div align="center">
+  <img src="./screenshots/skills-management.png" alt="Skills Management" width="800"/>
+  <p><em>Easy skill addition and management interface</em></p>
+</div>
+
+### 💬 Real-time Chat System
+<div align="center">
+  <img src="./screenshots/chat-interface.png" alt="Chat Interface" width="800"/>
+  <p><em>Real-time messaging with typing indicators and read receipts</em></p>
+</div>
+
+<div align="center">
+  <img src="./screenshots/chat-mobile.png" alt="Mobile Chat View" width="400"/>
+  <p><em>Responsive chat interface optimized for mobile devices</em></p>
+</div>
+
+### ⭐ Reviews & Admin Panel
+<div align="center">
+  <img src="./screenshots/review-system.png" alt="Review and Rating System" width="800"/>
+  <p><em>Post-session review system with star ratings and feedback</em></p>
+</div>
+
+<div align="center">
+  <img src="./screenshots/admin-dashboard.png" alt="Admin Dashboard" width="800"/>
+  <p><em>Comprehensive admin panel for user management and analytics</em></p>
+</div>
 
 ## 🛠️ Tech Stack
 
@@ -59,6 +117,7 @@ skillbridge/
 │   ├── routes/             # API endpoints
 │   ├── middleware/         # Auth & validation
 │   └── utils/              # Smart matching AI
+└── screenshots/            # App images for README
 ```
 
 ## 🚀 Quick Start
