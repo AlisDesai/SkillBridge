@@ -354,6 +354,6 @@ EMAIL_PASS=your_password
 
 <div align="center">
   <h2>🙏 Thank You</h2>
-  <p><em>Thank you for using SkillBridge! We hope our platform helps you connect, learn, and grow with amazing people around the world.</em></p>
+  <p><em>Thank you for using SkillBridge! I hope my platform helps you connect, learn, and grow with amazing people around the world.</em></p>
   <p>Happy Learning! 🌟</p>
 </div>
