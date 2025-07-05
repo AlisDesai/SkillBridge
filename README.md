@@ -283,8 +283,6 @@ The platform uses intelligent algorithms to match users:
 
 - Mobile-first approach
 - TailwindCSS utilities
-- Dark theme support
-- Optimized for all screen sizes
 
 ## 🔄 State Management
 
